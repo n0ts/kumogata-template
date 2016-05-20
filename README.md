@@ -4,7 +4,7 @@
 
 ## About
 
-- `kumogate-template` is a template sets for `[kumogata[(https://github.com/winebarrel/kumogata).`
+- `kumogate-template` is a template sets for `[kumogata](https://github.com/winebarrel/kumogata).`
 
 ## Installation
 
