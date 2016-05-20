@@ -6,3 +6,7 @@ rvm:
 script:
   - bundle install
   - bundle exec rake
+notifications:
+  slack:
+    secure: EEp/e4ajZ/oyTrwIpck0UiWB6kiPWC1Sg0/VdUZObrwb9dUI99368LlFhdvAeAdbSAlANARqgXwW3PN55dB6Ujp6uMrESe3SL8A+IgYEc7ctjt25/KXikkGT1hKlT3QWbzx3PGRiklxFnLtTmUTyUFm6Z5L5mD4V3Fc1DgESLRm+6UKIBiHhIBYWlDPJB2B8VNJqSZjKAUs0LzwtjO3yQuVg+QC6+m7C9g4NwVp8Akyojv5fDnZMEq55f6Tsth51EKFPXGJPe1gmKqHpiGteHgLAGTnOKy4snXNiGC18oqtGL2r/ki7nddjWcnw7ivcYy1sAU3ecSaW2PRWVK9KjgujR+sP3q7yxpbn5zXy7+ebarZUPJ6p7AgnJvOZtbl9ZfR2uBDCt7bW2WinupucvSXoIUp+/yVmnYG+NGR+YKkWYycTZ5j79Hr+DOiepdo7yAlXJ2Uywg4AAMKhaDFnFNVo7P1Gsp/fnLkNA6wZ/1UwWTKZewPV9rHaWJ8UjRabjE/SZPCjHzYHIGg7LqX9OxdU9/N+AtW/yMKoE+p8T3KbExSDt/DFLlxOdlwnk1y3EnMDcENfDI7dHHuCQzHm1/bc91EKWjgQ1nAbPD48+wB6sLV8aSsSPVEQIdDDa9XVKKaB1HW+iQABDrQB5csWiuAv6KsIkT8esp0lBE7pj9LY=
+  email: false
