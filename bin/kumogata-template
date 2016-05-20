@@ -1,0 +1,9 @@
+#!/usr/bin/env ruby
+$: << File.expand_path("#{File.dirname __FILE__}/../lib")
+require 'rubygems'
+require 'kumogata/template/ext/kumogata'
+require 'kumogata/template/ext/argument_parser'
+require 'kumogata/template'
+
+
+load Gem.bin_path('kumogata', 'kumogata')
