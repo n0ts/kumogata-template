@@ -1,5 +1,7 @@
 # kumogata-template
 
+[![Build Status](https://travis-ci.org/n0ts/kumogata-template.svg?branch=master)](https://travis-ci.org/n0ts/kumogata-template)
+
 ## About
 
 - `kumogate-template` is a template sets for `[kumogata[(https://github.com/winebarrel/kumogata).`
