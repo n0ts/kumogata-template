@@ -1,19 +1,19 @@
 PATH
   remote: .
   specs:
-    kumogata-template (0.0.2)
+    kumogata-template (0.0.3)
       aws-sdk (~> 2.3)
       kumogata (= 0.5.8)
 
 GEM
   remote: https://rubygems.org/
   specs:
-    aws-sdk (2.3.7)
-      aws-sdk-resources (= 2.3.7)
-    aws-sdk-core (2.3.7)
+    aws-sdk (2.3.8)
+      aws-sdk-resources (= 2.3.8)
+    aws-sdk-core (2.3.8)
       jmespath (~> 1.0)
-    aws-sdk-resources (2.3.7)
-      aws-sdk-core (= 2.3.7)
+    aws-sdk-resources (2.3.8)
+      aws-sdk-core (= 2.3.8)
     aws-sdk-v1 (1.66.0)
       json (~> 1.4)
       nokogiri (>= 1.4.4)
@@ -23,7 +23,7 @@ GEM
       execjs
     coffee-script-source (1.10.0)
     diffy (3.1.0)
-    dslh (0.3.6)
+    dslh (0.3.7)
     execjs (2.7.0)
     hashie (3.4.4)
     highline (1.7.8)
@@ -61,7 +61,7 @@ GEM
     therubyracer (0.12.2)
       libv8 (~> 3.16.14.0)
       ref
-    tins (1.10.1)
+    tins (1.10.2)
     uuidtools (2.1.5)
 
 PLATFORMS
