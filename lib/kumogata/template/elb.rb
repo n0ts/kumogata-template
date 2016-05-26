@@ -83,22 +83,31 @@ def _elb_listeners(args)
 
   array = []
   listeners.each do |listener|
-    proto = listener[:protocol].upcase
+    proto = listener[:protocol] || "http"
     protocol = _valid_values(proto, %w( http https tcp ssl ), "http")
-    port = listener[:port] || case protocol
-                              when "http"
-                                80
-                              when "https"
-                                443
-                              end
-    lb_port = listener[:lb_port] || port
+    lb_port =
+      case protocol
+      when "http"
+        80
+      when "https"
+        443
+      end
+    instance_proto = listener[:instance_protocol] || protocol
+    instance_protocol = _valid_values(instance_proto, %w( http https tcp ssl ), "http")
+    instance_port =
+      case instance_protocol
+      when "http"
+        80
+      when "https"
+        443
+      end
     policies = []
     policies << "ELBSecurityPolicy-2015-05" if protocol == "https" or protocol == "ssl"
     ssl = _ref_string("ssl", listener)
 
     array << _{
-      InstancePort port
-      InstanceProtocol protocol.upcase
+      InstancePort instance_port
+      InstanceProtocol instance_protocol.upcase
       LoadBalancerPort lb_port
       PolicyNames policies unless policies.empty?
       Protocol protocol.upcase
