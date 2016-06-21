@@ -51,12 +51,14 @@ Test _autoscaling_notification(topic_arn: "test")
 
   def test_autoscaling_step
     template = <<-EOS
-Test _autoscaling_step(scaling: 10)
+Test _autoscaling_step(scaling: 10, lower: 0, upper: 20)
     EOS
     act_template = run_client_as_json(template)
     exp_template = <<-EOS
 {
   "Test": {
+    "MetricIntervalLowerBound": "0",
+    "MetricIntervalUpperBound": "20",
     "ScalingAdjustment": "10"
   }
 }

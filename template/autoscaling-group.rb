@@ -21,7 +21,7 @@ max = min if max < min
 notifications = (args[:notifications] || []).collect{|v| _autoscaling_notification(v) }
 placement = args[:placement] || ""
 tags = _autoscaling_tags(args)
-termination = args[:termination] || []
+terminations = _autoscaling_terminations(args)
 vpc_zones = _ref_array("vpc_zones", args, "subnet")
 
 _(name) do
@@ -41,7 +41,7 @@ _(name) do
     NotificationConfigurations notifications
     PlacementGroup placement unless placement.empty?
     Tags tags
-    TerminationPolicies termination unless termination.empty?
+    TerminationPolicies terminations unless terminations.empty?
     VPCZoneIdentifier vpc_zones unless vpc_zones.empty?
   end
 end
