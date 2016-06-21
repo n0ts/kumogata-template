@@ -42,14 +42,35 @@ Test _emr_bootstraps(bootstraps: [ { name: "test", script_path: "test" } ])
 
   def test_emr_configurations
     template = <<-EOS
-Test _emr_configurations(configurations: [ { classification: "test" } ])
+configuration = {
+  classification: "test",
+  properties: {},
+  configurations: [
+    classification: "export",
+    properties: { JAVA_HOME: "/usr/java/default" },
+  ],
+}
+Test _emr_configurations(configurations: [ configuration ] )
     EOS
     act_template = run_client_as_json(template)
     exp_template = <<-EOS
 {
   "Test": [
     {
-      "Classification": "test"
+      "Classification": "test",
+      "ConfigurationProperties": {
+      },
+      "Configurations": [
+        {
+          "Classification": "export",
+          "ConfigurationProperties": {
+            "JAVA_HOME": "/usr/java/default"
+          },
+          "Configurations": [
+
+          ]
+        }
+      ]
     }
   ]
 }

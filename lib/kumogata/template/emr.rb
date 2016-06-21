@@ -42,11 +42,28 @@ def _emr_configurations(args)
   array = []
   configurations.each do |configuration|
     classification = configuration[:classification] || ""
-    properties = configuration[:properties] || []
+    properties = configuration[:properties] || {}
+    configuring = _emr_configuring(configuration)
     array << _{
       Classification classification unless classification.empty?
-      ConfigurationProperties properties unless properties.empty?
-      #Configurations
+      ConfigurationProperties properties
+      Configurations configuring
+    }
+  end
+  array
+end
+
+def _emr_configuring(args)
+  configurations = args[:configurations] || []
+
+  array = []
+  configurations.each do |configuration|
+    classification = configuration[:classification] || ""
+    properties = configuration[:properties] || {}
+    array << _{
+      Classification classification unless classification.empty?
+      ConfigurationProperties properties
+      Configurations []
     }
   end
   array
