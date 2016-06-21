@@ -83,6 +83,11 @@ EC2_INSTANCE_TYPES =
    # i2.4xlarge  16    122         4 x 800
    # i2.8xlarge  32    244         8 x 800
    "i2.xlarge", "i2.2xlarge", "i2.4xlarge", "i2.8xlarge",
+
+   # Model        vCPU   Mem (GiB)   SSD Storage (GB)  network Bandwidth
+   # x1.32xlargee  128   1,952        2 x 1,902 SSD      10 Gbps 10 Gbps
+   # * US East / US West only
+   "x1.32xlarge",
   ]
 EC2_DEFAULT_INSTANCE_TYPE = "t2.medium"
 
@@ -173,3 +178,16 @@ EMR_DEFAULT_INSTANCE_TYPE = "c4.large"
 
 # http://docs.aws.amazon.com/ElasticMapReduce/latest/ReleaseGuide/emr-whatsnew.html
 EMR_DEFAULT_RELEASE = "emr-4.6.0"
+
+ELB_ACCESS_LOG_ACCOUNT_ID = {
+  "us-east-1": "127311923021",
+  "us-west-2": "797873946194",
+  "us-west-1": "027434742980",
+  "eu-west-1": "156460612806",
+  "eu-central-1": "054676820928",
+  "ap-southeast-1": "114774131450",
+  "ap-northeast-1": "582318560864",
+  "ap-southeast-2": "783225319266",
+  "ap-northeast-2": "600734575887",
+  "sa-east-1": "507241528517",
+}
