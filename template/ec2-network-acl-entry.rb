@@ -21,7 +21,10 @@ _(name) do
   Properties do
     CidrBlock cidr
     Egress egress
-    Icmp icmp if protocol == 1
+    Icmp _{
+      Code -1
+      Type -1
+    } if protocol == 1
     NetworkAclId network_acl
     PortRange port_range if protocol == -1 or protocol == 6 or protocol == 17
     Protocol protocol
