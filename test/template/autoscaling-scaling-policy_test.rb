@@ -15,6 +15,7 @@ _autoscaling_scaling_policy "test", ref_autoscaling: "test"
       "AutoScalingGroupName": {
         "Ref": "TestAutoscalingGroup"
       },
+      "Cooldown": "60",
       "PolicyType": "SimpleScaling",
       "ScalingAdjustment": "1"
     }
