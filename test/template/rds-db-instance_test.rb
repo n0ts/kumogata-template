@@ -51,6 +51,7 @@ _rds_db_instance "test", ref_db_name: "test", ref_port: "test", ref_subnet_group
       "PreferredBackupWindow": "21:30-22:00",
       "PreferredMaintenanceWindow": "Thu:20:30-Thu:21:00",
       "PubliclyAccessible": "false",
+      "StorageType": "gp2",
       "Tags": [
         {
           "Key": "Name",

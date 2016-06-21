@@ -40,6 +40,7 @@ maintenance = _maintenance_window("rds", args[:maintenance] || DEFAULT_MAINTENAN
 publicly = _bool("publicly", args, false)
 source_db = _ref_string("source_db", args, "db source db")
 storage_encrypted = _bool("encrypted", args, false)
+storage_type = _valid_values(args[:storage_type], %w( standard gp2 io1 ), "gp2")
 tags = _tags(args)
 security_groups = _ref_array("security_groups", args, "security group")
 
@@ -75,7 +76,7 @@ _(name) do
     PubliclyAccessible publicly
     SourceDBInstanceIdentifier source_db unless source_db.empty?
     StorageEncrypted storage_encrypted if storage_encrypted == true
-    #StorageType
+    StorageType storage_type
     Tags tags
     VPCSecurityGroups security_groups unless security_groups.empty?
   end
