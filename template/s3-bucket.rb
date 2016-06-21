@@ -6,11 +6,7 @@ require 'kumogata/template/helper'
 require 'kumogata/template/s3'
 
 name = _resource_name(args[:name], "bucket")
-access = _valid_values(args[:access],
-                       %w( AuthenticatedRead AwsExecRead BucketOwnerRead
-                           BucketOwnerFullControl LogDeliveryWrite
-                           Private PublicRead PublicReadWrite ),
-                       "Private")
+access = _s3_to_access(args[:access])
 access = "PublicRead" if args.key? :website
 bucket = _ref_name("bucket", args)
 cors = _s3_cors(args)

@@ -3,6 +3,31 @@
 #
 require 'kumogata/template/helper'
 
+def _s3_to_access(value)
+  return "Private" if value.nil?
+
+  case value
+  when "auth"
+    "AuthenticatedRead"
+  when "aws_exec"
+    "AwsExecRead"
+  when "owner"
+    "BucketOwnerRead"
+  when "owner_full"
+    "BucketOwnerFullControl"
+  when "log_delivery_w"
+    "LogDeliveryWrite"
+  when "private"
+    "Private"
+  when "public"
+    "PublicRead"
+  when "public_rw"
+    "PublicReadWrite"
+  else
+    value
+  end
+end
+
 def _s3_cors(args)
   rules = args[:cors] || []
 
