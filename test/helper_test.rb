@@ -520,7 +520,7 @@ Test _availability_zones({})
   end
 
   def test_timestamp_utc
-    assert_equal _timestamp_utc(2016, 4, 1), "2016-03-31T15:00:00Z"
+    assert_equal _timestamp_utc(Time.local(2016, 4, 1)), "2016-03-31T15:00:00Z"
   end
 
   def test_timestamp_utc_from_string

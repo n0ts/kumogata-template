@@ -164,19 +164,12 @@ def _availability_zones(args, use_subnet = true)
   end
 end
 
-def _timestamp_utc(year = nil, month = nil, day = nil, hour = 0, min = 0)
-  time =
-    if year.nil?
-      Time.now
-    else
-      Time.local(year, month, day, hour, min)
-    end
-  time.utc.strftime("%Y-%m-%dT%H:%M:00Z")
+def _timestamp_utc(time = Time.now)
+  time.utc.strftime("%Y-%m-%dT%H:%M:%SZ")
 end
 
 def _timestamp_utc_from_string(time)
-  time = Time.strptime(time, "%Y-%m-%d %H:%M")
-  _timestamp_utc(time.year, time.month, time.day, time.hour, time.min)
+  _timestamp_utc(Time.strptime(time, "%Y-%m-%d %H:%M"))
 end
 
 def _maintenance_window(service, start_time)
