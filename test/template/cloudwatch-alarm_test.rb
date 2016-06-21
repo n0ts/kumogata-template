@@ -16,7 +16,7 @@ _cloudwatch_alarm "test", actions: "test", alarm_name: "test", namespace: "test"
         "test"
       ],
       "AlarmName": "test",
-      "ComparisonOperator": "LessThanOrEqualToThreshold",
+      "ComparisonOperator": "LessThanThreshold",
       "Dimensions": [
         {
           "Name": "test",

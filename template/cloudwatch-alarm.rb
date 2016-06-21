@@ -18,7 +18,7 @@ metric = args[:metric]
 namespace = args[:namespace]
 ok_actions = args[:ok_actions] || []
 period = args[:period] || 60
-statistic = _valid_values(args[:statistic],
+statistic = _valid_values(_cloudwatch_to_statistic(args[:statistic]),
                           %w(SampleCount Average Sum Minimum Maximum), "Average")
 threshold = args[:threshold] || 60
 unit = _valid_values(args[:unit], %w(Seconds Microseconds Milliseconds Bytes Kilobytes Megabytes Gigabytes Terabytes Bits Kilobits Megabits Gigabits Terabits Percent Count Bytes/Second Kilobytes/Second Megabytes/Second Gigabytes/Second Terabytes/Second Bits/Second Kilobits/Second Megabits/Second Gigabits/Second Terabits/Second Count/Second None), "")

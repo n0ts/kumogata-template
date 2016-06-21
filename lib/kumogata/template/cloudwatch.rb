@@ -2,6 +2,24 @@
 # Helper - CloudWatch
 #
 
+def _cloudwatch_to_statistic(value)
+  return value if value.nil?
+  case value.downcase
+  when "sample"
+    "SampleCount"
+  when "avg"
+    "Average"
+  when "Sum"
+    "Sum"
+  when "min"
+    "Minimum"
+  when "max"
+    "Maximum"
+  else
+    value
+  end
+end
+
 def _cloudwatch_convert_operator(operator)
   case operator
   when ">="
@@ -9,13 +27,13 @@ def _cloudwatch_convert_operator(operator)
   when ">"
     "GreaterThanThreshold"
   when "<="
-    "LessThanThreshold"
-  when "<"
     "LessThanOrEqualToThreshold"
+  when "<"
+    "LessThanThreshold"
   else
     _valid_values(operator,
                   %w( GreaterThanOrEqualToThreshold GreaterThanThreshold
-                      LessThanThreshold LessThanOrEqualToThreshold ),
+                      LessThanOrEqualToThreshold LessThanThreshold ),
                   "GreaterThanThreshold")
   end
 end
