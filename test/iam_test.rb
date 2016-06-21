@@ -90,4 +90,33 @@ arn _iam_arn("s3", "test")
   EOS
     assert_equal exp_template.chomp, act_template
   end
+
+  def test_iam_s3_bucket_policy
+    # def _iam_s3_bucket_policy(region, bucket, prefix, aws_account_id)
+    template = <<-EOS
+arn _iam_s3_bucket_policy("us_east1", "test", "test", 1234)
+    EOS
+    act_template = run_client_as_json(template)
+    exp_template = <<-EOS
+{
+  "arn": [
+    {
+      "service": "s3",
+      "action": [
+        "PutObject"
+      ],
+      "principal": {
+        "AWS": [
+          null
+        ]
+      },
+      "resource": [
+        "test/test/AWSLogs/1234/*"
+      ]
+    }
+  ]
+}
+  EOS
+    assert_equal exp_template.chomp, act_template
+  end
 end

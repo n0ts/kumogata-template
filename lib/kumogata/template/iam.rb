@@ -92,5 +92,24 @@ def _iam_arn(service, resource)
 
   when "elasticloadbalancing"
     "#{arn_prefix}:*:*:loadbalancer/#{resource}"
+
+  when "logs"
+    "#{arn_prefix}:*:*:*"
   end
+end
+
+def _iam_s3_bucket_policy(region, bucket, prefix, aws_account_id)
+  account_id = ELB_ACCESS_LOG_ACCOUNT_ID[region.to_sym]
+  prefix = [ prefix ] if prefix.is_a? String
+  resource = prefix.collect{|v| "#{bucket}/#{v}/AWSLogs/#{aws_account_id}/*" }
+  [
+   {
+     service: "s3",
+     action: [ "PutObject" ],
+     principal: {
+       "AWS": [ account_id ],
+     },
+     resource: resource,
+   },
+  ]
 end
