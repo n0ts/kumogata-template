@@ -23,7 +23,7 @@ _elb_loadbalancer "test", ref_security_groups: [ "test" ], listeners: [ protocol
       "ConnectionSettings": {
         "IdleTimeout": "60"
       },
-      "CrossZone": "false",
+      "CrossZone": "true",
       "HealthCheck": {
         "HealthyThreshold": "10",
         "Interval": "30",
