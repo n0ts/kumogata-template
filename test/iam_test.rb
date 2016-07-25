@@ -55,7 +55,7 @@ PolicyDocument _iam_policy_document "test", test: [ { service: "s3" } ]
 
   def test_iam_assume_role_policy_document
     template = <<-EOS
-Statement _iam_assume_role_policy_document("ec2")
+Statement _iam_assume_role_policy_document({ service: "ec2" })
     EOS
     act_template = run_client_as_json(template)
     exp_template = <<-EOS
@@ -92,7 +92,6 @@ arn _iam_arn("s3", "test")
   end
 
   def test_iam_s3_bucket_policy
-    # def _iam_s3_bucket_policy(region, bucket, prefix, aws_account_id)
     template = <<-EOS
 arn _iam_s3_bucket_policy("us_east1", "test", "test", 1234)
     EOS
@@ -114,6 +113,37 @@ arn _iam_s3_bucket_policy("us_east1", "test", "test", 1234)
         "test/test/AWSLogs/1234/*"
       ]
     }
+  ]
+}
+  EOS
+    assert_equal exp_template.chomp, act_template
+  end
+
+  def test_iam_login_profile
+    template = <<-EOS
+profile _iam_login_profile(password: "test")
+    EOS
+    act_template = run_client_as_json(template)
+    exp_template = <<-EOS
+{
+  "profile": {
+    "Password": "test",
+    "PasswordResetRequired": "true"
+  }
+}
+  EOS
+    assert_equal exp_template.chomp, act_template
+  end
+
+  def test_iam_managed_policies
+    template = <<-EOS
+managed _iam_managed_policies(managed_policies: %w( admin ))
+    EOS
+    act_template = run_client_as_json(template)
+    exp_template = <<-EOS
+{
+  "managed": [
+    "arn:aws:iam::aws:policy/AdministratorAccess"
   ]
 }
   EOS
