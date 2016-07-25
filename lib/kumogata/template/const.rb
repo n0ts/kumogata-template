@@ -13,6 +13,7 @@ AWS_REGION = {
   sydney:     "ap-southeast-2",
   seoul:      "ap-northeast-2",
   saopaulo:   "sa-east-1",
+  mumbai:     "ap-south-1",
 }
 
 PORT = {
@@ -86,7 +87,6 @@ EC2_INSTANCE_TYPES =
 
    # Model        vCPU   Mem (GiB)   SSD Storage (GB)  network Bandwidth
    # x1.32xlargee  128   1,952        2 x 1,902 SSD      10 Gbps 10 Gbps
-   # * US East / US West only
    "x1.32xlarge",
   ]
 EC2_DEFAULT_INSTANCE_TYPE = "t2.medium"
