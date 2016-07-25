@@ -19,7 +19,7 @@ def _s3_to_access(value)
     "LogDeliveryWrite"
   when "private"
     "Private"
-  when "public"
+  when "public_r"
     "PublicRead"
   when "public_rw"
     "PublicReadWrite"
