@@ -3,6 +3,19 @@
 #
 require 'kumogata/template/helper'
 
+def _iam_to_policy(value)
+  case value
+  when 'admin'
+    'AdministratorAccess'
+  when 'power'
+    'PowerUserAccess'
+  when 'readonly'
+    'ReadOnlyAccess'
+  else
+    value
+  end
+end
+
 def _iam_policies(name, args)
   array = []
   policies = args["#{name}".to_sym] || []
@@ -45,12 +58,35 @@ def _iam_policy_document(name, args)
   array
 end
 
-def _iam_assume_role_policy_document(service)
+def _iam_assume_role_policy_document(args)
+  aws =
+    if args.key? :aws
+      _iam_arn("iam", args[:aws])
+    else
+      ""
+    end
+  service = args[:service] || ""
+  condition =
+    if args.key? :external_id
+      true
+    else
+      false
+    end
+  external_id = args[:external_id] || ""
+
   [
    _{
      Effect "Allow"
-     Principal _{ Service [ "#{service}.amazonaws.com" ] }
+     Principal _{
+       AWS aws unless aws.empty?
+       Service [ "#{service}.amazonaws.com" ] unless service.empty?
+     }
      Action [ "sts:AssumeRole" ]
+     Condition _{
+       StringEquals _{
+         sts_ExternalId external_id unless external_id.empty?
+       }
+     } if condition
    }
   ]
 end
@@ -85,9 +121,13 @@ def _iam_arn(service, resource)
 
   when "iam"
     if resource.key? :sts
-      "arn:aws:sts::#{account_id}:#{resource[:type]}/#{resource[:user]}"
+      "arn:aws:sts::#{resource[:account_id]}:#{resource[:type]}/#{resource[:user]}"
+    elsif resource.key? :policy
+      "arn:aws:iam::aws:policy/#{_iam_to_policy(resource[:policy])}"
+    elsif resource.key? :root
+      "#{arn_prefix}::#{resource[:account_id]}:root"
     else
-      "#{arn_prefix}::#{account_id}:#{resource[:type]}/#{resource[:user]}"
+      "#{arn_prefix}::#{resource[:account_id]}:#{resource[:type]}/#{resource[:user]}"
     end
 
   when "elasticloadbalancing"
@@ -112,4 +152,24 @@ def _iam_s3_bucket_policy(region, bucket, prefix, aws_account_id)
      resource: resource,
    },
   ]
+end
+
+def _iam_login_profile(args)
+  password = args[:password] || ""
+  reset_required = _bool("reset_required", args, true)
+
+  _{
+    Password password
+    PasswordResetRequired reset_required
+  }
+end
+
+def _iam_managed_policies(args)
+  arns = args[:managed_policies]
+
+  array = []
+  arns.each do |v|
+    array << _iam_arn("iam", { policy: v })
+  end
+  array
 end
