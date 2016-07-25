@@ -6,7 +6,7 @@ require 'kumogata/template/helper'
 require 'kumogata/template/iam'
 
 name = _resource_name(args[:name], "role")
-service = args[:service] || "ec2"
+policy = _iam_assume_role_policy_document(args)
 path = args[:path] || "/"
 
 _(name) do
@@ -14,7 +14,7 @@ _(name) do
   Properties do
     AssumeRolePolicyDocument do
       Version "2012-10-17"
-      Statement _iam_assume_role_policy_document(service)
+      Statement policy
     end
     Path path
   end
