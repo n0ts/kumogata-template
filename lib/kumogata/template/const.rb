@@ -112,10 +112,17 @@ ELASTICACHE_NODE_TYPES =
    # cache.r3.2xlarge    8    58.2        High
    # cache.r3.4xlarge   16   118          High
    # cache.r3.8xlarge   32   237          10 Gigabit
+   # cache.m4.large      2     6.42       Moderate
+   # cache.m4.xlarge     4    14.28       High
+   # cache.m4.2xlarge    8    29.70       High
+   # cache.m4.4xlarge   16    60.78       High
+   # cache.m4.10xlarge  40   154.64       10 Gigabit
    "cache.t2.micro", "cache.t2.small", "cache.t2.medium",
    "cache.m3.medium", "cache.m3.large", "cache.m3.xlarge",
    "cache.m3.2xlarge", "cache.r3.large", "cache.r3.xlarge",
    "cache.r3.2xlarge", "cache.r3.4xlarge", "cache.r3.8xlarge",
+   "cache.m4.large", "cache.m4.xlarge", "cache.m4.2xlarge",
+   "cache.m4.4xlarge", "cache.m4.10xlarge",
   ]
 ELASTICACHE_DEFAULT_NODE_TYPE = "cache.t2.medium"
 
