@@ -1,5 +1,5 @@
 #
-# ElasticLoadBalancing LoadBalancer resource
+# ELB(ElasticLoadBalancing) LoadBalancer resource
 # http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-properties-ec2-elb.html
 #
 require 'kumogata/template/helper'
