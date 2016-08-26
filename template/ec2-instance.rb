@@ -7,9 +7,11 @@ require 'kumogata/template/ec2'
 
 name = _resource_name(args[:name], "instance")
 instance_type = _ref_string("instance_type", args, "instance type")
+affinity = _valid_values(args[:affinity], %w( host default ), "")
 az = _availability_zone(args)
 block_device = (args[:block_device] || []).collect{|v| _ec2_block_device(v) }
 disable_termination = _bool("disable_termination", args, false)
+host_id = args[:host_id] || ""
 iam_instance = _ref_string("iam_instance", args, "iam instance profile")
 image =_ec2_image(instance_type, args)
 instance_initiated = args[:instance_initiated] || "stop"
@@ -32,10 +34,12 @@ volumes = args[:volumes] || ""
 _(name) do
   Type "AWS::EC2::Instance"
   Properties do
+    Affinity affinity unless affinity.empty?
     AvailabilityZone az unless az.empty?
     BlockDeviceMappings block_device
     DisableApiTermination disable_termination
     #EbsOptimized
+    HostId host_id unless affinity.empty? and host_id.empty?
     IamInstanceProfile iam_instance
     ImageId image
     InstanceInitiatedShutdownBehavior instance_initiated
