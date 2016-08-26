@@ -117,3 +117,12 @@ def _ecs_volumes_host(args)
     SourcePath args[:source_path]
   }
 end
+
+def _ecs_deployment(args)
+  return "" unless args.key? :max or args.key? :min
+
+  _{
+    MaximumPercent args[:max]
+    MinimumHealthyPercent args[:min]
+  }
+end
