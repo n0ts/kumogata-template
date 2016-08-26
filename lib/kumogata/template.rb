@@ -1,4 +1,5 @@
 require 'kumogata/template/autoscaling'
+require 'kumogata/template/certificate'
 require 'kumogata/template/cloudwatch'
 require 'kumogata/template/codedeploy'
 require 'kumogata/template/const'
