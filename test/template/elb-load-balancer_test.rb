@@ -3,7 +3,7 @@ require 'abstract_unit'
 class ElbLoadbalancerTest < Minitest::Test
   def test_normal
     template = <<-EOS
-_elb_loadbalancer "test", ref_security_groups: [ "test" ], listeners: [ protocol: "http" ]
+_elb_load_balancer "test", ref_security_groups: [ "test" ], listeners: [ protocol: "http" ]
     EOS
     act_template = run_client_as_json(template)
     exp_template = <<-EOS
