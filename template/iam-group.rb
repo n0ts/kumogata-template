@@ -6,6 +6,7 @@ require 'kumogata/template/helper'
 require 'kumogata/template/iam'
 
 name = _resource_name(args[:name], "group")
+group = args[:group] || ""
 managed_policies =
   if args.key? :managed_policies
     _iam_managed_policies(args)
@@ -18,6 +19,7 @@ policies = _iam_policies("policies", args)
 _(name) do
   Type "AWS::IAM::Group"
   Properties do
+    GroupName group_name unless group.empty?
     ManagedPolicyArns managed_policies unless managed_policies.empty?
     Path path
     Policies policies unless policies.empty?
