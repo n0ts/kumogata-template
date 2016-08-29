@@ -255,6 +255,27 @@ Test _find_in_map("Test", "test1", "test2")
     assert_equal exp_template.chomp, act_template
   end
 
+  def test_select
+    template = <<-EOS
+Test _select(1, %w( test1 test2 ))
+    EOS
+    act_template = run_client_as_json(template)
+    exp_template = <<-EOS
+{
+  "Test": {
+    "Fn::Select": [
+      "1",
+      [
+        "test1",
+        "test2"
+      ]
+    ]
+  }
+}
+    EOS
+    assert_equal exp_template.chomp, act_template
+  end
+
   def test_tag
     template = <<-EOS
 Test _tag(key: "test", value: "test")

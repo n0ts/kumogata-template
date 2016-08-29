@@ -92,6 +92,10 @@ def _find_in_map(name, top_level, secondary_level)
   _{ Fn__FindInMap [ name, top_level, secondary_level ] }
 end
 
+def _select(index, list)
+  _{ Fn__Select [ index.to_s, list ] }
+end
+
 def _tag(args)
   key = args[:key].to_s || ""
   value = args[:value] || ""
