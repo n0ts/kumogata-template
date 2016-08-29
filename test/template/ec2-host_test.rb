@@ -21,4 +21,3 @@ _ec2_host "test", auto: "on", az: "test"
     assert_equal exp_template.chomp, act_template
   end
 end
-

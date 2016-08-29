@@ -103,4 +103,3 @@ _output_alb "test", security_groups: 1
     assert_equal exp_template.chomp, act_template
   end
 end
-

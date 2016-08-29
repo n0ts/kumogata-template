@@ -23,4 +23,3 @@ Test _alb_health_check({})
     assert_equal exp_template.chomp, act_template
   end
 end
-

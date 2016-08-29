@@ -38,4 +38,3 @@ _alb_listener_rule "test", actions: [ { ref_target: "test" } ], ref_listener: "t
     assert_equal exp_template.chomp, act_template
   end
 end
-

@@ -87,4 +87,3 @@ _alb_target_group "test", attributes: [ { key: "value" } ], targets: [ { ref_ins
     assert_equal exp_template.chomp, act_template
   end
 end
-
