@@ -1,3 +1,4 @@
+require 'kumogata/template/alb'
 require 'kumogata/template/autoscaling'
 require 'kumogata/template/certificate'
 require 'kumogata/template/cloudwatch'
