@@ -34,7 +34,7 @@ def _ec2_security_group_egress(args)
   destination = _ref_string("destination", args, "security group")
   from = _ref_string("from", args)
   group = _ref_string("group", args, "security group")
-  ip = args[:ip_protocol] || "tcp"
+  ip = args[:ip] || "tcp"
   to = _ref_string("to", args)
   from = to if from.empty?
 
@@ -53,6 +53,12 @@ def _ec2_security_group_ingresses(name, args)
 
   rules = []
   _array(args[name.to_sym]).each do |arg|
+    if arg.is_a? Fixnum
+      arg = {
+        from: arg,
+        to: arg,
+      }
+    end
     rules << _ec2_security_group_ingress(arg)
   end
   rules
@@ -63,12 +69,13 @@ def _ec2_security_group_ingress(args)
   from = _ref_string("from", args)
   group_id = _ref_string("group", args, "security group")
   group_name = args[:group_name] || ""
-  ip = args[:ip_protocol] || "tcp"
+  ip = args[:ip] || "tcp"
   source_group_name = _ref_string("source_group_name", args, "security group")
   source_group_id = _ref_string("source_group_id", args, "security group")
   source_group_owner_id = _ref_string("source_group_owner_id", args, "account id")
   to = _ref_string("to", args)
   to = from if to.empty?
+  ip = -1 and from = 0 and to = 65535 if ip == "all"
 
   _{
     CidrIp cidr if source_group_name.empty? and source_group_id.empty?
@@ -109,12 +116,13 @@ def _ec2_block_device(args)
   }
 end
 
-def _ec2_network_interface(args)
+def _ec2_network_interface(args, is_spot = false)
   associate_public = _bool("associate_public", args, true)
   delete = _bool("delete", args, true)
   description = args[:description] || ""
   device = args[:device] || 0
   group_set = _ref_array("group_set", args, "security group")
+  groups = _ref_array("groups", args, "security group")
   network_interface = _ref_string("network", args)
   private_ip = args[:private_ip] || ""
   private_ips = args[:private_ips] || ""
@@ -126,9 +134,13 @@ def _ec2_network_interface(args)
     DeleteOnTermination delete
     Description description unless description.empty?
     DeviceIndex device
-    GroupSet group_set unless group_set.empty?
+    if is_spot
+      Groups groups unless groups.empty?
+    else
+      GroupSet group_set unless group_set.empty?
+    end
     NetworkInterfaceId network_interface unless network_interface.empty?
-    PrivateIpAddress private_ip unless private_ip.empty?
+    PrivateIpAddress private_ip if is_spot and !private_ip.empty?
     PrivateIpAddresses private_ips unless private_ips.empty?
     SecondaryPrivateIpAddressCount secondary_private_ip unless secondary_private_ip.empty?
     SubnetId subnet
@@ -162,4 +174,82 @@ def _ec2_protocol_number(protocol)
   else
     -1
   end
+end
+
+def _ec2_spot_fleet_request(args)
+  allocation = _valid_values(args[:allocation], %w( lowestPrice diversified), "lowestPrice")
+  express = _valid_values(args[:express], %w( noTermination default), "")
+  iam = args[:iam]   # IAM Role "aws-ec2-spot-fleet-role" auto generated
+  launches = args[:launches].collect{|v| _ec2_spot_fleet_launches(v) }
+  price = args[:price] || 0.00
+  target = _ref_string("target", args, "")
+  target = 1 if target.empty?
+  terminate = _bool("terminate", args, false)
+  valid_from = (args.key? :valid_from) ? _timestamp_utc(args[:valid_from]) : ''
+  valid_until =
+    if args.key? :valid_until
+      _timestamp_utc(args[:valid_until])
+    elsif args.key? :valid_from
+      _timestamp_utc(args[:valid_from] + (60 * 60 * 24 * 365))
+    else
+      ''
+    end
+
+  _{
+    AllocationStrategy allocation
+    ExcessCapacityTerminationPolicy express unless express.empty?
+    IamFleetRole iam
+    LaunchSpecifications launches
+    SpotPrice price
+    TargetCapacity target
+    TerminateInstancesWithExpiration terminate
+    ValidFrom valid_from if args.key? :valid_from
+    ValidUntil valid_until if args.key? :valid_from or args.key? :valid_until
+  }
+end
+
+def _ec2_spot_fleet_launches(args)
+  block_devices = (args[:block_devices] || []).collect{|v| _ec2_block_device(v) }
+  ebs = _bool("ebs", args, false)
+  iam = _ref_string("iam", args, "iam instance profile")
+  iam = _ref_attr_string("iam", "Arn", args, "iam instance profile") if iam.empty?
+  instance_type = _ref_string("instance_type", args, "instance type")
+  image =_ec2_image(instance_type, args)
+  kernel = args[:kernel] || ""
+  key_name = _ref_string("key_name", args, "key name")
+  monitoring = _bool("monitoring", args, false)
+  network_interfaces = (args[:network_interfaces] || []).collect{|v| _ec2_network_interface(v, true) }
+  placement = _ref_string("placement", args)
+  ram_disk = args[:ram_disk] || ""
+  security_groups = _ref_array("security_groups", args, "security group")
+  subnet = _ref_string("subnet", args, "subnet")
+  user_data = _ref_string("user_data", args, "user data")
+  weighted = args[:weighted] || ""
+
+  _{
+    BlockDeviceMappings block_devices unless block_devices.empty?
+    EbsOptimized ebs
+    IamInstanceProfile do
+      Arn iam
+    end unless iam.empty?
+    ImageId image
+    InstanceType instance_type
+    KernelId kernel unless kernel.empty?
+    KeyName key_name unless key_name.empty?
+    Monitoring do
+      Enabled monitoring
+    end
+    NetworkInterfaces network_interfaces unless network_interfaces.empty?
+    Placement placement unless placement.empty?
+    RamdiskId ram_disk unless ram_disk.empty?
+    SecurityGroups security_groups unless security_groups.empty?
+    SubnetId subnet unless subnet.empty?
+    UserData do
+      Fn__Base64 (<<-EOS).undent
+#!/bin/bash
+#{user_data}
+EOS
+    end unless user_data.empty?
+    WeightedCapacity weighted if args.key? :weighted
+  }
 end

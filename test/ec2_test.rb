@@ -130,6 +130,26 @@ Test _ec2_security_group_egresses("egress", args)
 }
     EOS
     assert_equal exp_template.chomp, act_template
+
+    template = <<-EOS
+args = { egress: [ to: 80, group: "test" ] }
+Test _ec2_security_group_egresses("egress", args)
+    EOS
+    act_template = run_client_as_json(template)
+    exp_template = <<-EOS
+{
+  "Test": [
+    {
+      "CidrIp": "0.0.0.0/0",
+      "FromPort": "80",
+      "GroupId": "test",
+      "IpProtocol": "tcp",
+      "ToPort": "80"
+    }
+  ]
+}
+    EOS
+    assert_equal exp_template.chomp, act_template
   end
 
   def test_ec2_security_group_eggress
@@ -160,6 +180,31 @@ Test _ec2_security_group_ingresses("ingress", args)
     exp_template = <<-EOS
 {
   "Test": [
+    {
+      "CidrIp": "0.0.0.0/0",
+      "FromPort": "80",
+      "IpProtocol": "tcp",
+      "ToPort": "80"
+    }
+  ]
+}
+    EOS
+    assert_equal exp_template.chomp, act_template
+
+    template = <<-EOS
+args = { ingress: [ 22, 80 ] }
+Test _ec2_security_group_ingresses("ingress", args)
+    EOS
+    act_template = run_client_as_json(template)
+    exp_template = <<-EOS
+{
+  "Test": [
+    {
+      "CidrIp": "0.0.0.0/0",
+      "FromPort": "22",
+      "IpProtocol": "tcp",
+      "ToPort": "22"
+    },
     {
       "CidrIp": "0.0.0.0/0",
       "FromPort": "80",
@@ -278,6 +323,103 @@ Test _ec2_port_range({})
   "Test": {
     "From": "0",
     "To": "65535"
+  }
+}
+    EOS
+    assert_equal exp_template.chomp, act_template
+  end
+
+  def test_ec2_spot_fleet_request
+    template = <<-EOS
+Test _ec2_spot_fleet_request({ iam: "test", launches: [] })
+    EOS
+    act_template = run_client_as_json(template)
+    exp_template = <<-EOS
+{
+  "Test": {
+    "AllocationStrategy": "lowestPrice",
+    "IamFleetRole": "test",
+    "LaunchSpecifications": [
+
+    ],
+    "SpotPrice": "0.0",
+    "TargetCapacity": "1",
+    "TerminateInstancesWithExpiration": "false"
+  }
+}
+    EOS
+    assert_equal exp_template.chomp, act_template
+
+    template = <<-EOS
+Test _ec2_spot_fleet_request({ iam: "test", launches: [ { image_id: "test", instance_type: "test" } ] })
+    EOS
+    act_template = run_client_as_json(template)
+    exp_template = <<-EOS
+{
+  "Test": {
+    "AllocationStrategy": "lowestPrice",
+    "IamFleetRole": "test",
+    "LaunchSpecifications": [
+      {
+        "EbsOptimized": "false",
+        "ImageId": "test",
+        "InstanceType": "test",
+        "Monitoring": {
+          "Enabled": "false"
+        }
+      }
+    ],
+    "SpotPrice": "0.0",
+    "TargetCapacity": "1",
+    "TerminateInstancesWithExpiration": "false"
+  }
+}
+    EOS
+    assert_equal exp_template.chomp, act_template
+  end
+
+  def test_ec2_spot_fleet_launches
+    template = <<-EOS
+Test _ec2_spot_fleet_launches({ block_devices: [ { ref_size: "test" } ], iam: "test", image_id: "test", ref_instance_type: "test", ref_key_name: "test", network_interfaces: [ { ref_subnet_id: "test" } ] } )
+    EOS
+    act_template = run_client_as_json(template)
+    exp_template = <<-EOS
+{
+  "Test": {
+    "BlockDeviceMappings": [
+      {
+        "DeviceName": "/dev/sda1",
+        "Ebs": {
+          "DeleteOnTermination": "true",
+          "VolumeSize": {
+            "Ref": "TestVolumeSize"
+          },
+          "VolumeType": "gp2"
+        }
+      }
+    ],
+    "EbsOptimized": "false",
+    "IamInstanceProfile": {
+      "Arn": "test"
+    },
+    "ImageId": "test",
+    "InstanceType": {
+      "Ref": "TestInstanceType"
+    },
+    "KeyName": {
+      "Ref": "TestKeyName"
+    },
+    "Monitoring": {
+      "Enabled": "false"
+    },
+    "NetworkInterfaces": [
+      {
+        "AssociatePublicIpAddress": "true",
+        "DeleteOnTermination": "true",
+        "DeviceIndex": "0",
+        "SubnetId": ""
+      }
+    ]
   }
 }
     EOS

@@ -40,7 +40,7 @@ _(name) do
     DisableApiTermination disable_termination
     #EbsOptimized
     HostId host_id unless affinity.empty? and host_id.empty?
-    IamInstanceProfile iam_instance
+    IamInstanceProfile iam_instance unless iam_instance.empty?
     ImageId image
     InstanceInitiatedShutdownBehavior instance_initiated
     InstanceType instance_type
