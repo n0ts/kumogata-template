@@ -5,7 +5,7 @@ class Kumogata::Client
   def init(stack_name)
     begin
       base_template = ''
-      File.open(get_template_path("_template"), "r"){|f|
+      File.open(get_template_path('_template'), 'r'){|f|
         base_template = f.read
       }
       raise 'initialize template is empty' if base_template.empty?
@@ -17,7 +17,7 @@ class Kumogata::Client
         return nil if answer.upcase != 'Y'
       end
 
-      File.open(new_template, "w"){|f|
+      File.open(new_template, 'w'){|f|
         template = base_template.gsub('#{NAME}', stack_name)
         f.write(template)
       }
@@ -29,9 +29,8 @@ class Kumogata::Client
   end
 
   def define_template_func(scope, path_or_url)
-    functions = ""
-
-    Dir.glob(File.join(get_template_path, "*.rb")).all? do |file|
+    functions = ''
+    Dir.glob(File.join(get_template_path, '*.rb')).all? do |file|
       functions << include_func(path_or_url, file)
       functions << "\n\n"
     end
@@ -96,7 +95,7 @@ class Kumogata::Client
   end
 
   def get_template_path(file = nil)
-    template_path = File.expand_path(File.join(File.dirname(__FILE__), "..", "..", "..","..", "template"))
+    template_path = File.expand_path(File.join(File.dirname(__FILE__), '..', '..', '..','..', 'template'))
     template_path = File.join(template_path, "#{file}.rb") unless file.nil?
     template_path
   end
