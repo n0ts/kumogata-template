@@ -7,15 +7,23 @@ def _lambda_function_code(args)
   return "" unless args.key? :code
 
   code = args[:code]
-  s3_bucket = code[:s3_bucket]
-  s3_key = code[:s3_key]
+  is_s3 = (code.key? :zip_file) ? false : true
+  s3_bucket = code[:s3_bucket] || ""
+  s3_key = code[:s3_key] || ""
   s3_object_version = code[:s3_object_version] || ""
+  zip_file = code[:zip_file] || ""
+  unless zip_file.empty?
+    zip_file_code = []
+    File.foreach(zip_file) do |file|
+      file.each_line.collect{|line| zip_file_code << line.chomp }
+    end
+  end
 
   _{
-    S3Bucket s3_bucket
-    S3Key s3_key
-    S3ObjectVersion s3_object_version unless s3_object_version.empty?
-    #ZipFile
+    S3Bucket s3_bucket if is_s3
+    S3Key s3_key if is_s3
+    S3ObjectVersion s3_object_version if is_s3 and !s3_object_version.empty?
+    ZipFile _{ Fn__Join '\n', zip_file_code } unless is_s3
   }
 end
 
