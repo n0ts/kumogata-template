@@ -36,6 +36,7 @@ AWSRegionArch2AMIAmazonLinuxOfficial do
 end
 
 # CentOS 7 (x86_64) with Updates HVM
+# https://wiki.centos.org/Cloud/AWS
 # https://aws.amazon.com/marketplace/ordering/ref=dtl_psb_continue?ie=UTF8&productId=b7ee8a69-ee97-4a49-9e68-afaee216db2e
 AWSRegionArch2AMICentos7Official do
   # 1602, released 02/26/2016
