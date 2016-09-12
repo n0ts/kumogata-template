@@ -31,16 +31,16 @@ class MappingsEc2Test < Minitest::Test
     }
     centos7_images = get_image_values(centos7_image_id)
     ubuntu16_image_id = {
-      virginia: "840910ee",
-      oregon: "fa82739a",
-      california: "fa82739a",
-      frankfurt: "f0eb089f",
-      ireland: "3079f543",
-      singapore: "a5416cc6",
-      sydney: "a5416cc6",
-      tokyo: "3c5f4152",
-      seoul: "a5416cc6",
-      saopaulo: "567cf23a",
+      virginia: "2ef48339",
+      oregon:	"746aba14",
+      california: "a9a8e4c9",
+      frankfurt: "a9a557c6",
+      ireland: "643d4217",
+      singapore: "42934921",
+      sydney: "623c0d01",
+      tokyo: "919cd68",
+      seoul: "", ## N/A
+      saopaulo: "60bd2d0c",
     }
     ubuntu16_images = get_image_values(ubuntu16_image_id)
 
