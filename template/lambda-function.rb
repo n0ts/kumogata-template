@@ -9,12 +9,20 @@ name = _resource_name(args[:name], "lambda function")
 code = _lambda_function_code(args)
 description = args[:description] || ""
 function_name = args[:function_name] || ""
-handler = args[:handler]
+runtime = _valid_values(args[:runtime],
+                        %w( nodejs nodejs4.3 java8 python2.7 ), "python2.7")
+handler =
+  case runtime
+  when /^nodejs.+/
+    "#{args[:handler]}.handler"
+  when /^python.+/
+    "#{args[:handler]}.lambda_handler"
+  else
+    args[:handler]
+  end
 memory_size = args[:memory_size] || 128
 role = _ref_attr_string("role", "Arn", args, "role")
 role = _ref_string("role_arn", args, "role") if role.empty?
-runtime = _valid_values(args[:runtime],
-                        %w( nodejs nodejs4.3 java8 python2.7 ), "python2.7")
 timeout = args[:timeout] || 3
 vpc_config = _lambda_vpc_config(args)
 

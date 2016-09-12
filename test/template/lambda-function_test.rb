@@ -15,7 +15,7 @@ _lambda_function "test", code: { s3_bucket: "test", s3_key: "test" }, handler: "
         "S3Bucket": "test",
         "S3Key": "test"
       },
-      "Handler": "test",
+      "Handler": "test.handler",
       "MemorySize": "128",
       "Role": {
         "Fn::GetAtt": [
@@ -53,7 +53,7 @@ _lambda_function "test", code: { zip_file: "test/data/lambda_function.py" }, han
           ]
         }
       },
-      "Handler": "test",
+      "Handler": "test.lambda_handler",
       "MemorySize": "128",
       "Role": {
         "Fn::GetAtt": [
