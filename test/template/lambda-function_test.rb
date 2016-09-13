@@ -3,7 +3,7 @@ require 'abstract_unit'
 class LambdaFunctionTest < Minitest::Test
   def test_normal
     template = <<-EOS
-_lambda_function "test", code: { s3_bucket: "test", s3_key: "test" }, handler: "test", ref_role: "test", runtime: "nodejs4.3"
+_lambda_function "test", code: { s3_bucket: "test", s3_key: "test" }, function_name: "test", ref_role: "test", runtime: "nodejs4.3"
     EOS
     act_template = run_client_as_json(template)
     exp_template = <<-EOS
@@ -15,6 +15,7 @@ _lambda_function "test", code: { s3_bucket: "test", s3_key: "test" }, handler: "
         "S3Bucket": "test",
         "S3Key": "test"
       },
+      "FunctionName": "test",
       "Handler": "test.handler",
       "MemorySize": "128",
       "Role": {
@@ -32,7 +33,7 @@ _lambda_function "test", code: { s3_bucket: "test", s3_key: "test" }, handler: "
     assert_equal exp_template.chomp, act_template
 
     template = <<-EOS
-_lambda_function "test", code: { zip_file: "test/data/lambda_function.py" }, handler: "test", ref_role: "test", runtime: "python2.7"
+_lambda_function "test", code: { zip_file: "test/data/lambda_function.py" }, function_name: "test", ref_role: "test", runtime: "python2.7"
     EOS
     act_template = run_client_as_json(template)
     exp_template = <<-EOS
@@ -53,6 +54,7 @@ _lambda_function "test", code: { zip_file: "test/data/lambda_function.py" }, han
           ]
         }
       },
+      "FunctionName": "test",
       "Handler": "test.lambda_handler",
       "MemorySize": "128",
       "Role": {

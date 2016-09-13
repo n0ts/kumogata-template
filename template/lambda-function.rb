@@ -12,13 +12,17 @@ function_name = args[:function_name] || ""
 runtime = _valid_values(args[:runtime],
                         %w( nodejs nodejs4.3 java8 python2.7 ), "python2.7")
 handler =
-  case runtime
-  when /^nodejs.+/
-    "#{args[:handler]}.handler"
-  when /^python.+/
-    "#{args[:handler]}.lambda_handler"
-  else
+  if args.key? :handler
     args[:handler]
+  else
+    case runtime
+    when /^nodejs.+/
+      "#{args[:function_name]}.handler"
+    when /^python.+/
+      "#{args[:function_name]}.lambda_handler"
+    else
+      args[:handler]
+    end
   end
 memory_size = args[:memory_size] || 128
 role = _ref_attr_string("role", "Arn", args, "role")
