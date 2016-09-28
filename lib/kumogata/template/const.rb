@@ -46,7 +46,7 @@ EC2_DEFAULT_IMAGE = "amazon linux official"
 # https://aws.amazon.com/ec2/pricing/
 EC2_INSTANCE_TYPES =
   [
-   # Model     vCPU  CPU Credits/hour  Mem(GiB)   Storage
+   # Model     vCPU  CPU(Credits/hour)  Mem(GiB)   Storage
    # t2.nano     1     3                0.5       EBS-Only
    # t2.micro    1     6                  1       EBS-Only
    # t2.small    1    12                  2       EBS-Only
@@ -54,15 +54,16 @@ EC2_INSTANCE_TYPES =
    # t2.large    2    36                  8       EBS-Only
    "t2.nano", "t2.micro", "t2.small", "t2.medium", "t2.large",
 
-   # Model      vCPU   Mem(GiB)  Storage   Dedicated EBS Throughput(Mbps)
-   # m4.large     2      8       EBS-only    450
-   # m4.xlarge    4     16       EBS-only    750
-   # m4.2xlarge   8     32       EBS-only  1,000
-   # m4.4xlarge  16     64       EBS-only  2,000
-   # m4.10xlarge 40    160       EBS-only  4,000
-   "m4.large", "m4.xlarge", "m4.2xlarge", "m4.4xlarge", "m4.10xlarge",
+   # Model      vCPU   Mem(GiB)  Storage   Network   EBS(Mbps)
+   # m4.large     2      8       EBS-only  Moderate     450
+   # m4.xlarge    4     16       EBS-only  High         750
+   # m4.2xlarge   8     32       EBS-only  High       1,000
+   # m4.4xlarge  16     64       EBS-only  High       2,000
+   # m4.10xlarge 40    160       EBS-only  10Gps      4,000
+   # m4.16xlarge 64    256       EBS Only  20Gps     10,000
+   "m4.large", "m4.xlarge", "m4.2xlarge", "m4.4xlarge", "m4.10xlarge", "m4.16xlarge",
 
-   # Model      vCPU   Mem(GiB)  Storage   Dedicated EBS Throughput(Mbps)
+   # Model      vCPU   Mem(GiB)  Storage   EBS(Mbps)
    # c4.large     2   3.75       EBS-Only    500
    # c4.xlarge    4    7.5       EBS-Only    750
    # c4.2xlarge   8     15       EBS-Only  1,000
@@ -70,7 +71,7 @@ EC2_INSTANCE_TYPES =
    # c4.8xlarge  36     60       EBS-Only  4,000
    "c4.large", "c4.xlarge", "c4.2xlarge", "c4.4xlarge", "c4.8xlarge",
 
-   # Model      vCPU   Mem(GiB)  SSD Storage (GB)
+   # Model      vCPU   Mem(GiB)  SSD Storage(GB)
    # r3.large     2     15.25      1 x 32
    # r3.xlarge    4     30.5       1 x 80
    # r3.2xlarge   8     61         1 x 160
@@ -78,15 +79,15 @@ EC2_INSTANCE_TYPES =
    # r3.8xlarge  32    244         2 x 320
    "r3.large", "r3.xlarge", "r3.2xlarge", "r3.4xlarge", "r3.8xlarge",
 
-   # Model      vCPU   Mem (GiB) SSD Storage (GB)
-   # i2.xlarge    4     30.5       1 x 800
-   # i2.2xlarge   8     61         2 x 800
-   # i2.4xlarge  16    122         4 x 800
-   # i2.8xlarge  32    244         8 x 800
+   # Model      vCPU   Mem(GiB) SSD Storage(GB)
+   # i2.xlarge    4     30.5    1 x 800
+   # i2.2xlarge   8     61      2 x 800
+   # i2.4xlarge  16    122      4 x 800
+   # i2.8xlarge  32    244      8 x 800
    "i2.xlarge", "i2.2xlarge", "i2.4xlarge", "i2.8xlarge",
 
-   # Model        vCPU   Mem (GiB)   SSD Storage (GB)  network Bandwidth
-   # x1.32xlargee  128   1,952        2 x 1,902 SSD      10 Gbps 10 Gbps
+   # Model       vCPU   Mem(GiB)   Storage(GB)   Network(Gbps)
+   # x1.32xlarge 128    1,952      2 x 1,902 SSD 10
    "x1.32xlarge",
   ]
 EC2_DEFAULT_INSTANCE_TYPE = "t2.medium"
