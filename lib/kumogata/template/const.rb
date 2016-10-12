@@ -86,9 +86,10 @@ EC2_INSTANCE_TYPES =
    # i2.8xlarge  32    244      8 x 800
    "i2.xlarge", "i2.2xlarge", "i2.4xlarge", "i2.8xlarge",
 
-   # Model       vCPU   Mem(GiB)   Storage(GB)   Network(Gbps)
-   # x1.32xlarge 128    1,952      2 x 1,902 SSD 10
-   "x1.32xlarge",
+   # Model       vCPU   Mem(GiB)   Storage(GB)     Network(Gbps)
+   # x1.16xlarge   64     174.5    1 x 1,920 SSD    10
+   # x1.32xlarge  128   1,952      2 x 1,902 SSD    10
+   "x1.16xlarge", "x1.32xlarge",
   ]
 EC2_DEFAULT_INSTANCE_TYPE = "t2.medium"
 
