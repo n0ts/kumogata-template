@@ -4,6 +4,7 @@
 
 AWS_REGION = {
   virginia:   "us-east-1",
+  ohio:       "us-east-2",
   oregon:     "us-west-2",
   california: "us-west-1",
   ireland:    "eu-west-1",
