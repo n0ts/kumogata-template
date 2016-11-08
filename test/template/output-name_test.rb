@@ -1,9 +1,9 @@
 require 'abstract_unit'
 
-class OutputArnTest < Minitest::Test
+class OutputNameTest < Minitest::Test
   def test_normal
     template = <<-EOS
-_output_arn "test"
+_output_name "test"
     EOS
     act_template = run_client_as_json(template)
     exp_template = <<-EOS
@@ -12,15 +12,6 @@ _output_arn "test"
     "Description": "description of TestName",
     "Value": {
       "Ref": "Test"
-    }
-  },
-  "TestArn": {
-    "Description": "description of TestArn",
-    "Value": {
-      "Fn::GetAtt": [
-        "Test",
-        "Arn"
-      ]
     }
   }
 }

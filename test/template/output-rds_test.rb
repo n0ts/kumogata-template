@@ -1,6 +1,6 @@
 require 'abstract_unit'
 
-class OutputUserTest < Minitest::Test
+class OutputRdsrTest < Minitest::Test
   def test_normal
     template = <<-EOS
 _output_rds "test"
