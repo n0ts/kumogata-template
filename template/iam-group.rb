@@ -19,7 +19,7 @@ policies = _iam_policies("policies", args)
 _(name) do
   Type "AWS::IAM::Group"
   Properties do
-    GroupName group_name unless group.empty?
+    GroupName group unless group.empty?
     ManagedPolicyArns managed_policies unless managed_policies.empty?
     Path path
     Policies policies unless policies.empty?
