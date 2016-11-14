@@ -40,6 +40,10 @@ def _valid_numbers(value, min = 0, max = 0, default = nil)
   (min <= number and number <= max) ? number : default
 end
 
+def _real_name(name)
+  name.gsub(' ', '-')
+end
+
 def _ref_string(name, args, ref_name = "")
   return args[name.to_sym].to_s || "" unless args.key? "ref_#{name}".to_sym
 

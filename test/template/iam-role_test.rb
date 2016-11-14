@@ -27,7 +27,8 @@ _iam_role "test", user: "test", service: "s3"
           }
         ]
       },
-      "Path": "/"
+      "Path": "/",
+      "RoleName": "test"
     }
   }
 }

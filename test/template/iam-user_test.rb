@@ -11,7 +11,8 @@ _iam_user "test"
   "TestUser": {
     "Type": "AWS::IAM::User",
     "Properties": {
-      "Path": "/"
+      "Path": "/",
+      "UserName": "test"
     }
   }
 }
