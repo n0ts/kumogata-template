@@ -41,7 +41,7 @@ def _valid_numbers(value, min = 0, max = 0, default = nil)
 end
 
 def _real_name(name)
-  name.gsub(' ', '-')
+  name.to_s.gsub(' ', '-')
 end
 
 def _ref_string(name, args, ref_name = "")
