@@ -44,3 +44,22 @@ def _cloudwatch_dimension(args)
     Value _ref_string("value", args)
   }
 end
+
+def _cloudwatch_to_period(value)
+  case value
+  when '1m'
+    60
+  when '5m'
+    300
+  when '15m'
+    900
+  when '1h'
+    3600
+  when '6h'
+    21600
+  when '1d'
+    86400
+  else
+    nil
+  end
+end
