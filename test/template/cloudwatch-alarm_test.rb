@@ -26,7 +26,7 @@ _cloudwatch_alarm "test", actions: "test", alarm_name: "test", namespace: "test"
       "EvaluationPeriods": "3",
       "MetricName": "test",
       "Namespace": "test",
-      "Period": "60",
+      "Period": "300",
       "Statistic": "Average",
       "Threshold": "60"
     }
