@@ -2,6 +2,26 @@
 # Helper - CloudWatch
 #
 
+def _cloudwatch_to_period(value)
+  return value if value.nil?
+  case value
+  when "1m"
+    60
+  when "5m"
+    300
+  when "15m"
+    900
+  when "1h"
+    3600
+  when "6h"
+    21600
+  when "1d"
+    86400
+  else
+    value.to_i
+  end
+end
+
 def _cloudwatch_to_statistic(value)
   return value if value.nil?
   case value.downcase
@@ -43,23 +63,4 @@ def _cloudwatch_dimension(args)
     Name args[:name]
     Value _ref_string("value", args)
   }
-end
-
-def _cloudwatch_to_period(value)
-  case value
-  when '1m'
-    60
-  when '5m'
-    300
-  when '15m'
-    900
-  when '1h'
-    3600
-  when '6h'
-    21600
-  when '1d'
-    86400
-  else
-    nil
-  end
 end

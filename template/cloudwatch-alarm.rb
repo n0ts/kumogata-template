@@ -17,7 +17,7 @@ insufficients = args[:insufficients] || []
 metric = args[:metric]
 namespace = args[:namespace]
 ok_actions = args[:ok_actions] || []
-period = _cloudwatch_to_period(args[:period] || '5m')
+period = _cloudwatch_to_period(args[:period] || "5m")
 statistic = _valid_values(_cloudwatch_to_statistic(args[:statistic]),
                           %w(SampleCount Average Sum Minimum Maximum), "Average")
 threshold = args[:threshold] || 60
