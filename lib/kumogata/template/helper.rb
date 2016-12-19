@@ -88,6 +88,10 @@ def _ref_name(name, args, ref_name = "")
   end
 end
 
+def _ref_resource_name(args, ref_name = "")
+  _{ Ref _resource_name(args[:name], ref_name) }
+end
+
 def _attr_string(name, attr, ref_name = "")
   _{ Fn__GetAtt [ _resource_name(name, ref_name), attr ] }
 end
@@ -172,12 +176,19 @@ def _availability_zones(args, use_subnet = true)
   end
 end
 
-def _timestamp_utc(time = Time.now)
-  time.utc.strftime("%Y-%m-%dT%H:%M:%SZ")
+def _timestamp_utc(time = Time.now, type = nil)
+  format =
+    case type
+    when "cron"
+      "%M %H %d %m %w"
+    else
+      "%Y-%m-%dT%H:%M:%SZ"
+    end
+  time.utc.strftime(format)
 end
 
-def _timestamp_utc_from_string(time)
-  _timestamp_utc(Time.strptime(time, "%Y-%m-%d %H:%M"))
+def _timestamp_utc_from_string(time, type= nil)
+  _timestamp_utc(Time.strptime(time, "%Y-%m-%d %H:%M"), type)
 end
 
 def _maintenance_window(service, start_time)
