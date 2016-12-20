@@ -5,12 +5,8 @@
 require 'kumogata/template/helper'
 
 name = _resource_name(args[:name], "autoscaling scheduled action")
-autoscaling =
-  if args.key? :autoscaling
-    _ref_string("autoscaling", args, "autoscaling group")
-  else
-    _ref_resource_name(args, "autoscaling group")
-  end
+autoscaling = _ref_string("autoscaling", args, "autoscaling group")
+autoscaling = _ref_resource_name(args, "autoscaling group") if autoscaling.empty?
 desired = args[:desired].to_s || ""
 end_time =
   if args.key? :end_time
