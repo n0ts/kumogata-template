@@ -4,6 +4,44 @@
 require 'kumogata/template/helper'
 
 
+def _emr_to_configurations_default_hadoop_spark(max_age: 14)
+  _emr_to_configurations_default_hadoop | _emr_to_configurations_default_spark(max_age: max_age)
+end
+
+def _emr_to_configurations_default_hadoop()
+  [
+   {
+     classification: "hadoop-env",
+     properties: {},
+     configurations: [
+                      classification: "export",
+                      properties: { JAVA_HOME: "/usr/java/default" },
+                     ],
+   }
+  ]
+end
+
+def _emr_to_configurations_default_spark(max_age: 14)
+  [
+   {
+     classification: "spark-env",
+     properties: {},
+     configurations: [
+                      classification: "export",
+                      properties: { JAVA_HOME: "/usr/java/default" },
+                     ],
+   },
+   {
+     classification: "spark-defaults",
+     properties: {
+       "spark.history.fs.cleaner.enabled"  => "true",
+       "spark.history.fs.cleaner.interval" => "1d",
+       "spark.history.fs.cleaner.maxAge"  => "#{max_age}d",
+     }
+   }
+  ]
+end
+
 def _emr_applications(args)
   applications = args[:applications] || []
 
@@ -174,7 +212,7 @@ def _emr_step_properties(args)
 
   array = []
   properties.each do |property|
-    _{
+    array << _{
       Key property[:key]
       Value property[:value]
     }

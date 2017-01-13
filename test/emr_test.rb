@@ -2,6 +2,54 @@ require 'abstract_unit'
 require 'kumogata/template/emr'
 
 class EmrTest < Minitest::Test
+  def test_emr_to_configurations_default_hadoop_spark
+    template = <<-EOS
+Test _emr_to_configurations_default_hadoop_spark(max_age: 1)
+    EOS
+    act_template = run_client_as_json(template)
+    exp_template = <<-EOS
+{
+  "Test": [
+    {
+      "classification": "hadoop-env",
+      "properties": {
+      },
+      "configurations": [
+        {
+          "classification": "export",
+          "properties": {
+            "JAVA_HOME": "/usr/java/default"
+          }
+        }
+      ]
+    },
+    {
+      "classification": "spark-env",
+      "properties": {
+      },
+      "configurations": [
+        {
+          "classification": "export",
+          "properties": {
+            "JAVA_HOME": "/usr/java/default"
+          }
+        }
+      ]
+    },
+    {
+      "classification": "spark-defaults",
+      "properties": {
+        "spark.history.fs.cleaner.enabled": "true",
+        "spark.history.fs.cleaner.interval": "1d",
+        "spark.history.fs.cleaner.maxAge": "1d"
+      }
+    }
+  ]
+}
+    EOS
+    assert_equal exp_template.chomp, act_template
+  end
+
   def test_emr_applications
     template = <<-EOS
 Test _emr_applications(applications: [ { name: "test", version: "test" } ])
@@ -179,9 +227,9 @@ Test _emr_instance_group({ name: "test" })
     assert_equal exp_template.chomp, act_template
   end
 
-  def _emr_hadoop_jar_config
+  def test_emr_hadoop_jar_step_config
     template = <<-EOS
-Test _emr_hadopo_jar_config(jar: "test")
+Test _emr_hadoop_jar_step_config(jar: "test")
     EOS
     act_template = run_client_as_json(template)
     exp_template = <<-EOS
@@ -194,9 +242,9 @@ Test _emr_hadopo_jar_config(jar: "test")
     assert_equal exp_template.chomp, act_template
   end
 
-  def _emr_step_properties
+  def test_emr_step_properties
     template = <<-EOS
-Test _emr_step_properties([ key: "test", value: "test" ])
+Test _emr_step_properties(step_properties: [ { key: "test", value: "test" } ])
     EOS
     act_template = run_client_as_json(template)
     exp_template = <<-EOS
@@ -204,7 +252,7 @@ Test _emr_step_properties([ key: "test", value: "test" ])
   "Test": [
     {
       "Key": "test",
-      "Valuue": "test"
+      "Value": "test"
     }
   ]
 }
