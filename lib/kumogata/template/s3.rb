@@ -7,21 +7,21 @@ def _s3_to_access(value)
   return "Private" if value.nil?
 
   case value
-  when "auth"
+  when "auth read"
     "AuthenticatedRead"
-  when "aws_exec"
+  when "aws exec read"
     "AwsExecRead"
-  when "owner"
+  when "owner read"
     "BucketOwnerRead"
-  when "owner_full"
+  when "owner full"
     "BucketOwnerFullControl"
-  when "log_delivery_w"
+  when "log delivery write"
     "LogDeliveryWrite"
   when "private"
     "Private"
-  when "public_r"
+  when "public read"
     "PublicRead"
-  when "public_rw"
+  when "public read write"
     "PublicReadWrite"
   else
     value
