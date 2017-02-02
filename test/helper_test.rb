@@ -36,8 +36,8 @@ class HelperTest < Minitest::Test
     assert_equal _valid_numbers(1, 0, 1, 2), 1
     assert_equal _valid_numbers(2, 1, 2, 4), 2
     assert_equal _valid_numbers(2, 0, 1, 2), 2
-    assert_equal _valid_numbers(3, 0, 1), nil
-    assert_equal _valid_numbers(nil, 0, 1), nil
+    assert_nil _valid_numbers(3, 0, 1)
+    assert_nil _valid_numbers(nil, 0, 1)
   end
 
   def test_ref_string
