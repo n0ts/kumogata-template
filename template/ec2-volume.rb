@@ -16,7 +16,7 @@ tags = _tags(args)
 type = _valid_values(args[:type], %w( io1 gp2 sc1 st1 ), "gp2")
 
 _(name) do
-  Type AWS::EC2::Volume
+  Type "AWS::EC2::Volume"
   Properties do
     AutoEnableIO auto_enable
     AvailabilityZone az

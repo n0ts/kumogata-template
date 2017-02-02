@@ -7,6 +7,7 @@ require 'kumogata/template/iam'
 
 name = _resource_name(args[:name], "bucket policy")
 bucket = _ref_string("bucket", args, "bucket")
+policy = _iam_policy_document("policy_document", args)
 
 _(name) do
   Type "AWS::S3::BucketPolicy"
@@ -14,7 +15,7 @@ _(name) do
     Bucket bucket
     PolicyDocument do
       Version "2012-10-17"
-      Statement _iam_policy_document("policy_document", args)
+      Statement policy
     end
   end
 end

@@ -24,7 +24,7 @@ threshold = args[:threshold] || 60
 unit = _valid_values(args[:unit], %w(Seconds Microseconds Milliseconds Bytes Kilobytes Megabytes Gigabytes Terabytes Bits Kilobits Megabits Gigabits Terabits Percent Count Bytes/Second Kilobytes/Second Megabytes/Second Gigabytes/Second Terabytes/Second Bits/Second Kilobits/Second Megabits/Second Gigabits/Second Terabits/Second Count/Second None), "")
 
 _(name) do
-  Type AWS::CloudWatch::Alarm
+  Type "AWS::CloudWatch::Alarm"
   Properties do
     ActionsEnabled enabled
     AlarmActions actions
