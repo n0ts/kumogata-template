@@ -3,13 +3,16 @@ require 'abstract_unit'
 class EcsClusterTest < Minitest::Test
   def test_normal
     template = <<-EOS
-_ecs_cluster "test"
+_ecs_cluster "test", { cluster: "test" }
     EOS
     act_template = run_client_as_json(template)
     exp_template = <<-EOS
 {
   "TestEcsCluster": {
-    "Type": "AWS::ECS::Cluster"
+    "Type": "AWS::ECS::Cluster",
+    "Properties": {
+      "ClusterName": "test"
+    }
   }
 }
     EOS
