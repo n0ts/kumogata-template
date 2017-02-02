@@ -53,7 +53,7 @@ def _ec2_security_group_ingresses(name, args)
 
   rules = []
   _array(args[name.to_sym]).each do |arg|
-    if arg.is_a? Fixnum
+    if arg.is_a? Integer
       arg = {
         from: arg,
         to: arg,
