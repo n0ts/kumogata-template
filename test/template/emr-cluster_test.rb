@@ -105,7 +105,7 @@ _emr_cluster "test", job: { core: core, master: master, termination: true }, clu
         },
         "TerminationProtected": "true"
       },
-      "JobFlowRole": "EMR_EC2_DefaultRole\",
+      "JobFlowRole": "EMR_EC2_DefaultRole",
       "Name": "TestCluster",
       "ReleaseLabel": "emr-4.6.0",
       "ServiceRole": "EMR_DefaultRole",

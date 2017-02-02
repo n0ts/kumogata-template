@@ -12,7 +12,7 @@ _iam_managed_policy "test", policy_document: [ { service: "s3" } ]
     "Type": "AWS::IAM::ManagedPolicy",
     "Properties": {
       "Path": "/",
-      "PolicyDocument\": {
+      "PolicyDocument": {
         "Version": "2012-10-17",
         "Statement": [
           {

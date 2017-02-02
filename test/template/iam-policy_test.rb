@@ -11,7 +11,7 @@ _iam_policy "test", user: "test", ref_roles: "test", policy_document: [ { servic
   "TestPolicy": {
     "Type": "AWS::IAM::Policy",
     "Properties": {
-      "PolicyDocument\": {
+      "PolicyDocument": {
         "Version": "2012-10-17",
         "Statement": [
           {

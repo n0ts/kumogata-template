@@ -16,7 +16,7 @@ _ec2_network_acl_entry "test", ref_network_acl: "test"
       "NetworkAclId": {
         "Ref": "TestNetworkAcl"
       },
-      "PortRange\": {
+      "PortRange": {
         "From": "0",
         "To": "65535"
       },
@@ -45,7 +45,7 @@ _ec2_network_acl_entry "test", ref_network_acl: "my", action: "allow", number: 1
       "NetworkAclId": {
         "Ref": "MyNetworkAcl"
       },
-      "PortRange\": {
+      "PortRange": {
         "From": "53",
         "To": "53"
       },

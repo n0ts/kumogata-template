@@ -28,7 +28,7 @@ _rds_event_subscription "test", ref_sources: "test", ref_sns: "test"
         "restoration"
       ],
       "SnsTopicArn": {
-        "Fn::GetAtt\": [
+        "Fn::GetAtt": [
           "TestRole",
           "Arn"
         ]
