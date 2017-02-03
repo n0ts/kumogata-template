@@ -44,13 +44,13 @@ def _real_name(name)
   name.to_s.gsub(' ', '-')
 end
 
-def _ref_string(name, args, ref_name = "")
-  return args[name.to_sym].to_s || "" unless args.key? "ref_#{name}".to_sym
+def _ref_string(name, args, ref_name = '')
+  return args[name.to_sym].to_s || '' unless args.key? "ref_#{name}".to_sym
 
   _{ Ref _resource_name(args["ref_#{name}".to_sym].to_s, ref_name) }
 end
 
-def _ref_array(name, args, ref_name = "")
+def _ref_array(name, args, ref_name = '')
   return _array(args[name.to_sym]) || [] unless args.key? "ref_#{name}".to_sym
 
   array = []
@@ -64,7 +64,7 @@ def _ref_array(name, args, ref_name = "")
   array
 end
 
-def _ref_attr_string(name, attr, args, ref_name = "")
+def _ref_attr_string(name, attr, args, ref_name = '')
   if args.key? "ref_#{name}".to_sym
     _{
       Fn__GetAtt [ _resource_name(args["ref_#{name}".to_sym], ref_name), attr ]
@@ -72,11 +72,11 @@ def _ref_attr_string(name, attr, args, ref_name = "")
   elsif args.key? name.to_sym
     args[name.to_sym]
   else
-    ""
+    ''
   end
 end
 
-def _ref_name(name, args, ref_name = "")
+def _ref_name(name, args, ref_name = '')
   return args["raw_#{name}".to_sym] if args.key? "raw_#{name}".to_sym
   name = _ref_string(name, args, ref_name)
   if name.empty?
@@ -88,11 +88,17 @@ def _ref_name(name, args, ref_name = "")
   end
 end
 
-def _ref_resource_name(args, ref_name = "")
+def _ref_name_default(name, args, ref_name = '')
+  return args["raw_#{name}".to_sym] if args.key? "raw_#{name}".to_sym
+  name = _ref_string(name, args, ref_name)
+  name.empty? ? args[:name] : name.gsub(' ', '-')
+end
+
+def _ref_resource_name(args, ref_name = '')
   _{ Ref _resource_name(args[:name], ref_name) }
 end
 
-def _attr_string(name, attr, ref_name = "")
+def _attr_string(name, attr, ref_name = '')
   _{ Fn__GetAtt [ _resource_name(name, ref_name), attr ] }
 end
 
@@ -105,8 +111,8 @@ def _select(index, list)
 end
 
 def _tag(args)
-  key = args[:key].to_s || ""
-  value = args[:value] || ""
+  key = args[:key].to_s || ''
+  value = args[:value] || ''
   if key =~ /^ref_.*/
     key.gsub!(/^ref_/, '')
     value = _{ Ref _resource_name(value) }
@@ -153,7 +159,7 @@ def _availability_zone(args, use_subnet = true)
   elsif zone.key? :az
     zone[:az]
   else
-    ""
+    ''
   end
 end
 
