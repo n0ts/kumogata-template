@@ -35,7 +35,35 @@ _elasticache_replication_group "test", ref_security_groups: "test", ref_subnet: 
         }
       ],
       "SnapshotRetentionLimit": "10",
-      "SnapshotWindow": "21:15-22:15"
+      "SnapshotWindow": "21:15-22:15",
+      "Tags": [
+        {
+          "Key": "Name",
+          "Value": {
+            "Fn::Join": [
+              "-",
+              [
+                {
+                  "Ref": "Service"
+                },
+                "test"
+              ]
+            ]
+          }
+        },
+        {
+          "Key": "Service",
+          "Value": {
+            "Ref": "Service"
+          }
+        },
+        {
+          "Key": "Version",
+          "Value": {
+            "Ref": "Version"
+          }
+        }
+      ]
     }
   }
 }

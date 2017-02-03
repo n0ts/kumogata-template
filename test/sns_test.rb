@@ -4,7 +4,7 @@ require 'kumogata/template/sns'
 class SnsTest < Minitest::Test
   def test_sns_subscription
     template = <<-EOS
-Test _sns_subscription(subscription: [ { protocol: "lambda", endpoint: "test" } ])
+Test _sns_subscription_list(subscription: [ { protocol: "lambda", endpoint: "test" } ])
     EOS
     act_template = run_client_as_json(template)
     exp_template = <<-EOS
