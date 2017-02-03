@@ -1,5 +1,5 @@
 #
-# S3 bucket policy resource
+# S3 Bucket Policy resource
 # http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-properties-s3-policy.html
 #
 require 'kumogata/template/helper'

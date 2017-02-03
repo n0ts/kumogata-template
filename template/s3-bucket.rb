@@ -1,5 +1,5 @@
 #
-# S3 bucket resource
+# S3 Bucket resource
 # https://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-properties-s3-bucket.html
 #
 require 'kumogata/template/helper'
