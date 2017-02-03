@@ -3,19 +3,28 @@
 #
 require 'kumogata/template/helper'
 
-def _sns_subscription(args)
+def _sns_to_protocol(value)
+  _valid_values(value,
+                %w( http https email email-json sms sqs application lambda ),
+                "email")
+end
+
+def _sns_to_endpoint(protocol, value)
+  case protocol
+  when "lambda", "sqs"
+    _attr_string(value, "Arn")
+  else
+    value
+  end
+end
+
+def _sns_subscription_list(args)
+  subscription= args[:subscription] || []
+
   array = []
-  types = args[:subscription] || []
-  types.each do |v|
-    protocol = _valid_values(v[:protocol],
-                             [ "http", "https", "email", "email-json", "sms", "sqs", "application", "lambda" ],
-                             "email")
-    case protocol
-    when "lambda", "sqs"
-      endpoint = _attr_string(v[:endpoint], "Arn")
-    else
-      endpoint = v[:endpoint]
-    end
+  subscription.each do |v|
+    protocol = _sns_to_protocol(v[:protocol])
+    endpoint = _sns_to_endpoint(protocol, v[:endpoint])
     array << _{
       Endpoint endpoint
       Protocol protocol
