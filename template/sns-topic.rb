@@ -7,7 +7,7 @@ require 'kumogata/template/sns'
 
 name = _resource_name(args[:name], "topic")
 display = args[:display] || ""
-subscription = _sns_subscription(args)
+subscription = _sns_subscription_list(args)
 topic = _ref_name("topic", args)
 
 _(name) do
