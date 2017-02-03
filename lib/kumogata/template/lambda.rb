@@ -27,6 +27,11 @@ def _lambda_function_code(args)
   }
 end
 
+def _lambda_function_environment(args)
+  environment = args[:environment] || {}
+  environment.empty? ? '' : _{ Variables variables }
+end
+
 def _lambda_vpc_config(args)
   return "" unless args.key? :vpc
 

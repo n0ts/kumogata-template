@@ -8,6 +8,7 @@ require 'kumogata/template/lambda'
 name = _resource_name(args[:name], "lambda function")
 code = _lambda_function_code(args)
 description = args[:description] || ""
+environment = _lambda_function_environment(args)
 function_name = args[:function_name] || ""
 runtime = _valid_values(args[:runtime],
                         %w( nodejs nodejs4.3 java8 python2.7 ), "python2.7")
@@ -35,6 +36,7 @@ _(name) do
   Properties do
     Code code
     Description description unless description.empty?
+    Environment environment unless environment.empty?
     FunctionName function_name unless function_name.empty?
     Handler handler
     MemorySize memory_size
