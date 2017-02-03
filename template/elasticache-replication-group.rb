@@ -32,6 +32,7 @@ description = args[:description] || "#{args[:name]} cache replication group desc
 security_groups = _ref_array("security_groups", args, "security group")
 snapshot_retention = args[:snapshot_retention] || DEFAULT_SNAPSHOT_NUM
 snapshot_window = _window_time("elasticache", args[:snapshot_window_start] || DEFAULT_SNAPSHOT_TIME[:elasticache])
+tags = _tags(args)
 
 _(name) do
   Type "AWS::ElastiCache::ReplicationGroup"
@@ -54,5 +55,6 @@ _(name) do
     #SnapshotArns
     SnapshotRetentionLimit snapshot_retention if 0 < snapshot_retention
     SnapshotWindow snapshot_window unless snapshot_retention < 0 and snapshot_window.empty?
+    Tags tags
   end
 end

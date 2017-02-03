@@ -26,6 +26,8 @@ parameter = "default.mysql5.7" if parameter.empty?
 security = _ref_array("security_groups", args, "security group")
 subnet_group = _ref_string("subnet_group", args, "db subnet group")
 snapshot = _ref_string("snapshot", args, "db snapshot")
+domain = args[:domain] || ""
+domain_iam = args[:domain_iam] || ""
 engine_version = _ref_string("engine_version", args, "db engine version")
 engine_version = RDS_DEFAULT_ENGINE_VERSION[engine.to_sym] if engine_version.empty?
 iops = args[:iops] || ""
@@ -42,6 +44,7 @@ source_db = _ref_string("source_db", args, "db source db")
 storage_encrypted = _bool("encrypted", args, false)
 storage_type = _valid_values(args[:storage_type], %w( standard gp2 io1 ), "gp2")
 tags = _tags(args)
+timezone = args[:timezone] || ""
 security_groups = _ref_array("security_groups", args, "security group")
 
 _(name) do
@@ -61,6 +64,8 @@ _(name) do
     DBSecurityGroups security if security_groups.empty?
     DBSnapshotIdentifier snapshot unless snapshot.empty?
     DBSubnetGroupName subnet_group
+    Domain domain unless domain.empty? and engine !~ /sqlserver/
+    DomainIAMRoleName domain_iam unless domain_iam.empty? and engine !~ /sqlserver/
     Engine engine
     EngineVersion engine_version
     Iops iops unless iops.empty?
@@ -78,6 +83,7 @@ _(name) do
     StorageEncrypted storage_encrypted if storage_encrypted == true
     StorageType storage_type
     Tags tags
+    Timezone timezone unless timezone.empty?
     VPCSecurityGroups security_groups unless security_groups.empty?
   end
 end
