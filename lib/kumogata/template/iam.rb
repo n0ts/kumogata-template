@@ -135,6 +135,9 @@ def _iam_arn(service, resource)
 
   when "logs"
     "#{arn_prefix}:*:*:*"
+
+  when "kinesis"
+    "#{arn_prefix}:#{resource[:region]}:#{resource[:account_id]}:#{resource[:type]}/#{resource[:name]}"
   end
 end
 
