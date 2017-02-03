@@ -1,6 +1,6 @@
 require 'abstract_unit'
 
-class CodedeploApplicationTest < Minitest::Test
+class CodedeployApplicationTest < Minitest::Test
   def test_normal
     template = <<-EOS
 _codedeploy_application "test", application: "test"
