@@ -125,6 +125,50 @@ Test _elb_listeners({})
 }
     EOS
     assert_equal exp_template.chomp, act_template
+
+    template = <<-EOS
+Test _elb_listeners({ listeners: [ { protocol: "https", ssl: "test" } ] })
+    EOS
+    act_template = run_client_as_json(template)
+    exp_template = <<-EOS
+{
+  "Test": [
+    {
+      "InstancePort": "443",
+      "InstanceProtocol": "HTTPS",
+      "LoadBalancerPort": "443",
+      "PolicyNames": [
+        "ELBSecurityPolicy-2016-08"
+      ],
+      "Protocol": "HTTPS",
+      "SSLCertificateId": "test"
+    }
+  ]
+}
+    EOS
+    assert_equal exp_template.chomp, act_template
+
+    template = <<-EOS
+Test _elb_listeners({ listeners: [ { protocol: "https", ssl: "test", policy: "TLS-1-2-2017-01" } ] })
+    EOS
+    act_template = run_client_as_json(template)
+    exp_template = <<-EOS
+{
+  "Test": [
+    {
+      "InstancePort": "443",
+      "InstanceProtocol": "HTTPS",
+      "LoadBalancerPort": "443",
+      "PolicyNames": [
+        "ELBSecurityPolicy-TLS-1-2-2017-01"
+      ],
+      "Protocol": "HTTPS",
+      "SSLCertificateId": "test"
+    }
+  ]
+}
+    EOS
+    assert_equal exp_template.chomp, act_template
   end
 
   def test_elb_policy_types

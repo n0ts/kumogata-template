@@ -102,7 +102,10 @@ def _elb_listeners(args)
         443
       end
     policies = []
-    policies << "ELBSecurityPolicy-2015-05" if protocol == "https" or protocol == "ssl"
+    if protocol == "https" or protocol == "ssl"
+      policy = listener[:policy] || "2016-08"
+      policies << "ELBSecurityPolicy-#{policy}"
+    end
     ssl = _ref_string("ssl", listener)
 
     array << _{
