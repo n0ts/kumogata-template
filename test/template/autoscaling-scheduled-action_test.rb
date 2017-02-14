@@ -3,7 +3,30 @@ require 'abstract_unit'
 class AutoscalingScheduledActionTest < Minitest::Test
   def test_normal
     template = <<-EOS
-_autoscaling_scheduled_action "test", ref_autoscaling: "test", max: "1", min: "1", recurrence: Time.local(2016, 3, 31, 15)
+_autoscaling_scheduled_action "test", ref_autoscaling: "test", desired: "10"
+    EOS
+    act_template = run_client_as_json(template)
+    start_time = _timestamp_utc(Time.now + 3600)
+    exp_template = <<-EOS
+{
+  "TestAutoscalingScheduledAction": {
+    "Type": "AWS::AutoScaling::ScheduledAction",
+    "Properties": {
+      "AutoScalingGroupName": {
+        "Ref": "TestAutoscalingGroup"
+      },
+      "DesiredCapacity": "10",
+      "MaxSize": "10",
+      "MinSize": "10",
+      "StartTime": "#{start_time}"
+    }
+  }
+}
+    EOS
+    assert_equal exp_template.chomp, act_template
+
+    template = <<-EOS
+_autoscaling_scheduled_action "test", ref_autoscaling: "test", max: 1, min: 1, recurrence: Time.local(2016, 3, 31, 15)
     EOS
     act_template = run_client_as_json(template)
     start_time = _timestamp_utc(Time.now + 3600)

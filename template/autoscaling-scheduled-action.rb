@@ -7,16 +7,18 @@ require 'kumogata/template/helper'
 name = _resource_name(args[:name], "autoscaling scheduled action")
 autoscaling = _ref_string("autoscaling", args, "autoscaling group")
 autoscaling = _ref_resource_name(args, "autoscaling group") if autoscaling.empty?
-desired = args[:desired].to_s || ""
+desired = _integer("desired", args, -1)
 end_time =
   if args.key? :end_time
     _timestamp_utc(args[:end_time])
   else
     ""
   end
-max = args[:max].to_s || ""
-min = args[:min].to_s || ""
-min = desired.to_s if args.key? :desired and desired.to_i < min.to_i
+max = _integer("max", args, -1)
+max = desired if max < desired
+min = _integer("min", args, -1)
+min = desired if min < desired
+
 recurrence =
   if args.key? :recurrence
     case args[:recurrence]
@@ -49,10 +51,10 @@ _(name) do
   Type "AWS::AutoScaling::ScheduledAction"
   Properties do
     AutoScalingGroupName autoscaling
-    DesiredCapacity desired unless desired.empty?
+    DesiredCapacity desired if desired > -1
     EndTime end_time unless end_time.empty?
-    MaxSize max unless max.empty?
-    MinSize min unless min.empty?
+    MaxSize max if max > -1
+    MinSize min if min > -1
     Recurrence recurrence unless recurrence.empty?
     StartTime start_time unless start_time.empty?
   end

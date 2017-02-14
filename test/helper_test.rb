@@ -22,6 +22,13 @@ class HelperTest < Minitest::Test
     assert_equal _bool("test", { test1: false }, false), "false"
   end
 
+  def test_integer
+    assert_equal _integer("test", { test: 1 }), 1
+    assert_equal _integer("test", { test: 2 }, 1), 2
+    assert_equal _integer("test", { test1: 1 }), 0
+    assert_equal _integer("test", { test1: 1 }, 2), 2
+  end
+
   def test_capitalize
     assert_equal _capitalize("test test"), "TestTest"
   end
@@ -216,6 +223,21 @@ Test _ref_name("test", {})
 }
     EOS
     assert_equal exp_template.chomp, act_template
+  end
+
+  def test_ref_name_default
+    template = <<-EOS
+Test _ref_name_default("test", { name: "test1" })
+    EOS
+    act_template = run_client_as_json(template)
+    exp_template = <<-EOS
+{
+  "Test": "test1"
+}
+    EOS
+    assert_equal exp_template.chomp, act_template
+
+    # _ref_name_default(name, args, ref_name = '')
   end
 
   def test_attr_string

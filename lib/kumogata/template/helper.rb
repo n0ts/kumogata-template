@@ -24,6 +24,10 @@ def _bool(name, args, default = false)
   args.key?(name.to_sym) ? args[name.to_sym].to_s : default.to_s
 end
 
+def _integer(name, args, default = 0)
+  args.key?(name.to_sym) ? args[name.to_sym].to_i : default
+end
+
 def _capitalize(name)
   name.split(' ').map(&:capitalize).join()
 end
