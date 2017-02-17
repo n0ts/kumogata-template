@@ -148,7 +148,9 @@ def _ec2_network_interface(args, is_spot = false)
 end
 
 def _ec2_image(instance_type, args)
-  return args[:image_id] if args.key? :image_id
+  image_id = args[:image_id] || false
+  return args[:image_id] if image_id
+
   resource_image = _resource_name(args[:image] || EC2_DEFAULT_IMAGE)
   _find_in_map("AWSRegionArch2AMI#{resource_image}",
                _{ Ref "AWS::Region" },
