@@ -30,7 +30,10 @@ azs = _availability_zones(args, false)
 maintenance = _maintenance_window("elasticache", args[:maintenance] || DEFAULT_MAINTENANCE_TIME[:elasticache])
 description = args[:description] || "#{args[:name]} cache replication group description"
 security_groups = _ref_array("security_groups", args, "security group")
+snapshot_arn = args[:snapshot_arn] || ""
+snapshot_name = args[:snapshot_name] || ""
 snapshot_retention = args[:snapshot_retention] || DEFAULT_SNAPSHOT_NUM
+snapshot_id = args[:snapshot_id] || ""
 snapshot_window = _window_time("elasticache", args[:snapshot_window_start] || DEFAULT_SNAPSHOT_TIME[:elasticache])
 tags = _tags(args)
 
@@ -52,8 +55,10 @@ _(name) do
     PreferredMaintenanceWindow maintenance
     ReplicationGroupDescription description
     SecurityGroupIds security_groups unless security_groups.empty?
-    #SnapshotArns
+    SnapshotArns snapshot_arn unless snapshot_arn.empty?
+    SnapshotName snapshot_name unless snapshot_name.empty?
     SnapshotRetentionLimit snapshot_retention if 0 < snapshot_retention
+    SnapshottingClusterId snapshot_id unless snapshot_id.empty?
     SnapshotWindow snapshot_window unless snapshot_retention < 0 and snapshot_window.empty?
     Tags tags
   end

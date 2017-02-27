@@ -30,6 +30,8 @@ port = PORT[engine.to_sym] if port.empty?
 az = _availability_zone(args, false)
 azs = _availability_zones(args, false)
 maintenance = _maintenance_window("elasticache", args[:maintenance] || DEFAULT_MAINTENANCE_TIME[:elasticache])
+snapshot_arn = args[:snapshot_arn] || ""
+snapshot_name = args[:snapshot_name] || ""
 snapshot_retention = args[:snapshot_retention] || DEFAULT_SNAPSHOT_NUM
 snapshot_window = _window_time("elasticache", args[:snapshot_window_start] || DEFAULT_SNAPSHOT_TIME[:elasticache])
 tags = _tags(args)
@@ -42,7 +44,7 @@ _(name) do
     AZMode azmode unless azmode.empty? and engine == "redis"
     CacheNodeType node
     CacheParameterGroupName parameter
-    #CacheSecurityGroupNamesk security_groups if security_group_ids.empty?
+    #CacheSecurityGroupNames
     CacheSubnetGroupName subnet
     ClusterName cluster
     Engine engine
@@ -53,8 +55,8 @@ _(name) do
     PreferredAvailabilityZone az if engine == "redis" and !az.empty?
     PreferredAvailabilityZones azs if engine == "memached" and !azs.empty?
     PreferredMaintenanceWindow maintenance
-    #SnapshotArns
-    #SnapshotName
+    SnapshotArns snapshot_arn unless snapshot_arn.empty?
+    SnapshotName snapshot_name unless snapshot_name.empty?
     SnapshotRetentionLimit snapshot_retention if engine == "redis"
     SnapshotWindow snapshot_window if engine == "redis"
     Tags tags
