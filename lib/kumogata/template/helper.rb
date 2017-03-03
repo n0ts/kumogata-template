@@ -33,7 +33,9 @@ def _capitalize(name)
 end
 
 def _description(name)
-  name.gsub("\s+", ' ').sub("\n", ' ').chomp.slice(0, 1024)
+  name.gsub("\n", ' ').
+    gsub(/\s+/, ' ').gsub(/^\s/, '').gsub(/\s$/, '').
+    chomp.slice(0, 1024)
 end
 
 def _valid_values(value, values, default = nil)
