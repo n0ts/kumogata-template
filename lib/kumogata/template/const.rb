@@ -2,19 +2,22 @@
 # AWS Constants
 #
 
+# http://docs.aws.amazon.com/AWSEC2/latest/UserGuide/using-regions-availability-zones.html#concepts-available-regions
 AWS_REGION = {
   virginia:   "us-east-1",
   ohio:       "us-east-2",
-  oregon:     "us-west-2",
   california: "us-west-1",
+  oregon:     "us-west-2",
+  canada:     "ca-central-1",
   ireland:    "eu-west-1",
   frankfurt:  "eu-central-1",
-  singapore:  "ap-southeast-1",
+  london:     "eu-west-2",
   tokyo:      "ap-northeast-1",
-  sydney:     "ap-southeast-2",
   seoul:      "ap-northeast-2",
-  saopaulo:   "sa-east-1",
+  singapore:  "ap-southeast-1",
+  sydney:     "ap-southeast-2",
   mumbai:     "ap-south-1",
+  saopaulo:   "sa-east-1",
 }
 
 PORT = {
