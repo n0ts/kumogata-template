@@ -32,8 +32,8 @@ _output_elb "test"
       ]
     }
   },
-  "TestLoadBalancerSecuriryGroupOwner": {
-    "Description": "description of TestLoadBalancerSecuriryGroupOwner",
+  "TestLoadBalancerSecurityGroupOwner": {
+    "Description": "description of TestLoadBalancerSecurityGroupOwner",
     "Value": {
       "Fn::GetAtt": [
         "TestLoadBalancer",
@@ -93,8 +93,8 @@ _output_elb "test", route53: true
       ]
     }
   },
-  "TestLoadBalancerSecuriryGroupOwner": {
-    "Description": "description of TestLoadBalancerSecuriryGroupOwner",
+  "TestLoadBalancerSecurityGroupOwner": {
+    "Description": "description of TestLoadBalancerSecurityGroupOwner",
     "Value": {
       "Fn::GetAtt": [
         "TestLoadBalancer",

@@ -171,7 +171,7 @@ Test _ec2_security_group_egress(to: 80, group: "test")
     assert_equal exp_template.chomp, act_template
   end
 
-  def test_ec2_securiry_group_ingresses
+  def test_ec2_security_group_ingresses
     template = <<-EOS
 args = { ingress: [ from: 80 ] }
 Test _ec2_security_group_ingresses("ingress", args)
