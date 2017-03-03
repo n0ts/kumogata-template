@@ -33,6 +33,14 @@ class HelperTest < Minitest::Test
     assert_equal _capitalize("test test"), "TestTest"
   end
 
+  def test_description
+    description = _description <<-EOS
+  test description,
+  test
+EOS
+    assert_equal description, "test description, test"
+  end
+
   def test_valid_values
     assert_equal _valid_values("test1", ["test1", "test2"]), "test1"
     assert_equal _valid_values("test3", ["test1", "test2"], "test1"), "test1"

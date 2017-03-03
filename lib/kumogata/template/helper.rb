@@ -32,6 +32,10 @@ def _capitalize(name)
   name.split(' ').map(&:capitalize).join()
 end
 
+def _description(name)
+  name.gsub("\s+", ' ').sub("\n", ' ').chomp.slice(0, 1024)
+end
+
 def _valid_values(value, values, default = nil)
   return default if value.nil?
   values.collect{|v| return v if v =~ /^#{value}$/i }
