@@ -12,23 +12,28 @@ AWSInstanceType2Arch do
 end
 
 # Amazon Linux AMI (HVM / 64-bit)
-# https://aws.amazon.com/marketplace/pp/B00CIYTQTC/ref=srh_res_product_title?ie=UTF8&sr=0-3&qid=1460447105907
+# https://aws.amazon.com/marketplace/pp/B00CIYTQTC/
 AWSRegionArch2AMIAmazonLinuxOfficial do
-  # 2016.03
+  # 2016.09
   image_id = {
-    virginia: "08111162",
-    oregon: "c229c0a2",
-    california: "1b0f7d7b",
-    frankfurt: "e2df388d",
-    ireland: "31328842",
-    singapore: "e90dc68a",
-    sydney: "f2210191",
-    tokyo: "f80e0596",
-    seoul: "6598510b",
-    saopaulo: "1e159872",
+    virginia:   "0b33d91d",
+    ohio:       "c55673a0",
+    california: "165a0876",
+    oregon:     "f173cc91",
+    canada:     "ebed508f",
+    ireland:    "70edb016",
+    frankfurt:  "af0fc0c0",
+    london:     "f1949e95",
+    tokyo:      "56d4ad31",
+    seoul:      "dac312b4",
+    singapore:  "dc9339bf",
+    sydney:     "1c47407f",
+    mumbai:     "f9daac96",
+    saopaulo:   "80086dec",
   }
 
   AWS_REGION.each do |key, region|
+    next if !image_id.key?(key) or image_id[key].empty?
     _(region) do
       HVM64 "ami-#{image_id[key]}"
     end
@@ -37,23 +42,28 @@ end
 
 # CentOS 7 (x86_64) with Updates HVM
 # https://wiki.centos.org/Cloud/AWS
-# https://aws.amazon.com/marketplace/ordering/ref=dtl_psb_continue?ie=UTF8&productId=b7ee8a69-ee97-4a49-9e68-afaee216db2e
+# https://aws.amazon.com/marketplace/pp/B00O7WM7QW/
 AWSRegionArch2AMICentos7Official do
   # 1602, released 02/26/2016
   image_id = {
-    virginia: "6d1c2007",
-    oregon: "d2c924b2",
+    virginia:   "6d1c2007",
+    ohio:       "6a2d760f",
     california: "af4333cf",
-    ireland: "7abd0209",
-    frankfurt: "9bf712f4",
-    singapore: "f068a193",
-    tokyo: "eec1c380",
-    sydney: "fedafc9d",
-    seoul: "c74789a9",
-    saopaulo: "26b93b4a",
+    oregon:     "d2c924b2",
+    canada:     "af62d0cb",
+    ireland:    "7abd0209",
+    frankfurt:  "9bf712f4",
+    london:     "bb373ddf",
+    tokyo:      "eec1c380",
+    seoul:      "c74789a9",
+    singapore:  "f068a193",
+    sydney:     "fedafc9d",
+    mumbai:     "95cda6fa",
+    saopaulo:   "26b93b4a",
   }
 
   AWS_REGION.each do |key, region|
+    next if !image_id.key?(key) or image_id[key].empty?
     _(region) do
       HVM64 "ami-#{image_id[key]}"
     end
@@ -62,22 +72,28 @@ end
 
 # Ubuntu Server 16.04 LTS
 # https://cloud-images.ubuntu.com/locator/ec2/
+# https://aws.amazon.com/marketplace/pp/B01JBL2M0O
 AWSRegionArch2AMIUbuntu16Official do
   # 16.04 LTS 20160907.1 hvm:ebs-ssd
   image_id = {
-    virginia: "2ef48339",
-    oregon:	"746aba14",
-    california: "a9a8e4c9",
-    frankfurt: "a9a557c6",
-    ireland: "643d4217",
-    singapore: "42934921",
-    sydney: "623c0d01",
-    tokyo: "919cd68",
-    seoul: "", ## N/A
-    saopaulo: "60bd2d0c",
+    virginia:   "3267bb24",
+    ohio:       "e5be9b80",
+    california: "456f3125",
+    oregon:	"df25a6bf",
+    canada:     "",  ## N/A
+    ireland:    "cdfed1ab",
+    frankfurt:  "f6dd0899",
+    london:     "bcc5d0d8",
+    tokyo:      "0c05506b",
+    seoul:      "fc38e892",
+    singapore:  "4a299829",
+    sydney:     "d02d2eb3",
+    mumbai:     "",  ## N/A
+    saopaulo:   "4cacca20",
   }
 
   AWS_REGION.each do |key, region|
+    next if !image_id.key?(key) or image_id[key].empty?
     _(region) do
       HVM64 "ami-#{image_id[key]}"
     end
