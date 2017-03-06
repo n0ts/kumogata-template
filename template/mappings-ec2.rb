@@ -33,7 +33,6 @@ AWSRegionArch2AMIAmazonLinuxOfficial do
   }
 
   AWS_REGION.each do |key, region|
-    next if !image_id.key?(key) or image_id[key].empty?
     _(region) do
       HVM64 "ami-#{image_id[key]}"
     end
@@ -63,7 +62,6 @@ AWSRegionArch2AMICentos7Official do
   }
 
   AWS_REGION.each do |key, region|
-    next if !image_id.key?(key) or image_id[key].empty?
     _(region) do
       HVM64 "ami-#{image_id[key]}"
     end
@@ -93,7 +91,6 @@ AWSRegionArch2AMIUbuntu16Official do
   }
 
   AWS_REGION.each do |key, region|
-    next if !image_id.key?(key) or image_id[key].empty?
     _(region) do
       HVM64 "ami-#{image_id[key]}"
     end
