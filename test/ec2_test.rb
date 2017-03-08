@@ -333,6 +333,28 @@ Test _ec2_image("test", { image_id: false })
       }
     ]
   }
+
+    template = <<-EOS
+Test _ec2_image("test", { image_id: nil })
+    EOS
+    act_template = run_client_as_json(template)
+    exp_template = <<-EOS
+{
+  "Test": {
+    "Fn::FindInMap": [
+      "AWSRegionArch2AMIAmazonLinuxOfficial",
+      {
+        "Ref": "AWS::Region"
+      },
+      {
+        "Fn::FindInMap": [
+          "AWSInstanceType2Arch",
+          "test",
+          "Arch"
+        ]
+      }
+    ]
+  }
 }
     EOS
     assert_equal exp_template.chomp, act_template
