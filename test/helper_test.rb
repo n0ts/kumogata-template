@@ -210,6 +210,30 @@ Test _ref_name("test", ref_test: "test")
     assert_equal exp_template.chomp, act_template
 
     template = <<-EOS
+Test _ref_name("test", raw_test: "test")
+    EOS
+    act_template = run_client_as_json(template)
+    exp_template = <<-EOS
+{
+  "Test": "test"
+}
+    EOS
+    assert_equal exp_template.chomp, act_template
+
+    template = <<-EOS
+Test _ref_name("test", ref_raw_test: "test")
+    EOS
+    act_template = run_client_as_json(template)
+    exp_template = <<-EOS
+{
+  "Test": {
+    "Ref": "Test"
+  }
+}
+    EOS
+    assert_equal exp_template.chomp, act_template
+
+    template = <<-EOS
 Test _ref_name("test", {})
     EOS
     act_template = run_client_as_json(template)
@@ -451,8 +475,79 @@ Test _tag_name(ref_name: "test")
     exp_template = <<-EOS
 {
   "Test": {
+    "Fn::Join": [
+      "-",
+      [
+        {
+          "Ref": "Service"
+        },
+        {
+          "Ref": "Test"
+        }
+      ]
+    ]
+  }
+}
+    EOS
+    assert_equal exp_template.chomp, act_template
+
+    template = <<-EOS
+Test _tag_name(tag_name: "test")
+    EOS
+    act_template = run_client_as_json(template)
+    exp_template = <<-EOS
+{
+  "Test": "test"
+}
+    EOS
+    assert_equal exp_template.chomp, act_template
+
+    template = <<-EOS
+Test _tag_name(ref_tag_name: "test")
+    EOS
+    act_template = run_client_as_json(template)
+    exp_template = <<-EOS
+{
+  "Test": {
     "Ref": "Test"
   }
+}
+    EOS
+    assert_equal exp_template.chomp, act_template
+
+    template = <<-EOS
+Test _tag_name({ name: "test", ref_tag_name: "test" })
+    EOS
+    act_template = run_client_as_json(template)
+    exp_template = <<-EOS
+{
+  "Test": {
+    "Ref": "Test"
+  }
+}
+    EOS
+    assert_equal exp_template.chomp, act_template
+
+    template = <<-EOS
+Test _tag_name(ref_raw_tag_name: "test")
+    EOS
+    act_template = run_client_as_json(template)
+    exp_template = <<-EOS
+{
+  "Test": {
+    "Ref": "Test"
+  }
+}
+    EOS
+    assert_equal exp_template.chomp, act_template
+
+    template = <<-EOS
+Test _tag_name(raw_tag_name: "test")
+    EOS
+    act_template = run_client_as_json(template)
+    exp_template = <<-EOS
+{
+  "Test": "test"
 }
     EOS
     assert_equal exp_template.chomp, act_template

@@ -88,12 +88,13 @@ def _ref_attr_string(name, attr, args, ref_name = '')
 end
 
 def _ref_name(name, args, ref_name = '')
+  return _{ Ref _resource_name(args["ref_raw_#{name}".to_sym], ref_name) } if args.key? "ref_raw_#{name}".to_sym
   return args["raw_#{name}".to_sym] if args.key? "raw_#{name}".to_sym
   name = _ref_string(name, args, ref_name)
   if name.empty?
-    _{ Fn__Join "-", [ _{ Ref "Service" }, _{ Ref "Name" } ] }
+    _{ Fn__Join "-", [ _{ Ref _resource_name("service") }, _{ Ref _resource_name("name") } ] }
   elsif name.is_a? Hash
-    _{ Fn__Join "-", [ _{ Ref "Service" }, name ] }
+    _{ Fn__Join "-", [ _{ Ref _resource_name("service") }, name ] }
   else
     name.gsub(' ', '-')
   end
@@ -155,14 +156,17 @@ def _tags(args)
 end
 
 def _tag_name(args)
-  name = _ref_string("name", args)
-  if name.is_a? String
-    _{
-      Fn__Join [ "-", [ _{ Ref _resource_name("service") }, name.gsub(' ', '-') ] ]
-    }
-  else
-    name
-  end
+  return _{ Ref _resource_name(args["ref_raw_tag_name".to_sym]) } if args.key? "ref_raw_tag_name".to_sym
+  return args["raw_tag_name".to_sym] if args.key? "raw_tag_name".to_sym
+
+  tag_name = _ref_string("tag_name", args)
+  return tag_name unless tag_name.empty?
+
+  tag_name = _ref_string("name", args)
+  tag_name = tag_name.gsub(' ', '-') if tag_name.is_a? String
+  _{
+    Fn__Join [ "-", [ _{ Ref _resource_name("service") }, tag_name ] ]
+  }
 end
 
 def _availability_zone(args, use_subnet = true)
