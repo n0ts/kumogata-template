@@ -156,7 +156,7 @@ end
 
 def _tag_name(args)
   name = _ref_string("name", args)
-  name.gsub!(' ', '-') if name.is_a? String
+  name = name.gsub(' ', '-') if name.is_a? String
   _{
     Fn__Join [ "-", [ _{ Ref _resource_name("service") }, name ] ]
   }
