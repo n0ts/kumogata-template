@@ -1,6 +1,6 @@
 # kumogata-template
 
-[![Gem Version](https://badge.fury.io/rb/kumogata-tempalte.svg)](http://badge.fury.io/rb/kumogata-template)
+[![Gem Version](https://badge.fury.io/rb/kumogata-template.svg)](http://badge.fury.io/rb/kumogata-template)
 [![Build Status](https://travis-ci.org/n0ts/kumogata-template.svg?branch=master)](https://travis-ci.org/n0ts/kumogata-template)
 
 ## About
