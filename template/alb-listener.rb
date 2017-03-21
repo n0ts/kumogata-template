@@ -10,13 +10,13 @@ certificates = _alb_certificates(args)
 defaults = _alb_actions(args)
 lb = _ref_string("lb", args, "load balancer")
 port = args[:port] || 80
-protocol = _valid_values("protocol", %w( http https ), "http")
+protocol = _valid_values(args[:protocol], %w( http https ), "http")
 ssl = args[:ssl] || ""
 
 _(name) do
   Type "AWS::ElasticLoadBalancingV2::Listener"
   Properties do
-    Certificates certificates unless certificates.empty?
+    Certificates certificates if protocol == "https"
     DefaultActions defaults
     LoadBalancerArn lb
     Port port
