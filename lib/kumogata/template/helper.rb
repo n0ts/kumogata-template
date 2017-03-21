@@ -21,7 +21,7 @@ def _array(args)
 end
 
 def _bool(name, args, default = false)
-  args.key?(name.to_sym) ? args[name.to_sym].to_s : default.to_s
+  args.key?(name.to_sym) ? args[name.to_sym].to_s : default
 end
 
 def _integer(name, args, default = 0)
@@ -138,7 +138,7 @@ def _tags(args)
   tags = [
           _{
             Key "Name"
-            Value _tag_name(args[:name])
+            Value _tag_name(args)
           },
           _{
             Key "Service"
@@ -153,9 +153,11 @@ def _tags(args)
   tags
 end
 
-def _tag_name(name)
+def _tag_name(args)
+  name = _ref_string("name", args)
+  name.gsub!(' ', '-') if name.is_a? String
   _{
-    Fn__Join [ "-", [ _{ Ref _resource_name("service") }, name.to_s.gsub(' ', '-') ] ]
+    Fn__Join [ "-", [ _{ Ref _resource_name("service") }, name ] ]
   }
 end
 

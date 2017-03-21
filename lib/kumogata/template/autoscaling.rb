@@ -92,7 +92,7 @@ def _autoscaling_tags(args)
   tags = [
           _{
             Key "Name"
-            Value _tag_name(args[:tag_name] || args[:name])
+            Value _tag_name(args)
             PropagateAtLaunch _bool("tag_name_launch", args, true)
           },
           _{

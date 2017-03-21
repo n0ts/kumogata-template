@@ -424,7 +424,7 @@ Test _tags({ name: "test", tags_append: { ref_test: "test" } })
 
   def test_tag_name
     template = <<-EOS
-Test _tag_name("test")
+Test _tag_name(name: "test")
     EOS
     act_template = run_client_as_json(template)
     exp_template = <<-EOS
@@ -437,6 +437,29 @@ Test _tag_name("test")
           "Ref": "Service"
         },
         "test"
+      ]
+    ]
+  }
+}
+    EOS
+    assert_equal exp_template.chomp, act_template
+
+    template = <<-EOS
+Test _tag_name(ref_name: "test")
+    EOS
+    act_template = run_client_as_json(template)
+    exp_template = <<-EOS
+{
+  "Test": {
+    "Fn::Join": [
+      "-",
+      [
+        {
+          "Ref": "Service"
+        },
+        {
+          "Ref": "Test"
+        }
       ]
     ]
   }
