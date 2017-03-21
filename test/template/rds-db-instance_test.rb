@@ -3,7 +3,7 @@ require 'abstract_unit'
 class RdsDbInstanceTest < Minitest::Test
   def test_normal
     template = <<-EOS
-_rds_db_instance "test", ref_db_name: "test", ref_port: "test", ref_subnet_group: "test", ref_security_groups: "test", ref_user_name: "test", ref_user_password: "test"
+_rds_db_instance "test", ref_db_name: "test", ref_port: "test", ref_subnet_group: "test", ref_security_groups: "test", ref_user_name: "test", ref_user_password: "test", az: "test"
     EOS
     act_template = run_client_as_json(template)
     exp_template = <<-EOS
@@ -14,6 +14,7 @@ _rds_db_instance "test", ref_db_name: "test", ref_port: "test", ref_subnet_group
       "AllocatedStorage": "5",
       "AllowMajorVersionUpgrade": "true",
       "AutoMinorVersionUpgrade": "true",
+      "AvailabilityZone": "test",
       "BackupRetentionPeriod": "7",
       "DBInstanceClass": "db.t2.medium",
       "DBInstanceIdentifier": {

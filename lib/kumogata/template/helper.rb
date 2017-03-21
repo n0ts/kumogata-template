@@ -21,7 +21,8 @@ def _array(args)
 end
 
 def _bool(name, args, default = false)
-  args.key?(name.to_sym) ? args[name.to_sym].to_s : default.to_s
+  bool = args.key?(name.to_sym) ? args[name.to_sym] : default
+  bool.to_s == 'true'
 end
 
 def _integer(name, args, default = 0)
