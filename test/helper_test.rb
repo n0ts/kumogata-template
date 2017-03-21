@@ -451,17 +451,7 @@ Test _tag_name(ref_name: "test")
     exp_template = <<-EOS
 {
   "Test": {
-    "Fn::Join": [
-      "-",
-      [
-        {
-          "Ref": "Service"
-        },
-        {
-          "Ref": "Test"
-        }
-      ]
-    ]
+    "Ref": "Test"
   }
 }
     EOS
