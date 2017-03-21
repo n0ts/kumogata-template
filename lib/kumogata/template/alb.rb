@@ -3,19 +3,51 @@
 #
 require 'kumogata/template/helper'
 
+def _alb_to_lb_attribute_access_log(args)
+  {
+    "access_logs.s3.enabled": true,
+    "access_logs.s3.bucket": args[:bucket],
+    "access_logs.s3.prefix": args[:prefix],
+  }
+end
+
+def _alb_to_lb_attribute_delete_protection
+  {
+    "deletion_protection.enabled": true
+  }
+end
+
+def _alb_to_lb_attribute_idle_timeout(value)
+  # idle timeout seconds 1-3600
+  {
+    "idle_timeout.timeout_seconds": value
+  }
+end
+
+def _alb_to_target_group_attribute_delay_timeout(value)
+  # wait before changing the state of a deregistering target from draining to unused 0-3600 seconds.
+  {
+    "deregistration_delay.timeout_seconds": value
+  }
+end
+
+def _alb_to_target_group_stickiness(value)
+  # 1 second to 1 week (604800 seconds). The default value is 1 day (86400 seconds).
+  {
+    "stickiness.enabled": true,
+    "stickiness.type": "lb_cookie",
+    "stickiness.lb_cookie.duration_seconds": value
+  }
+end
+
 def _alb_certificates(args)
-  certificates = args[:certificates] || []
+  certificate = _ref_string("certificate", args)
 
-  array = []
-  certificates.each do |certificate|
-    cert = _ref_string("value", { value: certificate }, "certificate")
-    next if cert.empty?
-
-    array << _{
-      CertificateArn cert
-    }
-  end
-  array
+  [
+   _{
+     CertificateArn certificate
+   }
+  ]
 end
 
 def _alb_actions(args)
