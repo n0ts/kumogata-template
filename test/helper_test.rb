@@ -16,10 +16,10 @@ class HelperTest < Minitest::Test
   end
 
   def test_bool
-    assert_equal _bool("test", { test: true }), "true"
-    assert_equal _bool("test", { test: false }), "false"
-    assert_equal _bool("test", { test1: false }, true), "true"
-    assert_equal _bool("test", { test1: false }, false), "false"
+    assert_equal _bool("test", { test: true }), true
+    assert_equal _bool("test", { test: false }), false
+    assert_equal _bool("test", { test1: false }, true), true
+    assert_equal _bool("test", { test1: false }, false), false
   end
 
   def test_integer
