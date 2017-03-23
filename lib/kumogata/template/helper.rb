@@ -164,9 +164,7 @@ def _tag_name(args)
 
   tag_name = _ref_string("name", args)
   tag_name = tag_name.gsub(' ', '-') if tag_name.is_a? String
-  _{
-    Fn__Join [ "-", [ _{ Ref _resource_name("service") }, tag_name ] ]
-  }
+  _{ Fn__Join [ "-", [ _{ Ref _resource_name(args[:tag_service] || "service") }, tag_name ] ] }
 end
 
 def _availability_zone(args, use_subnet = true)

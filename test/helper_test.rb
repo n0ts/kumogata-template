@@ -551,6 +551,27 @@ Test _tag_name(raw_tag_name: "test")
 }
     EOS
     assert_equal exp_template.chomp, act_template
+
+    template = <<-EOS
+Test _tag_name(name: "test", tag_service: "test")
+    EOS
+    act_template = run_client_as_json(template)
+    exp_template = <<-EOS
+{
+  "Test": {
+    "Fn::Join": [
+      "-",
+      [
+        {
+          "Ref": "Test"
+        },
+        "test"
+      ]
+    ]
+  }
+}
+    EOS
+    assert_equal exp_template.chomp, act_template
   end
 
   def test_availability_zone
@@ -593,6 +614,7 @@ Test _availability_zone({})
 }
     EOS
     assert_equal exp_template.chomp, act_template
+
   end
 
   def test_availability_zones
