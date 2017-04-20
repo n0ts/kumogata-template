@@ -3,21 +3,14 @@
 # http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-resource-elasticache-replicationgroup.html
 #
 require 'kumogata/template/helper'
+require 'kumogata/template/elasticache'
 
 name = _resource_name(args[:name], "cache replication group")
-engine = _valid_values(args[:engine], %w( memcached redis ), ELASTICACHE_DEFAULT_ENGINE)
+engine = _elasticache_to_engine(args)
 automatic = _bool("automatic", args, true)
 auto = _bool("auto", args, true)
-node = _ref_string("node", args, "cache node types")
-node = _valid_values(node, ELASTICACHE_NODE_TYPES, ELASTICACHE_DEFAULT_NODE_TYPE) unless node.is_a? Hash
-parameter = _ref_string("parameter", args, "cache parameter group")
-if parameter.empty?
-  if engine == "memcached"
-    parameter = "default.memcached1.4"
-  else
-    parameter = "default.redis2.8"
-  end
-end
+node = _elasticache_to_node(args)
+parameter = _elasticache_to_parameter(args)
 subnet = _ref_string("subnet", args, "cache subnet group")
 engine_version = _ref_string("engine_version", args, "cache engine version")
 engine_version = ELASTICACHE_DEFAULT_ENGINE_VERSION[engine.to_sym] if engine_version.empty?
