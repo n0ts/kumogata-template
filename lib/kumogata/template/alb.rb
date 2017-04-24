@@ -118,6 +118,7 @@ end
 
 def _alb_targets(args)
   targets = args[:targets] || []
+  ref_targets = args[:ref_targets] || []
 
   array = []
   targets.each do |target|
@@ -127,5 +128,13 @@ def _alb_targets(args)
       Port target[:port] if target.key? :port
     }
   end
+
+  ref_targets.each do |target|
+    array << _{
+      Id _ref_string("instance", { ref_instance: target }, "instance")
+      Port 80
+    }
+  end
+
   array
 end
