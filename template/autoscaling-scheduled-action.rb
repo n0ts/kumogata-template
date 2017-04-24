@@ -19,9 +19,10 @@ max = desired if max < desired
 min = _integer("min", args, -1)
 min = desired if min < desired
 
+# 0 - 6 Sunday to Saturday
 recurrence =
-  if args.key? :recurrence
-    case args[:recurrence]
+  if args.key? :cron
+    case args[:cron]
     when "every 5 min"
       "*/5 * * * *"
     when "every 30 min"
@@ -31,21 +32,19 @@ recurrence =
     when "every day"
       "0 0 * * *"
     when "every week"
-      "0 0 * * Tue"
+      "0 0 * * #{args[:cron_day] || 'Tue'}"
     when /\*/
-      args[:recurrence]
-    else
-      _timestamp_utc(args[:recurrence], "cron")
+      args[:cron]
     end
+  elsif args[:cron_time]
+    _timestamp_utc(args[:cron_time], "cron")
   else
     ""
   end
-start_time =
-  if args.key? :start_time
-    _timestamp_utc(args[:start_time])
-  else
-    _timestamp_utc(Time.now + 3600)
-  end
+start_time = _timestamp_utc(args[:start_time] || Time.now + 3600)
+
+## FIXME if older dot not empty
+
 
 _(name) do
   Type "AWS::AutoScaling::ScheduledAction"
