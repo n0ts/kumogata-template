@@ -17,6 +17,7 @@ _cloudtrail "test", depends: %w( test ), s3_bucket: "test"
       "EnableLogFileValidation": "false",
       "IncludeGlobalServiceEvents": "false",
       "IsLogging": "true",
+      "IsMultiRegionTrail": "false",
       "S3BucketName": "test",
       "Tags": [
         {

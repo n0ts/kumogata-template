@@ -11,6 +11,7 @@ role = _ref_attr_string("role", "Arn", args)
 enable = _bool("enable", args, false)
 include = _bool("include", args, false)
 logging = _bool("logging", args, true)
+multiRegionTrail = _bool("multiRegionTrail", args, false)
 s3_bucket = _ref_string("s3_bucket", args, "bucket")
 s3_key = _ref_string("s3_key", args, "key")
 sns =
@@ -30,6 +31,7 @@ _(name) do
     EnableLogFileValidation enable
     IncludeGlobalServiceEvents include
     IsLogging logging
+    IsMultiRegionTrail multiRegionTrail
     #KMSkeyId
     S3BucketName s3_bucket
     S3KeyPrefix s3_key unless s3_key.empty?
