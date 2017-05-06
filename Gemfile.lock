@@ -1,20 +1,20 @@
 PATH
   remote: .
   specs:
-    kumogata-template (0.0.21)
+    kumogata-template (0.0.22)
       aws-sdk (~> 2.3)
       kumogata (= 0.5.12)
 
 GEM
   remote: https://rubygems.org/
   specs:
-    aws-sdk (2.9.7)
-      aws-sdk-resources (= 2.9.7)
-    aws-sdk-core (2.9.7)
+    aws-sdk (2.9.15)
+      aws-sdk-resources (= 2.9.15)
+    aws-sdk-core (2.9.15)
       aws-sigv4 (~> 1.0)
       jmespath (~> 1.0)
-    aws-sdk-resources (2.9.7)
-      aws-sdk-core (= 2.9.7)
+    aws-sdk-resources (2.9.15)
+      aws-sdk-core (= 2.9.15)
     aws-sdk-v1 (1.67.0)
       json (~> 1.4)
       nokogiri (~> 1)
@@ -57,7 +57,7 @@ GEM
     rake (11.3.0)
     ref (2.0.0)
     retryable (2.0.4)
-    term-ansicolor (1.5.0)
+    term-ansicolor (1.6.0)
       tins (~> 1.0)
     therubyracer (0.12.2)
       libv8 (~> 3.16.14.0)
