@@ -1,7 +1,7 @@
 PATH
   remote: .
   specs:
-    kumogata-template (0.0.23)
+    kumogata-template (0.0.24)
       aws-sdk (~> 2.3)
       kumogata (= 0.5.12)
 
