@@ -18,7 +18,7 @@ end
 
 def _iam_policies(name, args)
   array = []
-  policies = args["#{name}".to_sym] || []
+  policies = args[name.to_sym] || []
   policies.each_with_index do |v, i|
     array << _{
       PolicyDocument _iam_policy_document("document", v)
@@ -30,7 +30,7 @@ end
 
 def _iam_policy_document(name, args)
   array = []
-  documents = args["#{name}".to_sym] || []
+  documents = args[name.to_sym] || []
 
   documents.each do |v|
     service = v[:service] || ""
@@ -51,7 +51,7 @@ def _iam_policy_document(name, args)
     array << _{
       Effect v[:effect] || "Allow"
       Action actions
-      Resource resource
+      Resource resource unless v.key? :no_resource
       Principal v[:principal] if v.key? :principal
     }
   end
@@ -150,7 +150,7 @@ def _iam_s3_bucket_policy(region, bucket, prefix, aws_account_id)
      service: "s3",
      action: [ "PutObject" ],
      principal: {
-       "AWS": [ account_id ],
+       AWS: [ account_id ],
      },
      resource: resource,
    },
