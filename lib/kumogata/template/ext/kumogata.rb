@@ -1,7 +1,9 @@
-require 'kumogata'
-require 'kumogata/argument_parser'
+require 'kumogata2'
+require 'kumogata2/cli/option_parser'
+require 'kumogata2/logger'
+require 'kumogata2/plugin/ruby'
 
-class Kumogata::Client
+class Kumogata2::Client
   def init(stack_name)
     begin
       base_template = ''
@@ -21,12 +23,61 @@ class Kumogata::Client
         template = base_template.gsub('#{NAME}', stack_name)
         f.write(template)
       }
-      Kumogata.logger.info("Saved template to #{stack_name}.rb".green)
+      Kumogata2::Logger::Helper.log(:info, "Saved template to #{stack_name}.rb".green)
     rescue => e
-      Kumogata.logger.info("Failed to template #{stack_name} - #{e}".red)
+      Kumogata2::Logger::Helper.log(:error, "Failed to template #{stack_name} - #{e}".red)
     end
     nil
   end
+end
+
+class Kumogata2::Plugin::Ruby
+  def parse(str)
+    str = <<EOS
+template do
+  #{str}
+end
+EOS
+    context = Kumogata2::Plugin::Ruby::Context.new(@options)
+    context.instance_eval(str, @options.path_or_url)
+    @post = context.instance_variable_get(:@_post)
+    context.instance_variable_get(:@_template)
+  end
+end
+
+class Kumogata2::Plugin::Ruby::Context
+
+  def template(&block)
+    key_converter = proc do |key|
+      key = key.to_s
+      unless @options.skip_replace_underscore?
+        key.gsub!('__', '::')
+        key.gsub!('_', ':')
+      end
+      key
+    end
+
+    value_converter = proc do |v|
+      case v
+      when Hash, Array
+        v
+      else
+        v.to_s
+      end
+    end
+
+    @_template = Dslh.eval({
+      key_conv: key_converter,
+      value_conv: value_converter,
+      scope_hook: proc {|scope|
+        define_template_func(scope, @options.path_or_url)
+      },
+      filename: @options.path_or_url,
+      ignore_methods: IGNORE_METHODS,
+    }, &block)
+  end
+
+  private
 
   def define_template_func(scope, path_or_url)
     functions = ''
@@ -70,9 +121,6 @@ class Kumogata::Client
       end
     EOS
   end
-
-
-  private  ###########################################################
 
   def include_func(path_or_url, file)
     <<-EOS

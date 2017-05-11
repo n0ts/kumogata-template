@@ -2,8 +2,8 @@
 $: << File.expand_path("#{File.dirname __FILE__}/../lib")
 require 'rubygems'
 require 'kumogata/template/ext/kumogata'
-require 'kumogata/template/ext/argument_parser'
+require 'kumogata/template/ext/option_parser'
 require 'kumogata/template'
 
 
-load Gem.bin_path('kumogata', 'kumogata')
+load Gem.bin_path('kumogata2', 'kumogata2')
