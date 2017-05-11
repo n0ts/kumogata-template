@@ -16,6 +16,41 @@ def _iam_to_policy(value)
   end
 end
 
+def _iam_to_policy_condition_operator(value)
+  case value
+  when "=", "eq"
+    value = "string equals"
+  when "!=", "ne"
+    value = "string not equals"
+  end
+
+  if value.include? " "
+    value.split(" ").map(&:capitalize).join("")
+  else
+    value
+  end
+end
+
+def _iam_to_policy_condition(args)
+  condition = {}
+  args.each_pair do |k, v|
+    key = _iam_to_policy_condition_operator(k.to_s)
+    value = {}
+    last_key = nil
+    v.each do |vv|
+      if value.key? last_key
+        value[last_key] = vv
+      else
+        value[vv] = nil
+        last_key = vv
+      end
+    end
+    condition[key] = value
+  end
+
+  condition
+end
+
 def _iam_policies(name, args)
   array = []
   policies = args[name.to_sym] || []
@@ -37,22 +72,26 @@ def _iam_policy_document(name, args)
     action = v[:action] || [ "*" ]
     next if service.empty? or action.empty?
 
-    actions = action.collect{|v| "#{service}:#{v}" }
+    actions = action.collect{|vv| "#{service}:#{vv}" }
     if v.key? :resource
       if v[:resource].is_a? String
         resource = _iam_arn(service, v[:resource])
       else
-        resource = v[:resource].collect{|v| _iam_arn(service, v) }
+        resource = v[:resource].collect{|vv| _iam_arn(service, vv) }
       end
     else
       resource = [ "*" ]
     end
 
     array << _{
+      Sid v[:sid] if v.key :sid
       Effect v[:effect] || "Allow"
+      NotAction no_action v[:no_action] if v.key? :no_action
       Action actions
       Resource resource unless v.key? :no_resource
       Principal v[:principal] if v.key? :principal
+      NotPrincipal v[:not_principal] if v.key? :not_principal
+      Condition _iam_to_policy_condition(v[:condition]) if v.key? :condition
     }
   end
   array

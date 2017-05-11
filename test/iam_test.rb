@@ -2,6 +2,57 @@ require 'abstract_unit'
 require 'kumogata/template/iam'
 
 class IamTest < Minitest::Test
+  def test_iam_to_policy_condition
+    template = <<-EOS
+condition = { "=": [ "s3:x-amz-acl", "bucket-owner-full-control" ] }
+Test _iam_to_policy_condition(condition)
+    EOS
+    act_template = run_client_as_json(template)
+    exp_template = <<-EOS
+{
+  "Test": {
+    "StringEquals": {
+      "s3:x-amz-acl": "bucket-owner-full-control"
+    }
+  }
+}
+    EOS
+    assert_equal exp_template.chomp, act_template
+
+    template = <<-EOS
+condition = {
+  "=": [ "aws:UserAgent", "Example Corp Java Client" ],
+  "date greater than": [ "aws:CurrentTime", "2013-08-16T12:00:00Z" ],
+  "numeric less than equals": [ "s3:max-keys", "10" ],
+  "ip address": [ "aws:SourceIp", ["192.0.2.0/24", "203.0.113.0/24"] ],
+}
+Test _iam_to_policy_condition(condition)
+    EOS
+    act_template = run_client_as_json(template)
+    exp_template = <<-EOS
+{
+  "Test": {
+    "StringEquals": {
+      "aws:UserAgent": "Example Corp Java Client"
+    },
+    "DateGreaterThan": {
+      "aws:CurrentTime": "2013-08-16T12:00:00Z"
+    },
+    "NumericLessThanEquals": {
+      "s3:max-keys": "10"
+    },
+    "IpAddress": {
+      "aws:SourceIp": [
+        "192.0.2.0/24",
+        "203.0.113.0/24"
+      ]
+    }
+  }
+}
+    EOS
+    assert_equal exp_template.chomp, act_template
+  end
+
   def test_iam_policies
     template = <<-EOS
 Policies _iam_policies "test", test: [ { document: [ { service: "s3" } ] } ]
@@ -51,6 +102,55 @@ PolicyDocument _iam_policy_document "test", test: [ { service: "s3" } ]
 }
     EOS
     assert_equal exp_template.chomp, act_template
+
+    template = <<-EOS
+PolicyDocument _iam_policy_document "test", test: [ { service: "s3", sid: "test" } ]
+    EOS
+    act_template = run_client_as_json(template)
+    exp_template = <<-EOS
+{
+  "PolicyDocument": [
+    {
+      "Effect": "Allow",
+      "Action": [
+        "s3:*"
+      ],
+      "Resource": [
+        "*"
+      ]
+    }
+  ]
+}
+    EOS
+    assert_equal exp_template.chomp, act_template
+
+    template = <<-EOS
+condition = { "=": [ "s3:x-amz-acl", "bucket-owner-full-control" ] }
+PolicyDocument _iam_policy_document "test", test: [ { service: "s3", sid: "test", condition: condition } ]
+    EOS
+    act_template = run_client_as_json(template)
+    exp_template = <<-EOS
+{
+  "PolicyDocument": [
+    {
+      "Effect": "Allow",
+      "Action": [
+        "s3:*"
+      ],
+      "Resource": [
+        "*"
+      ],
+      "Condition": {
+        "StringEquals": {
+          "s3:x-amz-acl": "bucket-owner-full-control"
+        }
+      }
+    }
+  ]
+}
+    EOS
+    assert_equal exp_template.chomp, act_template
+
   end
 
   def test_iam_assume_role_policy_document

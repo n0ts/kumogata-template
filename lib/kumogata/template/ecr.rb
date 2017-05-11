@@ -2,6 +2,7 @@
 # Helper - ECR
 #
 require 'kumogata/template/helper'
+require 'kumogata/template/iam'
 
 
 def _ecr_policy(name, args)
