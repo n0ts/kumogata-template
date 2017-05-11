@@ -5,12 +5,9 @@
 
 ## About
 
-- `kumogate-template` is a template sets for [kumogata](https://github.com/winebarrel/kumogata).
+- `kumogate-template` is a template sets for [kumogata2](https://github.com/winebarrel/kumogata2).
 
 ## Installation
-
-Add
-
 
 Add this line to your application's Gemfile:
 
@@ -124,82 +121,36 @@ EOS
 - more example see [test code](test/template)
 
 
-## Support AWS Resource Types
+## AWS CloudFormation
 
-- AWS::AutoScaling::AutoScalingGroup
-- AWS::AutoScaling::LaunchConfiguration
-- AWS::AutoScaling::LifecycleHook
-- AWS::AutoScaling::ScalingPolicy
-- AWS::AutoScaling::ScheduledAction
-- AWS::CloudTrail::Trail
-- AWS::CodeDeploy::Application
-- AWS::CodeDeploy::DeploymentConfig
-- AWS::CodeDeploy::DeploymentGroup
-- AWS::DataPipeline::Pipeline
-- AWS::DynamoDB::Table
-- AWS::EC2::EIPAssociation
-- AWS::EC2::EIP
-- AWS::EC2::Instance
-- AWS::EC2::InternetGateway
-- AWS::EC2::NatGateway
-- AWS::EC2::NetworkAclEntry
-- AWS::EC2::NetworkAcl
-- AWS::EC2::RouteTable
-- AWS::EC2::Route
-- AWS::EC2::SecurityGroup
-- AWS::EC2::SubnetNetworkAclAssociation
-- AWS::EC2::SubnetRouteTableAssociation
-- AWS::EC2::Subnet
-- AWS::EC2::VolumeAttachment
-- AWS::EC2::VPCEndpoint
-- AWS::EC2::VPCGatewayAttachment
-- AWS::EC2::VPC
-- AWS::ECS::Cluster
-- AWS::ECS::Service
-- AWS::ECS::TaskDefinition
-- AWS::ElastiCache::CacheCluster
-- AWS::ElastiCache::ParameterGroup
-- AWS::ElastiCache::ReplicationGroup
-- AWS::ElastiCache::SubnetGroup
-- AWS::ElasticBeanstalk::ApplicationVersion
-- AWS::ElasticBeanstalk::Application
-- AWS::ElasticBeanstalk::ConfigurationTemplate
-- AWS::ElasticBeanstalk::Environment
-- AWS::ElasticLoadBalancing::LoadBalancer
-- AWS::EMR::Cluster
-- AWS::EMR::InstanceGroupConfig
-- AWS::EMR::Step
-- AWS::Events::Rule
-- AWS::IAM::AccessKey
-- AWS::IAM::Group
-- AWS::IAM::InstanceProfile
-- AWS::IAM::ManagedPolicy
-- AWS::IAM::Policy
-- AWS::IAM::Role
-- AWS::IAM::UserToGroupAddition
-- AWS::IAM::User
-- AWS::Lambda::Alias
-- AWS::Lambda::EventSourceMapping
-- AWS::Lambda::Function
-- AWS::Lambda::Permission
-- AWS::Lambda::Version
-- AWS::RDS::DBClusterParameterGroup
-- AWS::RDS::DBCluster
-- AWS::RDS::DBInstance
-- AWS::RDS::DBParameterGroup
-- AWS::RDS::DBSubnetGroup
-- AWS::RDS::EventSubscription
-- AWS::RDS::OptionGroup
-- AWS::Redshift::ClusterParameterGroup
-- AWS::Redshift::ClusterSubnetGroup
-- AWS::Redshift::Cluster
-- AWS::S3::BucketPolicy
-- AWS::S3::Bucket
-- AWS::SNS::Topic
-- AWS::SQS::Queue
+- [Relese notes](http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/ReleaseHistory.html)
+  - Almost support release date is `January 17, 2017`
 
-
-## TODO
-
-- Support [Kumogata2](https://github.com/winebarrel/kumogata2)
-- Useful kumogate-template snippets
+- [Support Resource Types](http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-template-resource-type-ref.html)
+  - AWS::AutoScaling::*
+  - AWS::CertificateManager::*
+  - AWS::CloudFront::**
+  - AWS::CloudTrail::*
+  - AWS::CloudWatch::*
+  - AWS::CodeBuild::*
+  - AWS::CodeCommit::*
+  - AWS::CodeDeploy::*
+  - AWS::DataPipeline::*
+  - AWS::DynamoDB::*
+  - AWS::EC2::*
+  - AWS::ECS::*
+  - AWS::ElastiCache::*
+  - AWS::ElasticBeanstalk::*
+  - AWS::ElasticLoadBalancing::*
+  - AWS::ElasticLoadBalancingV2::*
+  - AWS::EMR::*
+  - AWS::Events::*
+  - AMS::KMS::*
+  - AWS::IAM::*
+  - AWS::Lambda::*
+  - AWS::Logs::*
+  - AWS::RDS::*
+  - AWS::Redshift::*
+  - AWS::S3::*
+  - AWS::SNS::*
+  - AWS::SQS::*
