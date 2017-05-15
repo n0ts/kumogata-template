@@ -84,7 +84,7 @@ def _iam_policy_document(name, args)
     end
 
     array << _{
-      Sid v[:sid] if v.key :sid
+      Sid v[:sid] if v.key? :sid
       Effect v[:effect] || "Allow"
       NotAction no_action v[:no_action] if v.key? :no_action
       Action actions
