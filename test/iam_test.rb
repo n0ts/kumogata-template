@@ -111,6 +111,7 @@ PolicyDocument _iam_policy_document "test", test: [ { service: "s3", sid: "test"
 {
   "PolicyDocument": [
     {
+      "Sid": "test",
       "Effect": "Allow",
       "Action": [
         "s3:*"
@@ -133,6 +134,7 @@ PolicyDocument _iam_policy_document "test", test: [ { service: "s3", sid: "test"
 {
   "PolicyDocument": [
     {
+      "Sid": "test",
       "Effect": "Allow",
       "Action": [
         "s3:*"
