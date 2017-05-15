@@ -152,7 +152,6 @@ PolicyDocument _iam_policy_document "test", test: [ { service: "s3", sid: "test"
 }
     EOS
     assert_equal exp_template.chomp, act_template
-
   end
 
   def test_iam_assume_role_policy_document
