@@ -7,7 +7,7 @@ class Kumogata2::Client
   def init(stack_name)
     begin
       base_template = ''
-      File.open(get_template_path('_template'), 'r'){|f|
+      File.open(Kumogata2::Client::get_template_path('_template'), 'r'){|f|
         base_template = f.read
       }
       raise 'initialize template is empty' if base_template.empty?
@@ -29,6 +29,13 @@ class Kumogata2::Client
     end
     nil
   end
+
+  def self.get_template_path(file = nil)
+    template_path = File.expand_path(File.join(File.dirname(__FILE__),
+                                               '..', '..', '..','..', 'template'))
+    template_path = File.join(template_path, "#{file}.rb") unless file.nil?
+    template_path
+  end
 end
 
 class Kumogata2::Plugin::Ruby
@@ -46,7 +53,6 @@ EOS
 end
 
 class Kumogata2::Plugin::Ruby::Context
-
   def template(&block)
     key_converter = proc do |key|
       key = key.to_s
@@ -81,7 +87,7 @@ class Kumogata2::Plugin::Ruby::Context
 
   def define_template_func(scope, path_or_url)
     functions = ''
-    Dir.glob(File.join(get_template_path, '*.rb')).all? do |file|
+    Dir.glob(File.join(Kumogata2::Client::get_template_path, '*.rb')).all? do |file|
       functions << include_func(path_or_url, file)
       functions << "\n\n"
     end
@@ -140,11 +146,5 @@ class Kumogata2::Plugin::Ruby::Context
 
   def get_funcname(file)
     File.basename(file, '.rb').gsub('-', '_')
-  end
-
-  def get_template_path(file = nil)
-    template_path = File.expand_path(File.join(File.dirname(__FILE__), '..', '..', '..','..', 'template'))
-    template_path = File.join(template_path, "#{file}.rb") unless file.nil?
-    template_path
   end
 end
