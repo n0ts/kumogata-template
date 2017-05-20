@@ -126,3 +126,15 @@ def _ecs_deployment(args)
     MinimumHealthyPercent args[:min]
   }
 end
+
+def _ecs_placement(args)
+  placement = args[:placement] || {}
+  return "" if placement.empty?
+  type = _valid_values(placement[:type], %w( distinctInstance memberOf), "distinctInstance")
+  expression = placement[:expression] || ""
+
+  _{
+    Type type
+    Expression expression unless placement.empty?
+  }
+end
