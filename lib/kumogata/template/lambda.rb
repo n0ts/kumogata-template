@@ -45,3 +45,12 @@ def _lambda_vpc_config(args)
     SubnetIds subnet_ids unless subnet_ids.empty?
   }
 end
+
+def _lambda_dead_letter(args)
+  return "" unless args.key? :dead_latter
+
+  dead_letter = _ref_string("dead_letter", args)
+  _{
+    TargetArn dead_letter
+  }
+end
