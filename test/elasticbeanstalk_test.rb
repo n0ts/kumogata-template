@@ -2,9 +2,9 @@ require 'abstract_unit'
 require 'kumogata/template/elasticbeanstalk'
 
 class ElasticbeantalkTest < Minitest::Test
-  def test_elasticbeanstalk_option
+  def test_elasticbeanstalk_options
     template = <<-EOS
-Test _elasticbeanstalk_option([ namespace: "test", option: "test", value: "test" ])
+Test _elasticbeanstalk_options([ name: "test", option: "test", value: "test" ])
     EOS
     act_template = run_client_as_json(template)
     exp_template = <<-EOS
@@ -39,7 +39,7 @@ Test _elasticbeanstalk_configuration(application: "test", template: "test")
 
   def test_elasticbeanstalk_tier
     template = <<-EOS
-Test _elasticbeanstalk_tier(name: "test")
+Test _elasticbeanstalk_tier("test")
     EOS
     act_template = run_client_as_json(template)
     exp_template = <<-EOS
