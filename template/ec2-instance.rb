@@ -15,6 +15,7 @@ host_id = args[:host_id] || ""
 iam_instance = _ref_string("iam_instance", args, "iam instance profile")
 image =_ec2_image(instance_type, args)
 instance_initiated = args[:instance_initiated] || "stop"
+ipv6_addresses = args[:ipv6_addresses] || []
 kernel = args[:kernel] || ""
 key_name = _ref_string("key_name", args, "key name")
 monitoring = _bool("monitoring", args, true)
@@ -44,6 +45,8 @@ _(name) do
     ImageId image
     InstanceInitiatedShutdownBehavior instance_initiated
     InstanceType instance_type
+    Ipv6AddressCount ipv6_addresses.size unless ipv6_addresses.empty?
+    Ipv6Addresses ipv6_addresses unless ipv6_addresses.empty?
     KernelId kernel unless kernel.empty?
     KeyName key_name
     Monitoring monitoring

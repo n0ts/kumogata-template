@@ -1,10 +1,9 @@
 require 'abstract_unit'
 
 class OutputAzTest < Minitest::Test
-  # FIXME?
   def test_normal
     template = <<-EOS
-_output_az "test"
+_output_ec2_subnet "test"
     EOS
     act_template = run_client_as_json(template)
     exp_template = <<-EOS

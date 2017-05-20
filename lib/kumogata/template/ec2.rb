@@ -31,6 +31,7 @@ end
 
 def _ec2_security_group_egress(args)
   cidr = args[:cidr] || "0.0.0.0/0"
+  cidr_ipv6 = args[:cidr_ipv6] || ""
   destination = _ref_string("destination", args, "security group")
   from = _ref_string("from", args)
   group = _ref_string("group", args, "security group")
@@ -40,6 +41,7 @@ def _ec2_security_group_egress(args)
 
   _{
     CidrIp cidr if destination.empty?
+    CidrIpv6 cidr_ipv6 unless cidr_ipv6.empty?
     DestinationSecurityGroupId destination unless destination.empty?
     FromPort from unless ip == "icmp"
     GroupId group unless group.empty?
@@ -66,6 +68,7 @@ end
 
 def _ec2_security_group_ingress(args)
   cidr = args[:cidr] || "0.0.0.0/0"
+  cidr_ipv6 = args[:cidr_ipv6] || ""
   from = _ref_string("from", args)
   group_id = _ref_string("group", args, "security group")
   group_name = args[:group_name] || ""
@@ -79,6 +82,7 @@ def _ec2_security_group_ingress(args)
 
   _{
     CidrIp cidr if source_group_name.empty? and source_group_id.empty?
+    CidrIpv6 cidr_ipv6 unless cidr_ipv6.empty?
     FromPort from unless ip == "icmp"
     GroupId group_id unless group_id.empty?
     GroupName group_name unless group_name.empty?

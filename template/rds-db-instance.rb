@@ -16,6 +16,12 @@ auto = _bool("auto", args, true)
 az = _availability_zone(args, false)
 backup_retention = args[:backup_retention] || 7
 character = args[:character] || ""
+copy_tags =
+  if args.key? :copy_tags
+    _bool("copy_tags", args, true)
+  else
+    ""
+  end
 cluster = _ref_string("cluster", args, "db cluster")
 instance_class = _ref_string("instance_class", args, "db instance classes")
 instance_class = _valid_values(instance_class, RDS_INSTANCE_CLASSES, RDS_DEFAULT_INSTANCE_CLASS) unless instance_class.is_a? Hash
@@ -56,6 +62,7 @@ _(name) do
     AvailabilityZone az unless multi_az
     BackupRetentionPeriod backup_retention if 0 < backup_retention
     CharacterSetName character if !character.empty? and engine =~ /^oracle.*$/
+    CopyTagsToSnapshot copy_tags unless copy_tags.empty?
     DBClusterIdentifier cluster if engine == "aurora" and !cluster.empty?
     DBInstanceClass instance_class
     DBInstanceIdentifier instance_id

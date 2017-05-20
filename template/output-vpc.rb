@@ -17,3 +17,6 @@ _output "#{args[:name]} vpc network acl",
 _output "#{args[:name]} vpc security group",
         ref_value: [ vpc, "DefaultSecurityGroup" ],
         export: _export_string(args, "vpc default security group")
+_output "#{args[:name]} vpc ipv6 cidr blocks",
+        ref_value: [ vpc, "Ipv6CidrBlocks" ],
+        export: _export_string(args, "vpc ipv6 cidr bocks") if args.key? :ipv6

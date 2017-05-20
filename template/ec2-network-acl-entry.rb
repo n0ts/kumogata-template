@@ -7,6 +7,7 @@ require 'kumogata/template/ec2'
 
 name = _resource_name(args[:name], "network acl entry")
 cidr = args[:cidr] || "0.0.0.0/0"
+cidr_ipv6 = args[:cidr_ipv6] || ""
 egress = _bool("egress", args, false)
 icmp = args[:icmp] || ""
 network_acl = _ref_attr_string("vpc_network_acl", "DefaultNetworkAcl", args, "vpc")
@@ -19,7 +20,8 @@ rule_number = _valid_numbers(args[:number], 1, 32766, 100)
 _(name) do
   Type "AWS::EC2::NetworkAclEntry"
   Properties do
-    CidrBlock cidr
+    CidrBlock cidr if cidr_ipv6.empty?
+    Ipv6CidrBlock ipv6_cidr if cidr.empty?
     Egress egress
     Icmp _{
       Code -1

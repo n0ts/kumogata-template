@@ -6,6 +6,7 @@ require 'kumogata/template/helper'
 
 name = _resource_name(args[:name], "route")
 destination_cidr = args[:destination_cidr] || "0.0.0.0/0"
+destination_cidr_ipv6 = args[:destination_cidr_ipv6] || ""
 gateway = _ref_string("gateway", args, "internet gateway")
 instance = _ref_string("instance", args, "intance")
 nat_gateway = _ref_string("nat_gateway", args, "nat gateway")
@@ -16,7 +17,8 @@ vpc_peering_connection = _ref_string("vpc_peering_connection", args)
 _(name) do
   Type "AWS::EC2::Route"
   Properties do
-    DestinationCidrBlock destination_cidr
+    DestinationCidrBlock destination_cidr if destination_cidr_ipv6.empty?
+    DestinationIpv6CidrBlock destination_cidr_ipv6 if destination_cidr.empty?
     GatewayId gateway unless gateway.empty?
     InstanceId instance unless instance.empty?
     NatGatewayId nat_gateway unless nat_gateway.empty?
