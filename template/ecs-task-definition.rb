@@ -9,7 +9,7 @@ name = _resource_name(args[:name], "ecs task definition")
 volumes = _ecs_volumes(args)
 family = args[:family] || ""
 network = _valid_values(args[:network], %w( bridge host none ), "")
-placement = _ecs_placement(args)
+placement = _ecs_placement_definition(args)
 role = _ref_attr_string("role", "Arn", args, "role")
 definitions = _ecs_container_definitions(args)
 

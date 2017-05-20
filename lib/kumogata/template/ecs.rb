@@ -127,14 +127,36 @@ def _ecs_deployment(args)
   }
 end
 
-def _ecs_placement(args)
-  placement = args[:placement] || {}
-  return "" if placement.empty?
+def _ecs_placement_definition(args)
+  return "" unless args.key? :placement
+
+  placement = args[:placement]
   type = _valid_values(placement[:type], %w( distinctInstance memberOf), "distinctInstance")
   expression = placement[:expression] || ""
 
   _{
     Type type
     Expression expression unless placement.empty?
+  }
+end
+
+def _ecs_placement_service(args)
+  return "" unless args.key? :placement
+
+  placement = args[:placement]
+  type = _valid_values(placement[:type], %w( random spread binpack ), "random")
+  field =
+    case type
+    when "binpack"
+      _valid_values(args[:field], %w( cpu memory ), "cpu")
+    when "spread"
+      args[:field] || ""
+    else
+      ""
+    end
+
+  _{
+    Type type
+    Field field unless field.empty?
   }
 end

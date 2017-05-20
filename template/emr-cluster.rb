@@ -1,5 +1,5 @@
 #
-# EMR Cluster resource
+# EMR cluster resource
 # http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-resource-emr-cluster.html
 #
 require 'kumogata/template/helper'
@@ -7,9 +7,14 @@ require 'kumogata/template/emr'
 
 name = _resource_name(args[:name], "emr cluster")
 applications = _emr_applications(args)
+autoscaling =
+  if args.key? :autoscaling
+    args[:autoscaling] || "EMR_AutoScaling_DefaultRole"
+  else
+    ""
+  end
 bootstraps = _emr_bootstraps(args)
 configurations = _emr_configurations(args)
-ebs = _emr_ebs(args)
 instance = _emr_job_flow(args)
 job_flow_role = args[:job_flow_role] || "EMR_EC2_DefaultRole"
 log = args[:log] || ""
@@ -24,9 +29,9 @@ _(name) do
   Properties do
     #AdditionalInfo
     Applications applications unless applications.empty?
+    AutoScalingRole autoscaling unless autoscaling.empty?
     BootstrapActions bootstraps unless bootstraps.empty?
     Configurations configurations unless configurations.empty?
-    EbsConfiguration ebs unless ebs.empty?
     Instances instance
     JobFlowRole String job_flow_role
     LogUri log unless log.empty?
