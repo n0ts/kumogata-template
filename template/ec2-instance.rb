@@ -28,7 +28,7 @@ ssm = args[:ssm] || []
 subnet = _ref_string("subnet", args, "subnet")
 tags = _ec2_tags(args)
 tenancy = args[:tenancy] || "default"
-user_data = _ref_string("user_data", args, "user data")
+user_data = _ec2_user_data(args)##_ref_string("user_data", args, "user data")
 volumes = args[:volumes] || ""
 
 _(name) do
@@ -58,12 +58,7 @@ _(name) do
     SubnetId subnet unless subnet.empty?
     Tags tags
     Tenancy tenancy unless tenancy.empty?
-    UserData do
-      Fn__Base64 (<<-EOS).undent
-#!/bin/bash
-#{user_data}
-EOS
-    end
+    UserData user_data unless user_data.empty?
     Volumes volumes unless volumes.empty?
   end
 end

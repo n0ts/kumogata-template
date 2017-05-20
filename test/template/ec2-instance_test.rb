@@ -3,7 +3,7 @@ require 'abstract_unit'
 class Ec2InstanceTest < Minitest::Test
   def test_normal
     template = <<-EOS
-_ec2_instance "test", key_name: "test", ref_instance_type: "test", ref_iam_instance: "test"
+_ec2_instance "test", key_name: "test", ref_instance_type: "test", ref_iam_instance: "test", user_data: "test data"
     EOS
     act_template = run_client_as_json(template)
     exp_template = <<-EOS
@@ -84,7 +84,7 @@ _ec2_instance "test", key_name: "test", ref_instance_type: "test", ref_iam_insta
       ],
       "Tenancy": "default",
       "UserData": {
-        "Fn::Base64": "#!/bin/bash\\n\\n"
+        "Fn::Base64": "#!/bin/bash\\ntest data"
       }
     }
   }

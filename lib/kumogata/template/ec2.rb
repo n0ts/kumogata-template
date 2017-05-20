@@ -153,7 +153,7 @@ def _ec2_image(instance_type, args)
 
   resource_image = _resource_name(args[:image] || EC2_DEFAULT_IMAGE)
   _find_in_map("AWSRegionArch2AMI#{resource_image}",
-               _{ Ref "AWS::Region" },
+               _region,
                _find_in_map("AWSInstanceType2Arch", instance_type, "Arch"))
 end
 
@@ -175,6 +175,17 @@ def _ec2_protocol_number(protocol)
     1
   else
     -1
+  end
+end
+
+def _ec2_user_data(args)
+  user_data = _ref_string("user_data", args, "user data")
+  return "" if user_data.empty?
+
+  if user_data.is_a? Hash
+    _base64(user_data)
+  else
+    _base64_shell(user_data)
   end
 end
 
@@ -225,7 +236,7 @@ def _ec2_spot_fleet_launches(args)
   ram_disk = args[:ram_disk] || ""
   security_groups = _ref_array("security_groups", args, "security group")
   subnet = _ref_string("subnet", args, "subnet")
-  user_data = _ref_string("user_data", args, "user data")
+  user_data = _ec2_user_data(args)
   weighted = args[:weighted] || ""
 
   _{
@@ -246,12 +257,7 @@ def _ec2_spot_fleet_launches(args)
     RamdiskId ram_disk unless ram_disk.empty?
     SecurityGroups security_groups unless security_groups.empty?
     SubnetId subnet unless subnet.empty?
-    UserData do
-      Fn__Base64 (<<-EOS).undent
-#!/bin/bash
-#{user_data}
-EOS
-    end unless user_data.empty?
+    UserData user_data unless user_data.empty?
     WeightedCapacity weighted if args.key? :weighted
   }
 end

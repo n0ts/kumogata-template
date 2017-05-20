@@ -47,7 +47,6 @@ def _iam_to_policy_condition(args)
     end
     condition[key] = value
   end
-
   condition
 end
 
@@ -143,12 +142,12 @@ def _iam_arn(service, resource)
       resources = [ "#{arn_prefix}:::" ]
       resource.each do |v|
         if v =~ /^Ref_(.*)/
-          resources << _{ Ref _resource_name($1) }
+          resources << _ref(_resource_name($1))
         else
           resources << v
         end
       end
-      _{ Fn__Join "", resources }
+      _join(resources, "")
     end
 
   when "cloudformation"

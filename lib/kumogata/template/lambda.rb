@@ -23,7 +23,7 @@ def _lambda_function_code(args)
     S3Bucket s3_bucket if is_s3
     S3Key s3_key if is_s3
     S3ObjectVersion s3_object_version if is_s3 and !s3_object_version.empty?
-    ZipFile _{ Fn__Join '\n', zip_file_code } unless is_s3
+    ZipFile _join(zip_file_code, '\n') unless is_s3
   }
 end
 
