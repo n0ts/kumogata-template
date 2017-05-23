@@ -245,3 +245,35 @@ def _window_time(service, start_time)
   end
   "#{start_time.strftime(format)}-#{end_time.strftime(format)}"
 end
+
+def _ref_arn(service, name)
+  # FIXME
+  _{
+    Fn__Join [
+              ",",
+              [
+               "arn:aws:#{service}:::",
+               _{ Ref _resource_name(name) },
+              ]
+             ]
+  }
+end
+
+def _ref_pseudo(type)
+  pseudo =
+    case type
+    when "account"
+      "AccountId"
+    when "notification arns"
+      "NotificationARNs"
+    when "no value"
+      "NoValue"
+    when "region"
+      "Region"
+    when "stack id"
+      "StackId"
+    when "stack name"
+      "StackName"
+    end
+  _{ Ref "AWS::#{pseudo}" }
+end
