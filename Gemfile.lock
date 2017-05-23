@@ -1,20 +1,20 @@
 PATH
   remote: .
   specs:
-    kumogata-template (0.0.24)
+    kumogata-template (0.0.26)
       aws-sdk (~> 2.3)
       kumogata (= 0.5.12)
 
 GEM
   remote: https://rubygems.org/
   specs:
-    aws-sdk (2.9.15)
-      aws-sdk-resources (= 2.9.15)
-    aws-sdk-core (2.9.15)
+    aws-sdk (2.9.21)
+      aws-sdk-resources (= 2.9.21)
+    aws-sdk-core (2.9.21)
       aws-sigv4 (~> 1.0)
       jmespath (~> 1.0)
-    aws-sdk-resources (2.9.15)
-      aws-sdk-core (= 2.9.15)
+    aws-sdk-resources (2.9.21)
+      aws-sdk-core (= 2.9.21)
     aws-sdk-v1 (1.67.0)
       json (~> 1.4)
       nokogiri (~> 1)
@@ -50,7 +50,7 @@ GEM
       uuidtools
     libv8 (3.16.14.19)
     mini_portile2 (2.0.0)
-    minitest (5.10.1)
+    minitest (5.10.2)
     net-ssh (4.1.0)
     nokogiri (1.6.7.2)
       mini_portile2 (~> 2.0.0.rc2)
@@ -62,7 +62,7 @@ GEM
     therubyracer (0.12.2)
       libv8 (~> 3.16.14.0)
       ref
-    tins (1.13.2)
+    tins (1.14.0)
     uuidtools (2.1.5)
 
 PLATFORMS
@@ -75,4 +75,4 @@ DEPENDENCIES
   rake (~> 11.1)
 
 BUNDLED WITH
-   1.13.7
+   1.14.6
