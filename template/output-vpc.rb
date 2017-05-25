@@ -7,7 +7,7 @@ vpc = "#{args[:name]} vpc"
 
 _output "#{args[:name]} vpc",
         ref_value: vpc,
-        export: _export_string(args, "#{args[:name]} vpc")
+        export: _export_string(args, "vpc")
 _output "#{args[:name]} vpc cidr block",
         ref_value: [ vpc, "CidrBlock" ],
         export: _export_string(args, "vpc cidr block")

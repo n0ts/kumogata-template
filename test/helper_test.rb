@@ -687,7 +687,7 @@ Test _ref("test")
 
   def test_export_string
     assert_equal _export_string({ name: "test" }, "test"), ""
-    assert_equal _export_string({ name: "test", export: "export" }, "test"), "test-test"
+    assert_equal _export_string({ name: "test", export: true }, "test"), "test-test"
   end
 
   def test_export

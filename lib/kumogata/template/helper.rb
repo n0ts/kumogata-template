@@ -188,10 +188,11 @@ def _ref(name)
 end
 
 def _export_string(args, prefix)
-  export = args[:export] || ''
-  return '' if export.empty?
-
-  "#{args[:name]}-#{prefix}"
+  if args.key? :export and args[:export] == true
+    "#{args[:name]}-#{prefix}"
+  else
+    ""
+  end
 end
 
 def _export(args)
