@@ -12,10 +12,8 @@ action = %w(
   UploadLayerPart
   CompleteLayerUpload
 )
-user = [
-  { id: 1, name: "test" }
-]
-_ecr_repository "test", { policy: { action: action, user: user } }
+account = { id: 1, name: "test" }
+_ecr_repository "test", { policy: { action: action, account: account } }
     EOS
     act_template = run_client_as_json(template)
     exp_template = <<-EOS
@@ -39,9 +37,7 @@ _ecr_repository "test", { policy: { action: action, user: user } }
               "ecr:CompleteLayerUpload"
             ],
             "Principal": {
-              "AWS": [
-                "arn:aws:iam::1:user/test"
-              ]
+              "AWS": "arn:aws:iam::1:user/test"
             }
           }
         ]
