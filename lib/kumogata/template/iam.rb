@@ -215,7 +215,7 @@ def _iam_arn(service, resource)
         elsif v.is_a? Hash
           array << _convert(v)
         else
-          tmp = [ "#{arn_prefix}:::" ]
+          tmp = [ arn_prefix_s3 ]
           tmp += v.collect{|vv| _convert(vv) }
           array_map << _{ Fn__Join "", tmp }
         end
@@ -223,9 +223,9 @@ def _iam_arn(service, resource)
       return array_map unless array_map.empty?
 
       if array.select{|v| v.is_a? Hash }.empty?
-        array
+        array.collect{|v| "#{arn_prefix_s3}#{v}" }
       else
-        _{ Fn__Join "", array.insert(0, "#{arn_prefix}:::") }
+        _{ Fn__Join "", array.insert(0, arn_prefix_s3) }
       end
     end
 

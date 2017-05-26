@@ -301,8 +301,8 @@ arn _iam_arn("s3", [ "test1", "test2" ])
     exp_template = <<-EOS
 {
   "arn": [
-    "test1",
-    "test2"
+    "arn:aws:s3:::test1",
+    "arn:aws:s3:::test2"
   ]
 }
   EOS
