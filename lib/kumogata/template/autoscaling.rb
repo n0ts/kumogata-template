@@ -43,6 +43,25 @@ def _autoscaling_to_policy(value)
   end
 end
 
+def _autoscaling_to_schedued_recurrence(value)
+  case value
+  when "every 5 min"
+    "*/5 * * * *"
+  when "every 30 min"
+    "0,30 * * * *"
+  when "every 1 hour"
+    "0 * * * *"
+  when "every day"
+    "0 0 * * *"
+  when "every week"
+    "0 0 * * Tue"
+  when /\*/
+    value
+  else
+    _timestamp_utc(value, "cron")
+  end
+end
+
 def _autoscaling_metrics
   _{
     Granularity "1Minute"

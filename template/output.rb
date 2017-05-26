@@ -5,6 +5,7 @@
 require 'kumogata/template/helper'
 
 name = _resource_name(args[:name])
+description = args[:description] || "description of #{name}"
 value =
   if args.key? :value
     if args[:value].is_a?(Array) and args[:value].length == 2
@@ -21,9 +22,10 @@ value =
   else
     name
   end
-description = args[:description] || "description of #{name}"
+export = _export(args)
 
 _(name) do
   Description description
   Value value
+  Export export unless export.empty?
 end

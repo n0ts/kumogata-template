@@ -11,7 +11,7 @@ _ec2_vpc "test"
   "TestVpc": {
     "Type": "AWS::EC2::VPC",
     "Properties": {
-      "CidrBlock": "191.168.1.0/16",
+      "CidrBlock": "10.1.1.0/28",
       "EnableDnsSupport": "true",
       "EnableDnsHostnames": "true",
       "InstanceTenancy": "default",
@@ -60,7 +60,7 @@ _ec2_vpc "test"
   "TestVpc": {
     "Type": "AWS::EC2::VPC",
     "Properties": {
-      "CidrBlock": "191.168.1.0/16",
+      "CidrBlock": "10.1.1.0/28",
       "EnableDnsSupport": "true",
       "EnableDnsHostnames": "true",
       "InstanceTenancy": "default",

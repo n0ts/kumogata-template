@@ -5,10 +5,15 @@
 require 'kumogata/template/helper'
 
 name = _resource_name(args[:name], "elasticbeanstalk application version")
-application = _ref_name("application", args)
-description = args[:description] || ""
-s3_bucket = _ref_string("s3_bucket", args, "bucket")
-s3_key = args[:s3_key]
+application = _ref_string_default("application", args,
+                                  "elasticbeanstalk application", args[:name])
+description = _ref_string("description", args)
+s3_bucket = _join([
+                   _ref_string("s3_bucket", args, "bucket"),
+                   _region,
+                  ],
+                  "-")
+s3_key = _ref_string("s3_key", args)
 
 _(name) do
   Type "AWS::ElasticBeanstalk::ApplicationVersion"

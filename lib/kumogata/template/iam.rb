@@ -47,7 +47,6 @@ def _iam_to_policy_condition(args)
     end
     condition[key] = value
   end
-
   condition
 end
 
@@ -205,7 +204,7 @@ def _iam_arn(service, resource)
       "#{arn_prefix_s3}#{resource}"
 
     elsif resource.is_a? Hash
-      _{ Fn__Join "", [ arn_prefix_s3, _convert(resource) ] }
+      _join([ arn_prefix_s3, _convert(resource) ], "")
 
     else
       array, array_map = [], []
@@ -225,7 +224,7 @@ def _iam_arn(service, resource)
       if array.select{|v| v.is_a? Hash }.empty?
         array.collect{|v| "#{arn_prefix_s3}#{v}" }
       else
-        _{ Fn__Join "", array.insert(0, arn_prefix_s3) }
+        _join(array.insert(0, arn_prefix_s3), "")
       end
     end
 

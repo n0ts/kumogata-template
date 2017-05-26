@@ -7,24 +7,24 @@ require 'kumogata/template/elasticbeanstalk'
 
 name = _resource_name(args[:name], "elasticbeanstalk environment")
 application = _ref_string("application", args, "elasticbeanstalk application")
-cname = args[:cname] || ""
-description = args[:description] || ""
-environment = _ref_name("environment", args)
-option =
-  if args.key? :option
-    _elasticbeanstalk_option(args[:option])
+cname = _ref_string("cname", args)
+description = _ref_string("description", args)
+environment = _ref_string("environment", args)
+options =
+  if args.key? :options
+    _elasticbeanstalk_options(args[:options])
    else
     ""
   end
-solution = args[:solution] || ""
-template = args[:template] || ""
+solution = _ref_string("solution", args)
+template = _ref_string("template", args)
 tier =
   if args.key? :tier
     _elasticbeanstalk_tier(args[:tier])
   else
     ""
   end
-version = args[:version] || ""
+version = _ref_string("version", args, "elasticbeanstalk application version")
 tags = _tags(args)
 
 _(name) do
@@ -34,7 +34,7 @@ _(name) do
     CNAMEPrefix cname unless cname.empty?
     Description description unless description.empty?
     EnvironmentName environment
-    OptionSettings option unless option.empty?
+    OptionSettings options unless options.empty?
     SolutionStackName solution
     Tags tags
     TemplateName template unless template.empty?

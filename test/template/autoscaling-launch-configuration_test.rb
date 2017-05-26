@@ -33,10 +33,7 @@ _autoscaling_launch_configuration "test", image: "test", ref_instance_type: "tes
       "InstanceType": {
         "Ref": "TestInstanceType"
       },
-      "KeyName": "test",
-      "UserData": {
-        "Fn::Base64": "#!/bin/bash\\n\\n"
-      }
+      "KeyName": "test"
     }
   }
 }

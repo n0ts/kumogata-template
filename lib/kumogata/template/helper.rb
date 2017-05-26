@@ -52,16 +52,30 @@ def _valid_numbers(value, min = 0, max = 0, default = nil)
 end
 
 def _real_name(name)
-  name.to_s.gsub(' ', '-')
+  name.to_s.gsub(" ", "-")
+end
+
+def _ref_key?(name, args, ref_name = '')
+  return true if args.key? "import_#{name}".to_sym
+  return true if args.key? "ref_#{name}".to_sym
+  return true unless args[name.to_sym].to_s.empty?
+  false
 end
 
 def _ref_string(name, args, ref_name = '')
+  return _import(args["import_#{name}".to_sym]) if args.key? "import_#{name}".to_sym
   return args[name.to_sym].to_s || '' unless args.key? "ref_#{name}".to_sym
 
-  _{ Ref _resource_name(args["ref_#{name}".to_sym].to_s, ref_name) }
+  _ref(_resource_name(args["ref_#{name}".to_sym].to_s, ref_name))
+end
+
+def _ref_string_default(name, args, ref_name = '', default = '')
+  ref_string = _ref_string(name, args, ref_name)
+  ref_string.empty? ? default : ref_string
 end
 
 def _ref_array(name, args, ref_name = '')
+  return args["import_#{name}".to_sym].collect{|v| _import(v) } if args.key? "import_#{name}".to_sym
   return _array(args[name.to_sym]) || [] unless args.key? "ref_#{name}".to_sym
 
   array = []
@@ -69,7 +83,7 @@ def _ref_array(name, args, ref_name = '')
     array << _ref_string(name, args, ref_name)
   else
     args["ref_#{name}".to_sym].collect{|v|
-      array << _{ Ref _resource_name(v, ref_name) }
+      array << _ref(_resource_name(v, ref_name))
     }
   end
   array
@@ -77,9 +91,7 @@ end
 
 def _ref_attr_string(name, attr, args, ref_name = '')
   if args.key? "ref_#{name}".to_sym
-    _{
-      Fn__GetAtt [ _resource_name(args["ref_#{name}".to_sym], ref_name), attr ]
-    }
+    _attr_string(args["ref_#{name}".to_sym], attr, ref_name)
   elsif args.key? name.to_sym
     args[name.to_sym]
   else
@@ -88,30 +100,69 @@ def _ref_attr_string(name, attr, args, ref_name = '')
 end
 
 def _ref_name(name, args, ref_name = '')
-  return _{ Ref _resource_name(args["ref_raw_#{name}".to_sym], ref_name) } if args.key? "ref_raw_#{name}".to_sym
+  return _ref(_resource_name(args["ref_raw_#{name}".to_sym], ref_name)) if args.key? "ref_raw_#{name}".to_sym
   return args["raw_#{name}".to_sym] if args.key? "raw_#{name}".to_sym
+  return _import(args["import_#{name}".to_sym]) if args.key? "import_#{name}".to_sym
+
   name = _ref_string(name, args, ref_name)
   if name.empty?
-    _{ Fn__Join "-", [ _{ Ref _resource_name("service") }, _{ Ref _resource_name("name") } ] }
+    _join([ _ref(_resource_name("service")), _ref(_resource_name("name")) ], "-")
   elsif name.is_a? Hash
-    _{ Fn__Join "-", [ _{ Ref _resource_name("service") }, name ] }
+    _join([ _ref(_resource_name("service")), name ], "-")
   else
-    name.gsub(' ', '-')
+    name.gsub(" ", "-")
   end
 end
 
 def _ref_name_default(name, args, ref_name = '')
   return args["raw_#{name}".to_sym] if args.key? "raw_#{name}".to_sym
   name = _ref_string(name, args, ref_name)
-  name.empty? ? args[:name] : name.gsub(' ', '-')
+  name.empty? ? args[:name] : name.gsub(" ", "-")
 end
 
 def _ref_resource_name(args, ref_name = '')
-  _{ Ref _resource_name(args[:name], ref_name) }
+  _ref(_resource_name(args[:name], ref_name))
+end
+
+def _azs(region)
+  _{ Fn__GetAZs region }
 end
 
 def _attr_string(name, attr, ref_name = '')
   _{ Fn__GetAtt [ _resource_name(name, ref_name), attr ] }
+end
+
+def _and(conditions)
+  _{ Fn__And conditions }
+end
+
+def _equals(value1, value2)
+  _{ Fn__Equals [ value1, value2 ] }
+end
+
+def _if(name, value_if_true, value_if_false)
+  _{ Fn__If [ name, value_if_true, value_if_false ] }
+end
+
+def _not(conditions)
+  _{ Fn__Not conditions }
+end
+
+def _or(conditions)
+  _{ Fn__Or conditions }
+end
+
+def _condition(condition)
+  _{ Condition condition }
+end
+
+def _base64(data)
+  data  = data.undent if data.is_a? String
+  _{ Fn__Base64 data }
+end
+
+def _base64_shell(data, shell = "/bin/bash")
+  _base64("#!#{shell}\n#{data}")
 end
 
 def _find_in_map(name, top_level, secondary_level)
@@ -122,12 +173,56 @@ def _select(index, list)
   _{ Fn__Select [ index.to_s, list ] }
 end
 
+def _split(name, delimiter = ",")
+  _{
+    Fn__Split [ delimiter, name ]
+  }
+end
+
+def _sub(name)
+  _{ Fn__Sub name }
+end
+
+def _ref(name)
+  _{ Ref name }
+end
+
+def _export_string(args, prefix)
+  export = args[:export] || ''
+  return '' if export.empty?
+
+  "#{args[:name]}-#{prefix}"
+end
+
+def _export(args)
+  export = args[:export] || ''
+  return '' if export.empty?
+
+  _{
+    Name _sub("${AWS::StackName}-#{export.gsub(" ", "-")}")
+  }
+end
+
+def _join(args, delimiter = ",")
+  _{ Fn__Join delimiter, args }
+end
+
+def _import(name)
+  _{
+    Fn__ImportValue _sub(name)
+  }
+end
+
+def _region
+  _ref("AWS::Region")
+end
+
 def _tag(args)
   key = args[:key].to_s || ''
   value = args[:value] || ''
   if key =~ /^ref_.*/
     key.gsub!(/^ref_/, '')
-    value = _{ Ref _resource_name(value) }
+    value = _ref(_resource_name(value))
   end
 
   _{
@@ -144,11 +239,11 @@ def _tags(args)
           },
           _{
             Key "Service"
-            Value { Ref _resource_name("service") }
+            Value _ref(_resource_name("service"))
           },
           _{
             Key "Version"
-            Value { Ref _resource_name("version") }
+            Value _ref(_resource_name("version"))
           },
          ]
   args[:tags_append].collect{|k, v| tags << _tag(key: k, value: v) } if args.key? :tags_append
@@ -156,15 +251,15 @@ def _tags(args)
 end
 
 def _tag_name(args)
-  return _{ Ref _resource_name(args["ref_raw_tag_name".to_sym]) } if args.key? "ref_raw_tag_name".to_sym
+  return _ref(_resource_name(args["ref_raw_tag_name".to_sym])) if args.key? "ref_raw_tag_name".to_sym
   return args["raw_tag_name".to_sym] if args.key? "raw_tag_name".to_sym
 
   tag_name = _ref_string("tag_name", args)
   return tag_name unless tag_name.empty?
 
   tag_name = _ref_string("name", args)
-  tag_name = tag_name.gsub(' ', '-') if tag_name.is_a? String
-  _{ Fn__Join [ "-", [ _{ Ref _resource_name(args[:tag_service] || "service") }, tag_name ] ] }
+  tag_name = tag_name.gsub(" ", "-") if tag_name.is_a? String
+  _join([ _ref(_resource_name(args[:tag_service] || "service")), tag_name ], "-")
 end
 
 def _availability_zone(args, use_subnet = true)
@@ -196,7 +291,7 @@ def _availability_zones(args, use_subnet = true)
   elsif  args.key? :ref_az
     [ _ref_string("az", zone, "zone") ]
   else
-    _{ Fn__GetAZs _{ Ref "AWS::Region" } }
+    _azs(_region)
   end
 end
 
@@ -213,6 +308,14 @@ end
 
 def _timestamp_utc_from_string(time, type= nil)
   _timestamp_utc(Time.strptime(time, "%Y-%m-%d %H:%M"), type)
+end
+
+def _timestamp_utc_duration(minute, hour = nil, second = nil)
+  duration = "PT"
+  duration += "#{hour}H" unless hour.nil?
+  duration += "#{minute}M"
+  duration += "#{second}S" unless second.nil?
+  duration
 end
 
 def _maintenance_window(service, start_time)

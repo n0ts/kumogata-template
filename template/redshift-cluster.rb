@@ -15,6 +15,7 @@ version = args[:version] || ""
 db_name = _ref_string("db_name", args, "db name")
 elastic = args[:elastic] || ""
 encrypted = _bool("encrypted", args, false)
+iam_role = args[:iam_role] || ""
 user_name = _ref_string("user_name", args, "cluster master user name")
 user_password = _ref_string("user_password", args, "cluster master user password")
 node = _ref_string("node", args, "redshift cluster node types")
@@ -45,6 +46,7 @@ _(name) do
     Encrypted encrypted if encrypted == true
     #HsmClientCertificateIdentifie
     #HsmConfigurationIdentifier
+    IamRoles iam_role unless iam_role.empty?
     #KmsKeyId
     MasterUsername user_name
     MasterUserPassword user_password

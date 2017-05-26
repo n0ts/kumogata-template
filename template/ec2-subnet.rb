@@ -6,7 +6,8 @@ require 'kumogata/template/helper'
 
 name = _resource_name(args[:name], "subnet")
 az = _availability_zone(args, false)
-cidr = args[:cidr] || "10.1.0.0/24"
+cidr = _ref_string("cidr", args)
+cidr = "10.1.0.0/24" if cidr.empty?
 map_public_ip_on_launch = _bool("map_public_ip_on_launch", args, true)
 tags = _tags(args)
 vpc = _ref_string("vpc", args, "vpc")

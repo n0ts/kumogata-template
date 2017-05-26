@@ -1,13 +1,24 @@
 require 'minitest/autorun'
-require 'kumogata'
-require 'kumogata/argument_parser'
+require 'kumogata2'
+require 'kumogata2/cli/option_parser'
+require 'kumogata2/plugin/ruby'
 require 'json'
 require 'tempfile'
+require 'yaml'
 
 # for only test
 ENV['TZ'] = 'Asia/Tokyo'
 
-class Kumogata::Client
+class Kumogata2::Client
+  include Kumogata2::Logger::Helper
+
+  def initialize(options)
+    @options = options.kind_of?(Hashie::Mash) ? options : Hashie::Mash.new(options)
+    @plugin_by_ext = {}
+  end
+end
+
+class Kumogata2::Plugin::Ruby::Context
   def define_template_func(scope, path_or_url)
     functions = ""
     Dir.glob("template/*.rb").all? do |file|
@@ -73,6 +84,11 @@ def tempfile(content, template_ext = nil)
   basename = "#{File.basename __FILE__}.#{$$}"
   basename = [basename, template_ext] if template_ext
 
+  content = <<EOS
+template do
+  #{content}
+end
+EOS
   Tempfile.open(basename) do |f|
     f << content
     f.flush
@@ -84,18 +100,25 @@ end
 def run_client(template)
   $stdout = open('/dev/null', 'w') unless ENV['DEBUG']
 
-  kumogata_options = Kumogata::ArgumentParser::DEFAULT_OPTIONS
-  kumogata_options[:output_format] = 'json'
-  kumogata_options[:result_log] = '/dev/null'
-  kumogata_options[:command_result_log] = '/dev/null'
+  Kumogata2::Plugin.load_plugins
+
+  options = Kumogata2::CLI::OptionParser::DEFAULT_OPTIONS
+  options[:output_format] = 'json'
+  options[:result_log] = '/dev/null'
+  options[:command_result_log] = '/dev/null'
   template_ext = '.rb'
 
   template = tempfile(template, template_ext) do |f|
-    Kumogata::Client.new(kumogata_options).send(:evaluate_template, f, f.path)
+    Kumogata2::Client.new(options).send(:open_template, f.path)
   end
 end
 
 def run_client_as_json(template)
   eval_template = run_client(template)
   JSON.pretty_generate(eval_template)
+end
+
+def run_client_as_yaml(template)
+  eval_template = run_client(template)
+  YAML.dump(eval_template)
 end
