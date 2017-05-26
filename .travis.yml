@@ -2,7 +2,7 @@ sudo: false
 language: ruby
 cache: bundler
 rvm:
-  - 2.4.0
+  - 2.4.1
 gemfile: n0ts/kumogata-template/Gemfile
 script:
   - bundle install --path vendor/bundle
