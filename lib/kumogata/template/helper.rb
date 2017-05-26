@@ -124,6 +124,33 @@ def _ref_resource_name(args, ref_name = '')
   _ref(_resource_name(args[:name], ref_name))
 end
 
+def _ref_arn(service, name)
+  _join([ "arn:aws:#{service}:::", _ref(_resource_name(name)) ], ",")
+end
+
+def _ref_pseudo(type)
+  pseudo =
+    case type
+    when "account"
+      "AccountId"
+    when "notification arns"
+      "NotificationARNs"
+    when "no value"
+      "NoValue"
+    when "region"
+      "Region"
+    when "stack id"
+      "StackId"
+    when "stack name"
+      "StackName"
+    end
+  _ref("AWS::#{pseudo}")
+end
+
+def _ref(name)
+  _{ Ref name }
+end
+
 def _azs(region)
   _{ Fn__GetAZs region }
 end
@@ -181,10 +208,6 @@ end
 
 def _sub(name)
   _{ Fn__Sub name }
-end
-
-def _ref(name)
-  _{ Ref name }
 end
 
 def _export_string(args, prefix)
