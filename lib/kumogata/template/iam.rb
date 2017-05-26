@@ -62,6 +62,54 @@ def _iam_policies(name, args)
   array
 end
 
+def _iam_policy_principal(args, key = "principal")
+  principal = args[key.to_sym] || {}
+  return "" if principal.empty?
+  return principal if principal.is_a? String
+
+  if principal.key? :account
+    account = principal[:account]
+    if account.is_a? Hash
+      _{
+        AWS _iam_arn("iam", { type: "user", account_id: account[:id], user: account[:name] })
+      }
+    else
+      _{
+        AWS account
+      }
+    end
+  elsif principal.key? :accounts
+    accounts = []
+    principal[:accounts].each do |v|
+      accounts << _iam_arn("iam", { type: "user", account_id: v[:id], user: v[:name] })
+    end
+    _{
+      AWS accounts
+    }
+  elsif principal.key? :federated
+    _{
+      Federated principal[:federated]
+    }
+  elsif principal.key? :assumed_role
+    assumed_role = principal[:assumed_role]
+    _{
+      AWS _iam_arn("iam",
+                   { sts: true, type: "assumed-role",
+                     account_id: assumed_role[:id], user: assumed_role[:name] })
+    }
+  elsif principal.key? :services or principal.key? :service
+    _{
+      Service principal[:services] || principal[:service]
+    }
+  elsif principal.key? :canonical
+    _{
+      CanonicalUser principal[:canonical]
+    }
+  else
+    ""
+  end
+end
+
 def _iam_policy_document(name, args)
   array = []
   documents = args[name.to_sym] || []
@@ -73,14 +121,12 @@ def _iam_policy_document(name, args)
 
     actions = action.collect{|vv| "#{service}:#{vv}" }
     if v.key? :resource
-      if v[:resource].is_a? String
-        resource = _iam_arn(service, v[:resource])
-      else
-        resource = v[:resource].collect{|vv| _iam_arn(service, vv) }
-      end
+      resource = _iam_arn(service, v[:resource])
     else
       resource = [ "*" ]
     end
+    principal = _iam_policy_principal(v)
+    not_principal = _iam_policy_principal(v, "not_principal")
 
     array << _{
       Sid v[:sid] if v.key? :sid
@@ -88,8 +134,8 @@ def _iam_policy_document(name, args)
       NotAction no_action v[:no_action] if v.key? :no_action
       Action actions
       Resource resource unless v.key? :no_resource
-      Principal v[:principal] if v.key? :principal
-      NotPrincipal v[:not_principal] if v.key? :not_principal
+      Principal principal unless principal.empty?
+      NotPrincipal not_principal unless not_principal.empty?
       Condition _iam_to_policy_condition(v[:condition]) if v.key? :condition
     }
   end
@@ -132,29 +178,62 @@ end
 # Amazon Resource Names (ARNs) and AWS Service Namespaces
 # https://docs.aws.amazon.com/general/latest/gr/aws-arns-and-namespaces.html
 def _iam_arn(service, resource)
-  arn_prefix = "arn:aws:#{service}"
+  def _convert(args)
+    return "" if args.empty?
+    return args if args.is_a? String
+    array = []
+    args.each_pair do |k, v|
+      array <<
+        case k.to_s
+        when "ref"
+          _{ Ref _resource_name(v) }
+        when /ref_(.*)/
+          _ref_pseudo($1)
+        else
+          v
+        end
+    end
+    (args.size == 1) ? array.first : array
+  end
 
+  arn_prefix = "arn:aws:#{service}"
   case service
   when "s3"
+    arn_prefix_s3 = "#{arn_prefix}:::"
     if resource.is_a? String
-      "#{arn_prefix}:::#{resource}"
+      "#{arn_prefix_s3}#{resource}"
+
+    elsif resource.is_a? Hash
+      _join([ arn_prefix_s3, _convert(resource) ], "")
+
     else
-      resources = [ "#{arn_prefix}:::" ]
-      resource.each do |v|
-        if v =~ /^Ref_(.*)/
-          resources << _ref(_resource_name($1))
+      array, array_map = [], []
+      resource.each_with_index do |v, i|
+        if v.is_a? String
+          array << v
+        elsif v.is_a? Hash
+          array << _convert(v)
         else
-          resources << v
+          tmp = [ arn_prefix_s3 ]
+          tmp += v.collect{|vv| _convert(vv) }
+          array_map << _{ Fn__Join "", tmp }
         end
       end
-      _join(resources, "")
+      return array_map unless array_map.empty?
+
+      if array.select{|v| v.is_a? Hash }.empty?
+        array.collect{|v| "#{arn_prefix_s3}#{v}" }
+      else
+        _join(array.insert(0, arn_prefix_s3), "")
+      end
     end
 
   when "cloudformation"
     if resource == "*"
       resource
     else
-      "#{arn_prefix}:#{resource[:region]}:#{resource[:account_id]}:stack/#{resource[:stack]}"
+      resource = [ { region: resource[:region], account_id: resource[:account_id], stack: resource[:stack] } ] if resource.is_a? String
+      resource.collect{|v| "#{arn_prefix}:#{v[:region]}:#{v[:account_id]}:stack/#{v[:stack]}" }
     end
 
   when "iam"
@@ -169,7 +248,7 @@ def _iam_arn(service, resource)
     end
 
   when "elasticloadbalancing"
-    "#{arn_prefix}:*:*:loadbalancer/#{resource}"
+    resource.collect{|v| "#{arn_prefix}:*:*:loadbalancer/#{v}" }
 
   when "logs"
     "#{arn_prefix}:*:*:*"
@@ -177,22 +256,6 @@ def _iam_arn(service, resource)
   when "kinesis"
     "#{arn_prefix}:#{resource[:region]}:#{resource[:account_id]}:#{resource[:type]}/#{resource[:name]}"
   end
-end
-
-def _iam_s3_bucket_policy(region, bucket, prefix, aws_account_id)
-  account_id = ELB_ACCESS_LOG_ACCOUNT_ID[region.to_sym]
-  prefix = [ prefix ] if prefix.is_a? String
-  resource = prefix.collect{|v| "#{bucket}/#{v}/AWSLogs/#{aws_account_id}/*" }
-  [
-   {
-     service: "s3",
-     action: [ "PutObject" ],
-     principal: {
-       AWS: [ account_id ],
-     },
-     resource: resource,
-   },
-  ]
 end
 
 def _iam_login_profile(args)

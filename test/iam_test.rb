@@ -81,6 +81,88 @@ Policies _iam_policies "test", test: [ { document: [ { service: "s3" } ] } ]
     assert_equal exp_template.chomp, act_template
   end
 
+  def test_iam_policy_principal
+    template = <<-EOS
+Test _iam_policy_principal principal: { account: 1 }
+    EOS
+    act_template = run_client_as_json(template)
+    exp_template = <<-EOS
+{
+  "Test": {
+    "AWS": "1"
+  }
+}
+    EOS
+    assert_equal exp_template.chomp, act_template
+
+    template = <<-EOS
+Test _iam_policy_principal principal: { account: { id: 1, name: "test" } }
+    EOS
+    act_template = run_client_as_json(template)
+    exp_template = <<-EOS
+{
+  "Test": {
+    "AWS": "arn:aws:iam::1:user/test"
+  }
+}
+    EOS
+    assert_equal exp_template.chomp, act_template
+
+    template = <<-EOS
+Test _iam_policy_principal principal: { accounts: [ { id: 1, name: "test" } ] }
+    EOS
+    act_template = run_client_as_json(template)
+    exp_template = <<-EOS
+{
+  "Test": {
+    "AWS": [
+      "arn:aws:iam::1:user/test"
+    ]
+  }
+}
+    EOS
+    assert_equal exp_template.chomp, act_template
+
+    template = <<-EOS
+Test _iam_policy_principal principal: { federated: "test" }
+    EOS
+    act_template = run_client_as_json(template)
+    exp_template = <<-EOS
+{
+  "Test": {
+    "Federated": "test"
+  }
+}
+    EOS
+    assert_equal exp_template.chomp, act_template
+
+    template = <<-EOS
+Test _iam_policy_principal principal: { assumed_role: { id: 1, name: "test/test" } }
+    EOS
+    act_template = run_client_as_json(template)
+    exp_template = <<-EOS
+{
+  "Test": {
+    "AWS": "arn:aws:sts::1:assumed-role/test/test"
+  }
+}
+    EOS
+    assert_equal exp_template.chomp, act_template
+
+     template = <<-EOS
+Test _iam_policy_principal principal: { service: "test" }
+    EOS
+    act_template = run_client_as_json(template)
+    exp_template = <<-EOS
+{
+  "Test": {
+    "Service": "test"
+  }
+}
+    EOS
+    assert_equal exp_template.chomp, act_template
+  end
+
   def test_iam_policy_document
     template = <<-EOS
 PolicyDocument _iam_policy_document "test", test: [ { service: "s3" } ]
@@ -190,28 +272,104 @@ arn _iam_arn("s3", "test")
 }
   EOS
     assert_equal exp_template.chomp, act_template
-  end
 
-  def test_iam_s3_bucket_policy
     template = <<-EOS
-arn _iam_s3_bucket_policy("us_east1", "test", "test", 1234)
+arn _iam_arn("s3", { ref: "test" })
+    EOS
+    act_template = run_client_as_json(template)
+    exp_template = <<-EOS
+{
+  "arn": {
+    "Fn::Join": [
+      "",
+      [
+        "arn:aws:s3:::",
+        {
+          "Ref": "Test"
+        }
+      ]
+    ]
+  }
+}
+  EOS
+    assert_equal exp_template.chomp, act_template
+
+    template = <<-EOS
+arn _iam_arn("s3", [ "test1", "test2" ])
+    EOS
+    act_template = run_client_as_json(template)
+    exp_template = <<-EOS
+{
+  "arn": [
+    "arn:aws:s3:::test1",
+    "arn:aws:s3:::test2"
+  ]
+}
+  EOS
+    assert_equal exp_template.chomp, act_template
+
+    template = <<-EOS
+arn _iam_arn("s3", [ { ref: "test" }, { ref_account: true }, "/*" ])
+    EOS
+    act_template = run_client_as_json(template)
+    exp_template = <<-EOS
+{
+  "arn": {
+    "Fn::Join": [
+      "",
+      [
+        "arn:aws:s3:::",
+        {
+          "Ref": "Test"
+        },
+        {
+          "Ref": "AWS::AccountId"
+        },
+        "/*"
+      ]
+    ]
+  }
+}
+  EOS
+    assert_equal exp_template.chomp, act_template
+
+    template = <<-EOS
+test1 = [ { ref: "test1" }, { ref_account: true }, "/*" ]
+test2 = [ { ref: "test2" }, { ref_account: true }, "/*" ]
+arn _iam_arn("s3", [ test1, test2 ])
     EOS
     act_template = run_client_as_json(template)
     exp_template = <<-EOS
 {
   "arn": [
     {
-      "service": "s3",
-      "action": [
-        "PutObject"
-      ],
-      "principal": {
-        "AWS": [
-          null
+      "Fn::Join": [
+        "",
+        [
+          "arn:aws:s3:::",
+          {
+            "Ref": "Test1"
+          },
+          {
+            "Ref": "AWS::AccountId"
+          },
+          "/*"
         ]
-      },
-      "resource": [
-        "test/test/AWSLogs/1234/*"
+      ]
+    },
+    {
+      "Fn::Join": [
+        "",
+        [
+          "arn:aws:s3:::",
+          {
+            "Ref": "Test2"
+          },
+          {
+            "Ref": "AWS::AccountId"
+          },
+          "/*"
+        ]
       ]
     }
   ]

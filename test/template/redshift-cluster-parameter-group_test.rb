@@ -3,7 +3,8 @@ require 'abstract_unit'
 class RedshiftClusterParameterGroupTest < Minitest::Test
   def test_normal
     template = <<-EOS
-_redshift_cluster_parameter_group "test", parameters: [ ParameterName: "enable_user_activity_logging", ParameterValue: "true"]
+parameters = [ { name: "enable_user_activity_logging", value: "true" } ]
+_redshift_cluster_parameter_group "test", parameters: parameters
     EOS
     act_template = run_client_as_json(template)
     exp_template = <<-EOS
