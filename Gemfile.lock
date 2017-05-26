@@ -1,20 +1,20 @@
 PATH
   remote: .
   specs:
-    kumogata-template (0.0.26)
+    kumogata-template (0.0.27)
       aws-sdk (~> 2.3)
       kumogata (= 0.5.12)
 
 GEM
   remote: https://rubygems.org/
   specs:
-    aws-sdk (2.9.21)
-      aws-sdk-resources (= 2.9.21)
-    aws-sdk-core (2.9.21)
+    aws-sdk (2.9.25)
+      aws-sdk-resources (= 2.9.25)
+    aws-sdk-core (2.9.25)
       aws-sigv4 (~> 1.0)
       jmespath (~> 1.0)
-    aws-sdk-resources (2.9.21)
-      aws-sdk-core (= 2.9.21)
+    aws-sdk-resources (2.9.25)
+      aws-sdk-core (= 2.9.25)
     aws-sdk-v1 (1.67.0)
       json (~> 1.4)
       nokogiri (~> 1)
