@@ -3,11 +3,12 @@
 # http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-resource-redshift-clusterparametergroup.html
 #
 require 'kumogata/template/helper'
+require 'kumogata/template/redshift'
 
 name = _resource_name(args[:name], "redshift cluster parameter group")
 description = args[:description] || "#{args[:name]} redshift cluster parameter group description"
 family = args[:family] || "redshift-1.0"
-parameters = args[:parameters] || []
+parameters = _redshift_parameters(args)
 
 _(name) do
   Type "AWS::Redshift::ClusterParameterGroup"
