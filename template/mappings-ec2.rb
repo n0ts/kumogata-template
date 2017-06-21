@@ -14,22 +14,22 @@ end
 # Amazon Linux AMI (HVM / 64-bit)
 # https://aws.amazon.com/marketplace/pp/B00CIYTQTC/
 AWSRegionArch2AMIAmazonLinuxOfficial do
-  # 2016.09
+  # 2017.03.0.20170417, released 04/19/2017
   image_id = {
-    virginia:   "0b33d91d",
-    ohio:       "c55673a0",
-    california: "165a0876",
-    oregon:     "f173cc91",
-    canada:     "ebed508f",
-    ireland:    "70edb016",
-    frankfurt:  "af0fc0c0",
-    london:     "f1949e95",
-    tokyo:      "56d4ad31",
-    seoul:      "dac312b4",
-    singapore:  "dc9339bf",
-    sydney:     "1c47407f",
-    mumbai:     "f9daac96",
-    saopaulo:   "80086dec",
+    virginia:   "c58c1dd3",
+    ohio:       "4191b524",
+    california: "7a85a01a",
+    oregon:     "4836a428",
+    canada:     "0bd66a6f",
+    ireland:    "01ccc867",
+    frankfurt:  "b968bad6",
+    london:     "b6daced2",
+    tokyo:      "923d12f5",
+    seoul:      "9d15c7f3",
+    singapore:  "fc5ae39f",
+    sydney:     "162c2575",
+    mumbai:     "52c7b43d",
+    saopaulo:   "37cfad5b",
   }
 
   AWS_REGION.each do |key, region|
@@ -43,22 +43,22 @@ end
 # https://wiki.centos.org/Cloud/AWS
 # https://aws.amazon.com/marketplace/pp/B00O7WM7QW/
 AWSRegionArch2AMICentos7Official do
-  # 1602, released 02/26/2016
+  # 1704, released 05/15/2017
   image_id = {
-    virginia:   "6d1c2007",
-    ohio:       "6a2d760f",
-    california: "af4333cf",
-    oregon:     "d2c924b2",
-    canada:     "af62d0cb",
-    ireland:    "7abd0209",
-    frankfurt:  "9bf712f4",
-    london:     "bb373ddf",
-    tokyo:      "eec1c380",
-    seoul:      "c74789a9",
-    singapore:  "f068a193",
-    sydney:     "fedafc9d",
-    mumbai:     "95cda6fa",
-    saopaulo:   "26b93b4a",
+    virginia:   "46c1b650",
+    ohio:       "18f8df7d",
+    california: "f5d7f195",
+    oregon:     "f4533694",
+    canada:     "28823e4c",
+    ireland:    "061b1560",
+    frankfurt:  "fa2df395",
+    london:     "e05a4d84",
+    tokyo:      "29d1e34e",
+    seoul:      "08e93466",
+    singapore:  "7d2eab1e",
+    sydney:     "34171d57",
+    mumbai:     "3c0e7353",
+    saopaulo:   "b31a75df",
   }
 
   AWS_REGION.each do |key, region|
@@ -72,22 +72,22 @@ end
 # https://cloud-images.ubuntu.com/locator/ec2/
 # https://aws.amazon.com/marketplace/pp/B01JBL2M0O
 AWSRegionArch2AMIUbuntu16Official do
-  # 16.04 LTS 20160907.1 hvm:ebs-ssd
+  # 20170411, released 04/11/2017
   image_id = {
-    virginia:   "3267bb24",
-    ohio:       "e5be9b80",
-    california: "456f3125",
-    oregon:	"df25a6bf",
-    canada:     "",  ## N/A
-    ireland:    "cdfed1ab",
-    frankfurt:  "f6dd0899",
-    london:     "bcc5d0d8",
-    tokyo:      "0c05506b",
-    seoul:      "fc38e892",
-    singapore:  "4a299829",
-    sydney:     "d02d2eb3",
+    virginia:   "e4139df2",
+    ohio:       "33ab8f56",
+    california: "30476250",
+    oregon:	"17ba2a77",
+    canada:     "9eee52fa",
+    ireland:    "b5a893d3",
+    frankfurt:  "1b4d9e74",
+    london:     "4d3a2e29",
+    tokyo:      "c9e3c0ae",
+    seoul:      "3cda0852",
+    singapore:  "6e74ca0d",
+    sydney:     "92e8e6f1",
     mumbai:     "",  ## N/A
-    saopaulo:   "4cacca20",
+    saopaulo:   "36187a5a",
   }
 
   AWS_REGION.each do |key, region|

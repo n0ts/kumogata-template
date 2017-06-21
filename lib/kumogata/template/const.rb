@@ -160,10 +160,10 @@ RDS_INSTANCE_CLASSES =
 RDS_DEFAULT_INSTANCE_CLASS = "db.t2.medium"
 RDS_DEFAULT_ENGINE = "mysql"
 RDS_DEFAULT_ENGINE_VERSION = {
-  mysql: "5.7.10",
-  mariadb: "10.0.17",
+  mysql: "5.7.17",
+  mariadb: "10.1.19",
   aurora: "5.6.10a",
-  postgres: "9.4.5",
+  postgres: "9.6.2-R1",
 }
 
 # https://aws.amazon.com/redshift/pricing/
