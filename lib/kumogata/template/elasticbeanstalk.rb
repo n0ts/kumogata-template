@@ -359,7 +359,7 @@ def _elasticbeanstalk_to_option_environment(args)
     name: "aws:elasticbeanstalk:environment",
     option: "EnvironmentType",
     value: _valid_values(args[:type],
-                         %w( SingleInstnace LoadBalanced ), "LoadBalanced"),
+                         %w( SingleInstance LoadBalanced ), "LoadBalanced"),
   }
   array << {
     name: "aws:elasticbeanstalk:environment",
@@ -371,7 +371,7 @@ def _elasticbeanstalk_to_option_environment(args)
     option: "LoadBalancerType",
     value: _valid_values(args[:load_balancer_type],
                          %w( classic application ), "application")
-  }
+  } if args.key? :load_balancer_type
   array
 end
 
