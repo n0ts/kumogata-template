@@ -206,19 +206,19 @@ ELB_ACCESS_LOG_ACCOUNT_ID = {
 }
 
 # http://docs.aws.amazon.com/elasticbeanstalk/latest/dg/concepts.platforms.html
+ELASTIC_BEANTALK_LINUX = "64bit Amazon Linux 2017.03"
 ELASTIC_BEANTALK_PLATFORM = {
-  packer: "64bit Amazon Linux 2016.09 v2.1.0 running Packer 1.0.0",
-  nginx: "64bit Amazon Linux 2016.09 v2.5.2 running Docker 1.12.6",
-  docker: "64bit Amazon Linux 2016.09 v2.5.2 running Multi-container Docker 1.12.6 (Generic)",
-  go: "64bit Amazon Linux 2016.09 v2.3.3 running Go 1.6",
-  java: "64bit Amazon Linux 2016.09 v2.4.4 running Java 8",
-  java_tomcat: "64bit Amazon Linux 2016.09 v2.5.5 running Tomcat 8 Java 8",
+  packer: "#{ELASTIC_BEANTALK_LINUX} v2.2.0 running Packer 1.0.0",
+  docker: "#{ELASTIC_BEANTALK_LINUX} v2.6.0 running Docker 1.12.6",
+  go: "#{ELASTIC_BEANTALK_LINUX} v2.4.0 running Go 1.7",
+  java: "#{ELASTIC_BEANTALK_LINUX} v2.5.0 running Java 8",
+  java_tomcat: "#{ELASTIC_BEANTALK_LINUX} v2.6.0 running Tomcat 8 Java 8",
   windows_server: "64bit Windows Server 2012 R2 v1.2.0 running IIS 8.5",
-  node: "64bit Amazon Linux 2016.09 v4.0.1 running Node.js",
-  php: "64bit Amazon Linux 2016.09 v2.3.3 running PHP 7.0",
-  python: "64bit Amazon Linux 2016.09 v2.3.3 running Python 3.4",
-  ruby_puma: "64bit Amazon Linux 2016.09 v2.3.1 running Ruby 2.3 (Puma)",
-  ruby_passenger: "64bit Amazon Linux 2016.09 v2.3.1 running Ruby 2.3 (Passenger Standalone)",
+  node: "#{ELASTIC_BEANTALK_LINUX} v4.1.0 running Node.js",
+  php: "#{ELASTIC_BEANTALK_LINUX} v2.4.0 running PHP 7.0",
+  python: "#{ELASTIC_BEANTALK_LINUX} v2.4.0 running Python 3.4",
+  ruby_puma: "#{ELASTIC_BEANTALK_LINUX} v2.4.0 running Ruby 2.3 (Puma)",
+  ruby_passenger: "#{ELASTIC_BEANTALK_LINUX} v2.4.0 running Ruby 2.3 (Passenger Standalone)",
 }
 
 ELASTIC_BEANTALK_EC2_DEFAULT_ROLE = "aws-elasticbeanstalk-ec2-role"
