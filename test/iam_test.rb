@@ -62,17 +62,20 @@ Policies _iam_policies "test", test: [ { document: [ { service: "s3" } ] } ]
 {
   "Policies": [
     {
-      "PolicyDocument": [
-        {
-          "Effect": "Allow",
-          "Action": [
-            "s3:*"
-          ],
-          "Resource": [
-            "*"
-          ]
-        }
-      ],
+      "PolicyDocument": {
+        "Version": "2012-10-17",
+        "Statement": [
+          {
+            "Effect": "Allow",
+            "Action": [
+              "s3:*"
+            ],
+            "Resource": [
+              "*"
+            ]
+          }
+        ]
+      },
       "PolicyName": "Policy0"
     }
   ]
