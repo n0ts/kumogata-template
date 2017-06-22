@@ -55,7 +55,10 @@ def _iam_policies(name, args)
   policies = args[name.to_sym] || []
   policies.each_with_index do |v, i|
     array << _{
-      PolicyDocument _iam_policy_document("document", v)
+      PolicyDocument do
+        Version "2012-10-17"
+        Statement _iam_policy_document("document", v)
+      end
       PolicyName v[:name] || _resource_name("policy", i)
     }
   end
