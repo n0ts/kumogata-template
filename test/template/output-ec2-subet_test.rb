@@ -8,17 +8,17 @@ _output_ec2_subnet "test"
     act_template = run_client_as_json(template)
     exp_template = <<-EOS
 {
-  "TestName": {
-    "Description": "description of TestName",
+  "TestSubnet": {
+    "Description": "description of TestSubnet",
     "Value": {
-      "Ref": "Test"
+      "Ref": "TestSubnet"
     }
   },
-  "TestCidr": {
-    "Description": "description of TestCidr",
+  "TestSubnetAz": {
+    "Description": "description of TestSubnetAz",
     "Value": {
       "Fn::GetAtt": [
-        "Test",
+        "TestSubnet",
         "AvailabilityZone"
       ]
     }
