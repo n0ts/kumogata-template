@@ -30,6 +30,24 @@ _output_elasticache "test", replication: true, engine: "redis"
       "Ref": "TestCacheReplicationGroup"
     }
   },
+  "TestCacheReplicationGroupConfigurationAddress": {
+    "Description": "description of TestCacheReplicationGroupConfigurationAddress",
+    "Value": {
+      "Fn::GetAtt": [
+        "TestCacheReplicationGroup",
+        "ConfigurationEndPoint.Address"
+      ]
+    }
+  },
+  "TestCacheReplicationGroupConfigurationPort": {
+    "Description": "description of TestCacheReplicationGroupConfigurationPort",
+    "Value": {
+      "Fn::GetAtt": [
+        "TestCacheReplicationGroup",
+        "ConfigurationEndPoint.Port"
+      ]
+    }
+  },
   "TestCacheReplicationGroupPrimaryAddress": {
     "Description": "description of TestCacheReplicationGroupPrimaryAddress",
     "Value": {

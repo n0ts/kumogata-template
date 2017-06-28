@@ -23,7 +23,7 @@ def _lambda_function_code(args)
     S3Bucket s3_bucket if is_s3
     S3Key s3_key if is_s3
     S3ObjectVersion s3_object_version if is_s3 and !s3_object_version.empty?
-    ZipFile _{ Fn__Join '\n', zip_file_code } unless is_s3
+    ZipFile _join(zip_file_code, '\n') unless is_s3
   }
 end
 
@@ -43,5 +43,14 @@ def _lambda_vpc_config(args)
   _{
     SecurityGroupIds security_group_ids unless security_group_ids.empty?
     SubnetIds subnet_ids unless subnet_ids.empty?
+  }
+end
+
+def _lambda_dead_letter(args)
+  return "" unless args.key? :dead_latter
+
+  dead_letter = _ref_string("dead_letter", args)
+  _{
+    TargetArn dead_letter
   }
 end

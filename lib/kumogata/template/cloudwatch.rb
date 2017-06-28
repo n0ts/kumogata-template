@@ -238,15 +238,7 @@ end
 
 def _cloudwatch_to_ec2_action(value)
   value = _valid_values(value, %w( recover stop terminate reboot ), "recover")
-  _{
-    Fn__Join "", [
-                  "arn:aws:automate:",
-                  _{
-                    Ref "AWS::Region"
-                  },
-                  ":ec2:#{value}"
-                 ]
-  }
+  _join([ "arn:aws:automate:", _region, ":ec2:#{value}" ], "")
 end
 
 def _cloudwatch_dimension(args)

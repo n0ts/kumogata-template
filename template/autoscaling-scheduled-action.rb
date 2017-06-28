@@ -3,6 +3,7 @@
 # http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-resource-as-scheduledaction.html
 #
 require 'kumogata/template/helper'
+require 'kumogata/template/autoscaling'
 
 name = _resource_name(args[:name], "autoscaling scheduled action")
 autoscaling = _ref_string("autoscaling", args, "autoscaling group")
@@ -18,25 +19,9 @@ max = _integer("max", args, -1)
 max = desired if max < desired
 min = _integer("min", args, -1)
 min = desired if min < desired
-
 recurrence =
   if args.key? :recurrence
-    case args[:recurrence]
-    when "every 5 min"
-      "*/5 * * * *"
-    when "every 30 min"
-      "0,30 * * * *"
-    when "every 1 hour"
-      "0 * * * *"
-    when "every day"
-      "0 0 * * *"
-    when "every week"
-      "0 0 * * Tue"
-    when /\*/
-      args[:recurrence]
-    else
-      _timestamp_utc(args[:recurrence], "cron")
-    end
+    _autoscaling_to_schedued_recurrence(args[:recurrence])
   else
     ""
   end

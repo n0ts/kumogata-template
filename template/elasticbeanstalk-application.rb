@@ -5,13 +5,14 @@
 require 'kumogata/template/helper'
 
 name = _resource_name(args[:name], "elasticbeanstalk application")
-application = _ref_name("application", args)
-description = args[:description] || ""
+application = _ref_string("application", args)
+application = args[:name] if application.empty?
+description = _ref_string("description", args)
 
 _(name) do
   Type "AWS::ElasticBeanstalk::Application"
   Properties do
     ApplicationName application
-    Destination description unless description.empty?
+    Description description unless description.empty?
   end
 end

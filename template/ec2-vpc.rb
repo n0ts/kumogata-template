@@ -5,7 +5,8 @@
 require 'kumogata/template/helper'
 
 name = _resource_name(args[:name], "vpc")
-cidr = args[:cidr] || "191.168.1.0/16"
+cidr = _ref_string("cidr", args)
+cidr = "10.1.1.0/28" if cidr.empty?
 dns_support = _bool("dns_support", args, true)
 dns_hostnames = args[:dns_hostnames] || dns_support
 instance_tenancy = _valid_values(args[:instance_tenancy],

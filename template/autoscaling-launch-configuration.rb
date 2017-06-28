@@ -19,7 +19,7 @@ placement = _ref_string("placement", args)
 ram = args[:ram] || ""
 security_groups = _ref_array("security_groups", args, "security group")
 spot = args[:spot] || ""
-user_data = _ref_string("user_data", args, "user data")
+user_data = _ec2_user_data(args)
 
 _(name) do
   Type "AWS::AutoScaling::LaunchConfiguration"
@@ -40,15 +40,6 @@ _(name) do
     RamDiskId ram unless ram.empty?
     SecurityGroups security_groups unless security_groups.empty?
     SpotPrice spot unless spot.empty?
-    UserData do
-      if user_data.is_a? Hash
-        Fn__Base64 user_data
-      else
-        Fn__Base64 (<<-EOS).undent
-#!/bin/bash
-#{user_data}
-EOS
-      end
-    end
+    UserData user_data unless user_data.empty?
   end
 end

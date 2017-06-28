@@ -8,7 +8,12 @@ require 'kumogata/template/elasticbeanstalk'
 name = _resource_name(args[:name], "elasticbeanstalk configuration template")
 application = _ref_string("application", args, "elasticbeanstalk application")
 description = args[:description] || ""
-option = _elasticbeanstalk_option(args[:option] || [])
+options =
+  if args.key? :options
+    _elasticbeanstalk_options(args[:options])
+   else
+    ""
+  end
 environment = args[:environment] || ""
 solution = args[:solution] || ""
 configuration =
@@ -24,7 +29,7 @@ _(name) do
     ApplicationName application
     Description description unless description.empty?
     EnvironmentId environment unless environment.empty?
-    OptionSettings option unless option.empty?
+    OptionSettings options unless options.empty?
     SolutionStackName solution unless solution.empty?
     SourceConfiguration configuration unless configuration.empty?
   end

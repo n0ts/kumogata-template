@@ -5,7 +5,19 @@
 require 'kumogata/template/helper'
 
 name = _resource_name(args[:name], "queue")
+content =
+  if args.key? :content
+    _bool("content", args, true)
+  else
+    ""
+  end
 deplay = args[:deplay] || 0
+fifo =
+  if args.key? :fifo
+    _bool("fifo", args, true)
+  else
+    ""
+  end
 max = args[:max] || 262144   # default 256KiB
 retention = args[:retention] || 345600   # default 4 days
 queue = _ref_name("queue", args)
@@ -16,7 +28,9 @@ visibility = args[:visibility] || 30   # default 30 seconds
 _(name) do
   Type "AWS::SQS::Queue"
   Properties do
+    ContentBasedDeduplication content unless content.empty?
     DelaySeconds deplay
+    FifoQueue fio unless fifo.empty?
     MaximumMessageSize max
     MessageRetentionPeriod retention
     QueueName queue

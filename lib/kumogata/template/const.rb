@@ -95,7 +95,7 @@ EC2_INSTANCE_TYPES =
    # x1.32xlarge  128   1,952      2 x 1,902 SSD    10
    "x1.16xlarge", "x1.32xlarge",
   ]
-EC2_DEFAULT_INSTANCE_TYPE = "t2.medium"
+EC2_DEFAULT_INSTANCE_TYPE = "t2.micro"
 
 ELASTICACHE_DEFAULT_ENGINE = "redis"
 ELASTICACHE_DEFAULT_ENGINE_VERSION = {
@@ -160,10 +160,10 @@ RDS_INSTANCE_CLASSES =
 RDS_DEFAULT_INSTANCE_CLASS = "db.t2.medium"
 RDS_DEFAULT_ENGINE = "mysql"
 RDS_DEFAULT_ENGINE_VERSION = {
-  mysql: "5.7.10",
-  mariadb: "10.0.17",
+  mysql: "5.7.17",
+  mariadb: "10.1.19",
   aurora: "5.6.10a",
-  postgres: "9.4.5",
+  postgres: "9.6.2-R1",
 }
 
 # https://aws.amazon.com/redshift/pricing/
@@ -204,3 +204,21 @@ ELB_ACCESS_LOG_ACCOUNT_ID = {
   "ap-northeast-2": "600734575887",
   "sa-east-1": "507241528517",
 }
+
+# http://docs.aws.amazon.com/elasticbeanstalk/latest/dg/concepts.platforms.html
+ELASTIC_BEANTALK_LINUX = "64bit Amazon Linux 2017.03"
+ELASTIC_BEANTALK_PLATFORM = {
+  packer: "#{ELASTIC_BEANTALK_LINUX} v2.2.0 running Packer 1.0.0",
+  docker: "#{ELASTIC_BEANTALK_LINUX} v2.6.0 running Docker 1.12.6",
+  go: "#{ELASTIC_BEANTALK_LINUX} v2.4.0 running Go 1.7",
+  java: "#{ELASTIC_BEANTALK_LINUX} v2.5.0 running Java 8",
+  java_tomcat: "#{ELASTIC_BEANTALK_LINUX} v2.6.0 running Tomcat 8 Java 8",
+  windows_server: "64bit Windows Server 2012 R2 v1.2.0 running IIS 8.5",
+  node: "#{ELASTIC_BEANTALK_LINUX} v4.1.0 running Node.js",
+  php: "#{ELASTIC_BEANTALK_LINUX} v2.4.0 running PHP 7.0",
+  python: "#{ELASTIC_BEANTALK_LINUX} v2.4.0 running Python 3.4",
+  ruby_puma: "#{ELASTIC_BEANTALK_LINUX} v2.4.0 running Ruby 2.3 (Puma)",
+  ruby_passenger: "#{ELASTIC_BEANTALK_LINUX} v2.4.0 running Ruby 2.3 (Passenger Standalone)",
+}
+
+ELASTIC_BEANTALK_EC2_DEFAULT_ROLE = "aws-elasticbeanstalk-ec2-role"

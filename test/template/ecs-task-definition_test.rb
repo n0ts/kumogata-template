@@ -11,6 +11,11 @@ _ecs_task_definition "test", container_definitions: [ { name: "test", image: "te
   "TestEcsTaskDefinition": {
     "Type": "AWS::ECS::TaskDefinition",
     "Properties": {
+      "Volumes": [
+        {
+          "Name": "test"
+        }
+      ],
       "ContainerDefinitions": [
         {
           "Cpu": "10",
@@ -23,11 +28,6 @@ _ecs_task_definition "test", container_definitions: [ { name: "test", image: "te
               "ContainerPort": "80"
             }
           ]
-        }
-      ],
-      "Volumes": [
-        {
-          "Name": "test"
         }
       ]
     }
@@ -71,6 +71,14 @@ _ecs_task_definition "test", container_definitions: [ container1, container2 ], 
   "TestEcsTaskDefinition": {
     "Type": "AWS::ECS::TaskDefinition",
     "Properties": {
+      "Volumes": [
+        {
+          "Name": "my-vol",
+          "Host": {
+            "SourcePath": "/var/lib/docker/vfs/dir/"
+          }
+        }
+      ],
       "ContainerDefinitions": [
         {
           "Cpu": "10",
@@ -124,14 +132,6 @@ _ecs_task_definition "test", container_definitions: [ container1, container2 ], 
               "ReadOnly": "false"
             }
           ]
-        }
-      ],
-      "Volumes": [
-        {
-          "Name": "my-vol",
-          "Host": {
-            "SourcePath": "/var/lib/docker/vfs/dir/"
-          }
         }
       ]
     }
