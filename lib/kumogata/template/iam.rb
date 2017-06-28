@@ -200,6 +200,10 @@ def _iam_arn(service, resource)
     (args.size == 1) ? array.first : array
   end
 
+  def _convert_resource(args)
+    (args.size == 1) ? args.first : args
+  end
+
   arn_prefix = "arn:aws:#{service}"
   case service
   when "s3"
@@ -236,29 +240,51 @@ def _iam_arn(service, resource)
     if resource == "*"
       resource
     else
-      resource = [ { region: resource[:region], account_id: resource[:account_id], stack: resource[:stack] } ] if resource.is_a? String
-      resource.collect{|v| "#{arn_prefix}:#{v[:region]}:#{v[:account_id]}:stack/#{v[:stack]}" }
+      resource = [ resource ] if resource.is_a? Hash
+      resource.collect!{|v| "#{arn_prefix}:#{v[:region]}:#{v[:account_id]}:stack/#{v[:stack]}" }
+      _convert_resource(resource)
     end
 
   when "iam"
-    if resource.key? :sts
-      "arn:aws:sts::#{resource[:account_id]}:#{resource[:type]}/#{resource[:user]}"
-    elsif resource.key? :policy
-      "arn:aws:iam::aws:policy/#{_iam_to_policy(resource[:policy])}"
-    elsif resource.key? :root
-      "#{arn_prefix}::#{resource[:account_id]}:root"
-    else
-      "#{arn_prefix}::#{resource[:account_id]}:#{resource[:type]}/#{resource[:user]}"
+    resource = [ resource ] if resource.is_a? Hash
+    resource.collect! do |v|
+      if v.key? :sts
+        "arn:aws:sts::#{v[:account_id]}:#{v[:type]}/#{v[:user]}"
+      elsif v.key? :policy
+        "arn:aws:iam::aws:policy/#{_iam_to_policy(v[:policy])}"
+      elsif v.key? :root
+        "#{arn_prefix}::#{v[:account_id]}:root"
+      else
+        "#{arn_prefix}::#{v[:account_id]}:#{v[:type]}/#{v[:user]}"
+      end
     end
+    _convert_resource(resource)
 
   when "elasticloadbalancing"
-    resource.collect{|v| "#{arn_prefix}:*:*:loadbalancer/#{v}" }
+    resource = [ resource ] if resource.is_a? String
+    resource.collect!{|v| "#{arn_prefix}:*:*:loadbalancer/#{v}" }
+    _convert_resource(resource)
 
   when "logs"
     "#{arn_prefix}:*:*:*"
 
   when "kinesis"
-    "#{arn_prefix}:#{resource[:region]}:#{resource[:account_id]}:#{resource[:type]}/#{resource[:name]}"
+    resource = [ resource ] if resource.is_a? Hash
+    resource.collect!{|v| "#{arn_prefix}:#{v[:region]}:#{v[:account_id]}:#{v[:type]}/#{v[:name]}" }
+    _convert_resource(resource)
+
+  when "lambda"
+    resource = [ resource ] if resource.is_a? Hash
+    resource.collect! do |v|
+      v[:type] = "function" unless v.key? :type
+      "#{arn_prefix}:#{v[:region]}:#{v[:account_id]}:#{v[:type]}:#{v[:name]}"
+    end
+    _convert_resource(resource)
+
+  when "ses"
+    resource = [ resource ] if resource.is_a? String
+    resource.collect!{|v| "#{arn_prefix}:#{v}" }
+    _convert_resource(resource)
   end
 end
 

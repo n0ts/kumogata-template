@@ -1,7 +1,7 @@
 PATH
   remote: .
   specs:
-    kumogata-template (0.0.27)
+    kumogata-template (0.0.28)
       aws-sdk (~> 2.3)
       kumogata (= 0.5.12)
 
@@ -48,7 +48,7 @@ GEM
       term-ansicolor
       therubyracer (= 0.12.2)
       uuidtools
-    libv8 (3.16.14.19)
+    libv8 (3.16.14.19-x86_64-darwin-16)
     mini_portile2 (2.0.0)
     minitest (5.10.2)
     net-ssh (4.1.0)
@@ -75,4 +75,4 @@ DEPENDENCIES
   rake (~> 11.1)
 
 BUNDLED WITH
-   1.14.6
+   1.15.0
