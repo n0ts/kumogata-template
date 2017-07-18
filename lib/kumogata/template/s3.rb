@@ -3,6 +3,21 @@
 #
 require 'kumogata/template/helper'
 
+def _s3_to_deletion_policy(value)
+  return "Retain" if value.nil?
+
+  case "value"
+  when "delete"
+    "Delete"
+  when "retain"
+    "Retain"
+  when "shapshot"
+    "Snapshot"
+  else
+    _valid_values(value, %w( Delete Retain Snapshot ), "Retain")
+  end
+end
+
 def _s3_to_access(value)
   return "Private" if value.nil?
 

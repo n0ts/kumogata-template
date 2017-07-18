@@ -21,8 +21,7 @@ replication = _s3_replication(args)
 tags = _tags(args)
 versioning = _s3_versioning(args)
 website = _s3_website(args)
-deletion_policy = _valid_values(args[:deletion_policy],
-                                %w( Delete Retain Snapshot ), "Retain")
+deletion_policy = _s3_to_deletion_policy(args[:deletion_policy])
 
 _(name) do
   Type "AWS::S3::Bucket"
