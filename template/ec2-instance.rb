@@ -29,7 +29,7 @@ ssm = args[:ssm] || []
 subnet = _ref_string("subnet", args, "subnet")
 tags = _ec2_tags(args)
 tenancy = args[:tenancy] || "default"
-user_data = _ec2_user_data(args)##_ref_string("user_data", args, "user data")
+user_data = _ec2_user_data(args)
 volumes = args[:volumes] || ""
 
 _(name) do

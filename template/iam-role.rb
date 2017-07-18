@@ -15,7 +15,7 @@ managed_policies =
   end
 path = args[:path] || "/"
 policies = _iam_policies("policies", args)
-role = _real_name(args[:role] || args[:name])
+role_name = _real_name("role", args)
 
 _(name) do
   Type "AWS::IAM::Role"
@@ -27,6 +27,6 @@ _(name) do
     ManagedPolicyArns managed_policies unless managed_policies.empty?
     Path path
     Policies policies unless policies.empty?
-    RoleName role
+    RoleName role_name if role_name
   end
 end

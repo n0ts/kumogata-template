@@ -71,7 +71,9 @@ EOS
   end
 
   def test_real_name
-    assert_equal _real_name("test test"), "test-test"
+    assert_equal _real_name("test", { name: "test" }), "test"
+    assert_equal _real_name("test", { name: "test", test: "test test" }), "test-test"
+    assert_equal _real_name("test", { name: "test", test: false }), false
   end
 
   def test_ref_key

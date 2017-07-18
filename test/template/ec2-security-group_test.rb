@@ -11,6 +11,7 @@ _ec2_security_group "test", vpc: "test"
   "TestSecurityGroup": {
     "Type": "AWS::EC2::SecurityGroup",
     "Properties": {
+      "GroupName": "test",
       "GroupDescription": "test security group description",
       "Tags": [
         {
