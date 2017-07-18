@@ -23,8 +23,13 @@ def _sns_subscription_list(args)
 
   array = []
   subscription.each do |v|
-    protocol = _sns_to_protocol(v[:protocol])
-    endpoint = _sns_to_endpoint(protocol, v[:endpoint])
+    if v.is_a? String
+      protocol = "email"
+      endpoint = v
+    else
+      protocol = _sns_to_protocol(v[:protocol])
+      endpoint = _sns_to_endpoint(protocol, v[:endpoint])
+    end
     array << _{
       Endpoint endpoint
       Protocol protocol
