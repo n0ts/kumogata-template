@@ -11,7 +11,7 @@ _output_access_key "test"
   "TestAccessKey": {
     "Description": "description of TestAccessKey",
     "Value": {
-      "Ref": "Test"
+      "Ref": "TestAccessKey"
     }
   },
   "TestSecretAccessKey": {
