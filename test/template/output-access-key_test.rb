@@ -18,7 +18,7 @@ _output_access_key "test"
     "Description": "description of TestSecretAccessKey",
     "Value": {
       "Fn::GetAtt": [
-        "Test",
+        "TestAccessKey",
         "SecretAccessKey"
       ]
     }
