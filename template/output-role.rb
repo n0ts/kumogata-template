@@ -1,5 +1,5 @@
 #
-# Output IAM role
+# Output role
 #
 require 'kumogata/template/helper'
 
