@@ -215,7 +215,7 @@ end
 
 def _export_string(args, prefix)
   if args.key? :export and args[:export] == true
-    "#{args[:name]}-#{prefix}"
+    "#{args[:name]}-#{prefix.gsub(' ', '-')}"
   else
     ""
   end

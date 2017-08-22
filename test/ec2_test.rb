@@ -110,10 +110,10 @@ Test _ec2_tags(name: "test", tags_append: { ref_test: "test" })
     assert_equal exp_template.chomp, act_template
   end
 
-  def test_ec2_security_group_egresses
+  def test_ec2_security_group_egress_rules
     template = <<-EOS
-args = { egress: [ to: 80, group: "test" ] }
-Test _ec2_security_group_egresses("egress", args)
+args = { egress: [ to: 80 ] }
+Test _ec2_security_group_egress_rules("egress", args)
     EOS
     act_template = run_client_as_json(template)
     exp_template = <<-EOS
@@ -122,7 +122,6 @@ Test _ec2_security_group_egresses("egress", args)
     {
       "CidrIp": "0.0.0.0/0",
       "FromPort": "80",
-      "GroupId": "test",
       "IpProtocol": "tcp",
       "ToPort": "80"
     }
@@ -132,8 +131,8 @@ Test _ec2_security_group_egresses("egress", args)
     assert_equal exp_template.chomp, act_template
 
     template = <<-EOS
-args = { egress: [ to: 80, group: "test" ] }
-Test _ec2_security_group_egresses("egress", args)
+args = { egress: [ to: 80 ] }
+Test _ec2_security_group_egress_rules("egress", args)
     EOS
     act_template = run_client_as_json(template)
     exp_template = <<-EOS
@@ -142,7 +141,6 @@ Test _ec2_security_group_egresses("egress", args)
     {
       "CidrIp": "0.0.0.0/0",
       "FromPort": "80",
-      "GroupId": "test",
       "IpProtocol": "tcp",
       "ToPort": "80"
     }
@@ -152,9 +150,9 @@ Test _ec2_security_group_egresses("egress", args)
     assert_equal exp_template.chomp, act_template
   end
 
-  def test_ec2_security_group_eggress
+  def test_ec2_security_group_egress_rule
     template = <<-EOS
-Test _ec2_security_group_egress(to: 80, group: "test")
+Test _ec2_security_group_egress_rule(to: 80)
     EOS
     act_template = run_client_as_json(template)
     exp_template = <<-EOS
@@ -162,7 +160,6 @@ Test _ec2_security_group_egress(to: 80, group: "test")
   "Test": {
     "CidrIp": "0.0.0.0/0",
     "FromPort": "80",
-    "GroupId": "test",
     "IpProtocol": "tcp",
     "ToPort": "80"
   }
@@ -171,10 +168,10 @@ Test _ec2_security_group_egress(to: 80, group: "test")
     assert_equal exp_template.chomp, act_template
   end
 
-  def test_ec2_security_group_ingresses
+  def test_ec2_security_group_ingress_rules
     template = <<-EOS
 args = { ingress: [ from: 80 ] }
-Test _ec2_security_group_ingresses("ingress", args)
+Test _ec2_security_group_ingress_rules("ingress", args)
     EOS
     act_template = run_client_as_json(template)
     exp_template = <<-EOS
@@ -193,7 +190,7 @@ Test _ec2_security_group_ingresses("ingress", args)
 
     template = <<-EOS
 args = { ingress: [ 22, 80 ] }
-Test _ec2_security_group_ingresses("ingress", args)
+Test _ec2_security_group_ingress_rules("ingress", args)
     EOS
     act_template = run_client_as_json(template)
     exp_template = <<-EOS
@@ -217,9 +214,9 @@ Test _ec2_security_group_ingresses("ingress", args)
     assert_equal exp_template.chomp, act_template
   end
 
-  def test_ec2_security_group_ingress
+  def test_ec2_security_group_ingress_rule
     template = <<-EOS
-Test _ec2_security_group_ingress(from: 80)
+Test _ec2_security_group_ingress_rule(from: 80)
     EOS
     act_template = run_client_as_json(template)
     exp_template = <<-EOS
@@ -257,9 +254,9 @@ Test _ec2_block_device(ref_size: "test")
     assert_equal exp_template.chomp, act_template
   end
 
-  def test_ec2_network_interface
+  def test_ec2_network_interface_embedded
     template = <<-EOS
-Test _ec2_network_interface(ref_subnet_id: "test")
+Test _ec2_network_interface_embedded(ref_subnet: "test")
     EOS
     act_template = run_client_as_json(template)
     exp_template = <<-EOS
@@ -268,7 +265,9 @@ Test _ec2_network_interface(ref_subnet_id: "test")
     "AssociatePublicIpAddress": "true",
     "DeleteOnTermination": "true",
     "DeviceIndex": "0",
-    "SubnetId": ""
+    "SubnetId": {
+      "Ref": "TestSubnet"
+    }
   }
 }
     EOS

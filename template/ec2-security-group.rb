@@ -8,8 +8,8 @@ require 'kumogata/template/ec2'
 name = _resource_name(args[:name], "security group")
 group_name = _real_name("group", args)
 description = args[:description] || "#{args[:name]} security group description"
-egress = _ec2_security_group_egresses("egress", args)
-ingress = _ec2_security_group_ingresses("ingress", args)
+egress = _ec2_security_group_egress_rules("egress", args)
+ingress = _ec2_security_group_ingress_rules("ingress", args)
 tags = _tags(args)
 vpc = _ref_string("vpc", args, "vpc")
 
