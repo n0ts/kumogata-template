@@ -124,4 +124,64 @@ _s3_bucket "test", bucket: "PublicBucket", website: { error: "error.html", index
     EOS
     assert_equal exp_template.chomp, act_template
   end
+
+  def test_bucket_name
+    template = <<-EOS
+_s3_bucket "test"
+    EOS
+    act_template = run_client_as_json(template)
+    exp_template = <<-EOS
+{
+  "TestBucket": {
+    "Type": "AWS::S3::Bucket",
+    "Properties": {
+      "AccessControl": "Private",
+      "BucketName": {
+        "Fn::Join": [
+          "-",
+          [
+            {
+              "Ref": "Service"
+            },
+            {
+              "Ref": "Name"
+            }
+          ]
+        ]
+      },
+      "Tags": [
+        {
+          "Key": "Name",
+          "Value": {
+            "Fn::Join": [
+              "-",
+              [
+                {
+                  "Ref": "Service"
+                },
+                "test"
+              ]
+            ]
+          }
+        },
+        {
+          "Key": "Service",
+          "Value": {
+            "Ref": "Service"
+          }
+        },
+        {
+          "Key": "Version",
+          "Value": {
+            "Ref": "Version"
+          }
+        }
+      ]
+    },
+    "DeletionPolicy": "Retain"
+  }
+}
+    EOS
+    assert_equal exp_template.chomp, act_template
+  end
 end
