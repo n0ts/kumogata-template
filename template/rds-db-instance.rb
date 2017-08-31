@@ -60,17 +60,17 @@ _(name) do
     AllowMajorVersionUpgrade allow
     AutoMinorVersionUpgrade auto
     AvailabilityZone az unless multi_az
-    BackupRetentionPeriod backup_retention if 0 < backup_retention
+    BackupRetentionPeriod backup_retention if 0 < backup_retention and source_db.empty?
     CharacterSetName character if !character.empty? and engine =~ /^oracle.*$/
     CopyTagsToSnapshot copy_tags unless copy_tags.empty?
     DBClusterIdentifier cluster if engine == "aurora" and !cluster.empty?
     DBInstanceClass instance_class
     DBInstanceIdentifier instance_id
-    DBName db_name if snapshot.empty?
+    DBName db_name if snapshot.empty? and source_db.empty?
     DBParameterGroupName parameter unless parameter.empty?
     DBSecurityGroups security if security_groups.empty?
-    DBSnapshotIdentifier snapshot unless snapshot.empty?
-    DBSubnetGroupName subnet_group
+    DBSnapshotIdentifier snapshot if !snapshot.empty? and source_db.empty?
+    DBSubnetGroupName subnet_group if source_db.empty?
     Domain domain unless domain.empty? and engine !~ /sqlserver/
     DomainIAMRoleName domain_iam unless domain_iam.empty? and engine !~ /sqlserver/
     Engine engine
@@ -78,12 +78,12 @@ _(name) do
     Iops iops unless iops.empty?
     #KmsKeyId
     #LicenseModel
-    MasterUsername user_name
-    MasterUserPassword user_password
-    MultiAZ multi_az
+    MasterUsername user_name if source_db.empty?
+    MasterUserPassword user_password if source_db.empty?
+    MultiAZ (source_db.empty? ? multi_az : false)
     OptionGroupName option unless option.empty?
     Port port
-    PreferredBackupWindow backup_window
+    PreferredBackupWindow backup_window if source_db.empty?
     PreferredMaintenanceWindow maintenance
     PubliclyAccessible publicly
     SourceDBInstanceIdentifier source_db unless source_db.empty?
