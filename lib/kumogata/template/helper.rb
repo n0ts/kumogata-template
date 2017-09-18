@@ -39,6 +39,14 @@ def _description(name)
     chomp.slice(0, 1024)
 end
 
+def _empty?(value)
+  return true if value.nil?
+  return false if value.is_a? Integer
+  return false if value.is_a? TrueClass or value.is_a? FalseClass
+
+  value.empty?
+end
+
 def _valid_values(value, values, default = nil)
   return default if value.nil?
   values.collect{|v| return v if v =~ /^#{value}$/i }
