@@ -11,6 +11,12 @@ _rds_db_cluster "test", ref_parameter: "test", ref_subnet: "test", ref_user_name
   "TestDbCluster": {
     "Type": "AWS::RDS::DBCluster",
     "Properties": {
+      "AvailabilityZone": {
+        "Fn::GetAtt": [
+          "TestSubnet",
+          "AvailabilityZone"
+        ]
+      },
       "BackupRetentionPeriod": "7",
       "DatabaseName": {
         "Fn::Join": [
