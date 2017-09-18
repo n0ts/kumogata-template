@@ -3,9 +3,11 @@
 [![Gem Version](https://badge.fury.io/rb/kumogata-template.svg)](http://badge.fury.io/rb/kumogata-template)
 [![Build Status](https://travis-ci.org/n0ts/kumogata-template.svg?branch=master)](https://travis-ci.org/n0ts/kumogata-template)
 
+
 ## About
 
 - `kumogate-template` is a template sets for [kumogata2](https://github.com/winebarrel/kumogata2).
+
 
 ## Installation
 
@@ -17,11 +19,15 @@ gem 'kumogata-template'
 
 And then execute:
 
-  $ bundle
+```
+$ bundle
+```
 
 Or install it yourself as:
 
-  $ gem install kumogata-template
+```
+$ gem install kumogata-template
+```
 
 
 ## Usage
@@ -31,10 +37,10 @@ Usage: kumogate-template <command> [args] [options]
 
 Commands:
   init           STACK_NAME                 Initialize template
-  * Other command same as kumogata's commands
+  * Other command same as kumogata2 commands
 
 Options:
-  * Options is same as the kumogata's options
+  * Options is same as the kumogata2 options
 ```
 
 - Initialize a sample template
@@ -60,28 +66,28 @@ Parameters do
                         description: "sample version"
 end
 
-Mappings do
-end
-
 Resources do
-  _s3_bucket "sample"
+  # And more kumogata-template examples at examples/
+
+  # Create a S3 Bucket
+  #_s3_bucket "sample"
 end
 
 Outputs do
-  _output_s3 "sample"
+  # Output S3 Bucket Information
+  #_output_s3 "sample"
 end
 ```
 
-  - Below sample template is create a s3 bucket.
 
-
-## What is difference `kumogata-template` and `kumogata`
+## What is **THE** difference `kumogata-template` and `kumogata2`
 
 - For example launch EC2 instance.
 
-### kumogata
+### kumogata2
 
 ```
+Resources do
   myEC2Instance do
     Type "AWS::EC2::Instance"
     Properties do
@@ -98,6 +104,8 @@ end
       end
     end
   end
+  ...
+end
 ```
 
 
@@ -106,6 +114,7 @@ end
 - More simply write cloudformation stack.
 
 ```
+Resources do
   user_data =<<EOS
 yum install -y httpd
 service httpd start
@@ -116,41 +125,13 @@ EOS
                 ref_instance_type: "my",
                 key_name: "your_key_name",
                 user_data: user_data
+  ...
+end
 ```
 
-- more example see [test code](test/template)
+- And more example see [test code](test/template/)
 
 
-## AWS CloudFormation
+## Support AWS CloudFormation Relase
 
-- [Relese notes](http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/ReleaseHistory.html)
-  - Almost support release date is `January 17, 2017`
-
-- [Support Resource Types](http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-template-resource-type-ref.html)
-  - AWS::AutoScaling::*
-  - AWS::CertificateManager::*
-  - AWS::CloudFront::**
-  - AWS::CloudTrail::*
-  - AWS::CloudWatch::*
-  - AWS::CodeBuild::*
-  - AWS::CodeCommit::*
-  - AWS::CodeDeploy::*
-  - AWS::DataPipeline::*
-  - AWS::DynamoDB::*
-  - AWS::EC2::*
-  - AWS::ECS::*
-  - AWS::ElastiCache::*
-  - AWS::ElasticBeanstalk::*
-  - AWS::ElasticLoadBalancing::*
-  - AWS::ElasticLoadBalancingV2::*
-  - AWS::EMR::*
-  - AWS::Events::*
-  - AMS::KMS::*
-  - AWS::IAM::*
-  - AWS::Lambda::*
-  - AWS::Logs::*
-  - AWS::RDS::*
-  - AWS::Redshift::*
-  - AWS::S3::*
-  - AWS::SNS::*
-  - AWS::SQS::*
+**January 17, 2017** [Relese notes](http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/ReleaseHistory.html)
