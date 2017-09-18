@@ -56,6 +56,18 @@ EOS
     assert_equal description, "test description, test"
   end
 
+  def test_empty
+    assert_equal _empty?(nil), true
+    assert_equal _empty?(""), true
+    assert_equal _empty?("test"), false
+    assert_equal _empty?([]), true
+    assert_equal _empty?([ "test" ]), false
+    assert_equal _empty?(true), false
+    assert_equal _empty?(false), false
+    assert_equal _empty?({}), true
+    assert_equal _empty?({ test: "test" }), false
+  end
+
   def test_valid_values
     assert_equal _valid_values("test1", ["test1", "test2"]), "test1"
     assert_equal _valid_values("test3", ["test1", "test2"], "test1"), "test1"

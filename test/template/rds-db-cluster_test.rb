@@ -3,7 +3,7 @@ require 'abstract_unit'
 class RdsDbClusterTest < Minitest::Test
   def test_normal
     template = <<-EOS
-_rds_db_cluster "test", ref_parameter: "test", ref_subnet_group: "test", ref_user_name: "test", ref_user_password: "test", ref_security_groups: "test"
+_rds_db_cluster "test", ref_parameter: "test", ref_subnet: "test", ref_user_name: "test", ref_user_password: "test", ref_security_groups: "test"
     EOS
     act_template = run_client_as_json(template)
     exp_template = <<-EOS
@@ -11,6 +11,12 @@ _rds_db_cluster "test", ref_parameter: "test", ref_subnet_group: "test", ref_use
   "TestDbCluster": {
     "Type": "AWS::RDS::DBCluster",
     "Properties": {
+      "AvailabilityZone": {
+        "Fn::GetAtt": [
+          "TestSubnet",
+          "AvailabilityZone"
+        ]
+      },
       "BackupRetentionPeriod": "7",
       "DatabaseName": {
         "Fn::Join": [
