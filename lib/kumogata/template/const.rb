@@ -133,11 +133,10 @@ ELASTICACHE_NODE_TYPES =
 ELASTICACHE_DEFAULT_NODE_TYPE = "cache.t2.medium"
 
 # https://aws.amazon.com/rds/pricing/
+# http://docs.aws.amazon.com/AmazonRDS/latest/APIReference/API_CreateDBInstance.html
 RDS_INSTANCE_CLASSES =
   [
    # Instance Class   vCPU   ECU   Memory (GB)   EBS Optimized   Network Performance
-   # db.t1.micro       1      1       .615         No              Very Low
-   # db.m1.small       1      1      1.7           No              Very Low
    # db.m4.large       2      6.5    8            450 Mbps         Moderate
    # db.m4.xlarge      4     13     16            750 Mbps         High
    # db.m4.2xlarge     8     25.5   32            1000 Mbps        High
@@ -152,18 +151,17 @@ RDS_INSTANCE_CLASSES =
    # db.t2.small       1      1      2             No              Low
    # db.t2.medium      2      2      4             No              Moderate
    # db.t2.large       2      2      8             No              Moderate
-   "db.t1.micro",
-   "db.m1.small", "db.m4.large", "db.m4.xlarge", "db.m4.2xlarge", "db.m4.4xlarge", "db.m4.10xlarge",
+   "db.m4.large", "db.m4.xlarge", "db.m4.2xlarge", "db.m4.4xlarge", "db.m4.10xlarge",
    "db.r3.large", "db.r3.xlarge", "db.r3.2xlarge", "db.r3.4xlarge", "db.r3.8xlarge",
-   "db.t2.micro", "db.t2.small", "db.t2.medium", "db.t2.large"
+   "db.t2.micro", "db.t2.small", "db.t2.medium", "db.t2.large",
   ]
 RDS_DEFAULT_INSTANCE_CLASS = "db.t2.medium"
 RDS_DEFAULT_ENGINE = "mysql"
 RDS_DEFAULT_ENGINE_VERSION = {
   mysql: "5.7.17",
-  mariadb: "10.1.19",
+  mariadb: "10.1.23",
   aurora: "5.6.10a",
-  postgres: "9.6.2-R1",
+  postgres: "9.6.2",
 }
 
 # https://aws.amazon.com/redshift/pricing/
