@@ -19,7 +19,7 @@ ipv6_addresses = args[:ipv6_addresses] || []
 kernel = args[:kernel] || ""
 key_name = _ref_string("key_name", args, "key name")
 monitoring = _bool("monitoring", args, true)
-network_interfaces = (args[:network_interfaces] || []).collect{|v| _ec2_network_interface(v) }
+network_interfaces = (args[:network_interfaces] || []).collect{|v| _ec2_network_interface_embedded(v) }
 placement = _ref_string("placement", args)
 private_ip = args[:private_ip] || ""
 ram_disk = args[:ram_disk] || ""
@@ -29,7 +29,7 @@ ssm = args[:ssm] || []
 subnet = _ref_string("subnet", args, "subnet")
 tags = _ec2_tags(args)
 tenancy = args[:tenancy] || "default"
-user_data = _ec2_user_data(args)##_ref_string("user_data", args, "user data")
+user_data = _ec2_user_data(args)
 volumes = args[:volumes] || ""
 
 _(name) do

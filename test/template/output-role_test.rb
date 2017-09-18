@@ -1,25 +1,25 @@
 require 'abstract_unit'
 
-class OutputAzTest < Minitest::Test
+class OutputRoleTest < Minitest::Test
   def test_normal
     template = <<-EOS
-_output_ec2_subnet "test"
+_output_role "test"
     EOS
     act_template = run_client_as_json(template)
     exp_template = <<-EOS
 {
-  "TestSubnet": {
-    "Description": "description of TestSubnet",
+  "TestRole": {
+    "Description": "description of TestRole",
     "Value": {
-      "Ref": "TestSubnet"
+      "Ref": "TestRole"
     }
   },
-  "TestSubnetAz": {
-    "Description": "description of TestSubnetAz",
+  "TestRoleArn": {
+    "Description": "description of TestRoleArn",
     "Value": {
       "Fn::GetAtt": [
-        "TestSubnet",
-        "AvailabilityZone"
+        "TestRole",
+        "Arn"
       ]
     }
   }

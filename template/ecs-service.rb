@@ -12,7 +12,7 @@ desired = _ref_string("desired_count", args, "ecs desired count")
 load_balancers = _ecs_load_balancers(args)
 placement = _ecs_placement_service(args)
 role = args[:role] || ""
-service_name = _real_name(args[:service_name] || "")
+service_name = _real_name("service", args)
 task = _ref_string("task", args, "ecs task definition")
 
 _(name) do
@@ -24,7 +24,7 @@ _(name) do
     LoadBalancers load_balancers unless load_balancers.empty?
     PlacementConstraints placement unless placement.empty?
     Role role unless role.empty?
-    ServiceName service_name unless service_name.empty?
+    ServiceName service_name if service_name
     TaskDefinition task
   end
 end

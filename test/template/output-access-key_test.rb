@@ -11,14 +11,14 @@ _output_access_key "test"
   "TestAccessKey": {
     "Description": "description of TestAccessKey",
     "Value": {
-      "Ref": "Test"
+      "Ref": "TestAccessKey"
     }
   },
   "TestSecretAccessKey": {
     "Description": "description of TestSecretAccessKey",
     "Value": {
       "Fn::GetAtt": [
-        "Test",
+        "TestAccessKey",
         "SecretAccessKey"
       ]
     }

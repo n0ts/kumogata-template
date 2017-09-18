@@ -1,18 +1,20 @@
 require 'abstract_unit'
 
-class Ec2SecurityGroupTest < Minitest::Test
+class Ec2NetworkInterfaceTest < Minitest::Test
   def test_normal
     template = <<-EOS
-_ec2_security_group "test", vpc: "test"
+_ec2_network_interface "test", ref_subnet: "test"
     EOS
     act_template = run_client_as_json(template)
     exp_template = <<-EOS
 {
-  "TestSecurityGroup": {
-    "Type": "AWS::EC2::SecurityGroup",
+  "TestNetworkInterface": {
+    "Type": "AWS::EC2::NetworkInterface",
     "Properties": {
-      "GroupName": "test",
-      "GroupDescription": "test security group description",
+      "SourceDestCheck": "false",
+      "SubnetId": {
+        "Ref": "TestSubnet"
+      },
       "Tags": [
         {
           "Key": "Name",
@@ -40,8 +42,7 @@ _ec2_security_group "test", vpc: "test"
             "Ref": "Version"
           }
         }
-      ],
-      "VpcId": "test"
+      ]
     }
   }
 }

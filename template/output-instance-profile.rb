@@ -1,5 +1,5 @@
 #
-# Output IAM instance profile
+# Output instance profile
 #
 require 'kumogata/template/helper'
 

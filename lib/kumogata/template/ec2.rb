@@ -19,38 +19,38 @@ def _ec2_tags(args)
   _tags(args)
 end
 
-def _ec2_security_group_egresses(name, args)
+def _ec2_security_group_egress_rules(name, args)
   return [] unless args.key? name.to_sym
 
   rules = []
   _array(args[name.to_sym]).each do |arg|
-    rules << _ec2_security_group_egress(arg)
+    rules << _ec2_security_group_egress_rule(arg)
   end
   rules
 end
 
-def _ec2_security_group_egress(args)
+def _ec2_security_group_egress_rule(args)
   cidr = args[:cidr] || "0.0.0.0/0"
   cidr_ipv6 = args[:cidr_ipv6] || ""
-  destination = _ref_string("destination", args, "security group")
+  dest_security = _ref_string("dest_security", args, "security group")
   from = _ref_string("from", args)
-  group = _ref_string("group", args, "security group")
   ip = args[:ip] || "tcp"
+  dest_prefix = _ref_string("dest_prefix", args, "vpc endpoint")
   to = _ref_string("to", args)
   from = to if from.empty?
 
   _{
-    CidrIp cidr if destination.empty?
+    CidrIp cidr if dest_security.empty?
     CidrIpv6 cidr_ipv6 unless cidr_ipv6.empty?
-    DestinationSecurityGroupId destination unless destination.empty?
+    DestinationPrefixListId dest_prefix unless dest_prefix.empty?
     FromPort from unless ip == "icmp"
-    GroupId group unless group.empty?
     IpProtocol ip
+    DestinationSecurityGroupId dest_security unless dest_security.empty?
     ToPort to unless ip == "icmp"
   }
 end
 
-def _ec2_security_group_ingresses(name, args)
+def _ec2_security_group_ingress_rules(name, args)
   return [] unless args.key? name.to_sym
 
   rules = []
@@ -61,17 +61,15 @@ def _ec2_security_group_ingresses(name, args)
         to: arg,
       }
     end
-    rules << _ec2_security_group_ingress(arg)
+    rules << _ec2_security_group_ingress_rule(arg)
   end
   rules
 end
 
-def _ec2_security_group_ingress(args)
+def _ec2_security_group_ingress_rule(args)
   cidr = args[:cidr] || "0.0.0.0/0"
   cidr_ipv6 = args[:cidr_ipv6] || ""
   from = _ref_string("from", args)
-  group_id = _ref_string("group", args, "security group")
-  group_name = args[:group_name] || ""
   ip = args[:ip] || "tcp"
   source_group_name = _ref_string("source_group_name", args, "security group")
   source_group_id = _ref_string("source_group_id", args, "security group")
@@ -84,8 +82,6 @@ def _ec2_security_group_ingress(args)
     CidrIp cidr if source_group_name.empty? and source_group_id.empty?
     CidrIpv6 cidr_ipv6 unless cidr_ipv6.empty?
     FromPort from unless ip == "icmp"
-    GroupId group_id unless group_id.empty?
-    GroupName group_name unless group_name.empty?
     IpProtocol ip
     SourceSecurityGroupName source_group_name unless source_group_name.empty?
     SourceSecurityGroupId source_group_id unless source_group_id.empty?
@@ -120,7 +116,7 @@ def _ec2_block_device(args)
   }
 end
 
-def _ec2_network_interface(args, is_spot = false)
+def _ec2_network_interface_embedded(args, is_spot = false)
   associate_public = _bool("associate_public", args, true)
   delete = _bool("delete", args, true)
   description = args[:description] || ""
@@ -196,7 +192,9 @@ end
 def _ec2_spot_fleet_request(args)
   allocation = _valid_values(args[:allocation], %w( lowestPrice diversified), "lowestPrice")
   express = _valid_values(args[:express], %w( noTermination default), "")
-  iam = args[:iam]   # IAM Role "aws-ec2-spot-fleet-role" auto generated
+  iam = _ref_attr_string("iam", "Arn", args, "role")
+  # TODO move to role.rb
+  iam = "aws-ec2-spot-fleet-role" if iam.empty?
   launches = args[:launches].collect{|v| _ec2_spot_fleet_launches(v) }
   price = args[:price] || 0.00
   target = _ref_string("target", args, "")
@@ -235,7 +233,7 @@ def _ec2_spot_fleet_launches(args)
   kernel = args[:kernel] || ""
   key_name = _ref_string("key_name", args, "key name")
   monitoring = _bool("monitoring", args, false)
-  network_interfaces = (args[:network_interfaces] || []).collect{|v| _ec2_network_interface(v, true) }
+  network_interfaces = (args[:network_interfaces] || []).collect{|v| _ec2_network_interface_embedded(v, true) }
   placement = _ref_string("placement", args)
   ram_disk = args[:ram_disk] || ""
   security_groups = _ref_array("security_groups", args, "security group")

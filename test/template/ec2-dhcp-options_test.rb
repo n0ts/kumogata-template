@@ -1,18 +1,17 @@
 require 'abstract_unit'
 
-class Ec2SecurityGroupTest < Minitest::Test
+class Ec2DhcpOptionsTest < Minitest::Test
   def test_normal
     template = <<-EOS
-_ec2_security_group "test", vpc: "test"
+_ec2_dhcp_options "test", domain_name: "test"
     EOS
     act_template = run_client_as_json(template)
     exp_template = <<-EOS
 {
-  "TestSecurityGroup": {
-    "Type": "AWS::EC2::SecurityGroup",
+  "TestDhcpOptions": {
+    "Type": "AWS::EC2::DHCPOptions",
     "Properties": {
-      "GroupName": "test",
-      "GroupDescription": "test security group description",
+      "DomainName": "test",
       "Tags": [
         {
           "Key": "Name",
@@ -40,8 +39,7 @@ _ec2_security_group "test", vpc: "test"
             "Ref": "Version"
           }
         }
-      ],
-      "VpcId": "test"
+      ]
     }
   }
 }

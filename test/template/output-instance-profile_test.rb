@@ -1,9 +1,9 @@
 require 'abstract_unit'
 
-class OutputIamInstancerProfileTest < Minitest::Test
+class OutputInstancerProfileTest < Minitest::Test
   def test_normal
     template = <<-EOS
-_output_iam_instance_profile "test"
+_output_instance_profile "test"
     EOS
     act_template = run_client_as_json(template)
     exp_template = <<-EOS

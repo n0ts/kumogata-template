@@ -59,8 +59,11 @@ def _valid_numbers(value, min = 0, max = 0, default = nil)
   (min <= number and number <= max) ? number : default
 end
 
-def _real_name(name)
-  name.to_s.gsub(" ", "-")
+def _real_name(name, args)
+  key = _ref_key?(name, args) ? name : "name"
+  real_name = _ref_string(key, args)
+  real_name.gsub!(" ", "-") if real_name.is_a? String
+  real_name =~ /^false/i ? false : real_name
 end
 
 def _ref_key?(name, args, ref_name = '')
@@ -220,7 +223,7 @@ end
 
 def _export_string(args, prefix)
   if args.key? :export and args[:export] == true
-    "#{args[:name]}-#{prefix}"
+    "#{args[:name]}-#{prefix.gsub(' ', '-')}"
   else
     ""
   end
@@ -379,36 +382,4 @@ def _window_time(service, start_time)
     end_time = start_time + (60 * 30)
   end
   "#{start_time.strftime(format)}-#{end_time.strftime(format)}"
-end
-
-def _ref_arn(service, name)
-  # FIXME
-  _{
-    Fn__Join [
-              ",",
-              [
-               "arn:aws:#{service}:::",
-               _{ Ref _resource_name(name) },
-              ]
-             ]
-  }
-end
-
-def _ref_pseudo(type)
-  pseudo =
-    case type
-    when "account"
-      "AccountId"
-    when "notification arns"
-      "NotificationARNs"
-    when "no value"
-      "NoValue"
-    when "region"
-      "Region"
-    when "stack id"
-      "StackId"
-    when "stack name"
-      "StackName"
-    end
-  _{ Ref "AWS::#{pseudo}" }
 end

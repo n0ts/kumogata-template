@@ -1,18 +1,19 @@
 require 'abstract_unit'
 
-class Ec2SecurityGroupTest < Minitest::Test
+class Ec2VpcPeeringConnectionTest < Minitest::Test
   def test_normal
     template = <<-EOS
-_ec2_security_group "test", vpc: "test"
+_ec2_vpc_peering_connection "test", ref_peer_vpc: "test", ref_vpc: "test"
     EOS
     act_template = run_client_as_json(template)
     exp_template = <<-EOS
 {
-  "TestSecurityGroup": {
-    "Type": "AWS::EC2::SecurityGroup",
+  "TestVpcPeeringConnection": {
+    "Type": "AWS::EC2::VPCPeeringConnection",
     "Properties": {
-      "GroupName": "test",
-      "GroupDescription": "test security group description",
+      "PeerVpcId": {
+        "Ref": "TestVpc"
+      },
       "Tags": [
         {
           "Key": "Name",
@@ -41,7 +42,9 @@ _ec2_security_group "test", vpc: "test"
           }
         }
       ],
-      "VpcId": "test"
+      "VpcId": {
+        "Ref": "TestVpc"
+      }
     }
   }
 }

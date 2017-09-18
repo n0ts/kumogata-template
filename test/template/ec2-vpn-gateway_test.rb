@@ -1,18 +1,17 @@
 require 'abstract_unit'
 
-class Ec2SecurityGroupTest < Minitest::Test
+class Ec2VpnGatewayTest < Minitest::Test
   def test_normal
     template = <<-EOS
-_ec2_security_group "test", vpc: "test"
+_ec2_vpn_gateway "test", type: "test"
     EOS
     act_template = run_client_as_json(template)
     exp_template = <<-EOS
 {
-  "TestSecurityGroup": {
-    "Type": "AWS::EC2::SecurityGroup",
+  "TestVpnGateway": {
+    "Type": "AWS::EC2::VPNGateway",
     "Properties": {
-      "GroupName": "test",
-      "GroupDescription": "test security group description",
+      "Type": "test",
       "Tags": [
         {
           "Key": "Name",
@@ -40,8 +39,7 @@ _ec2_security_group "test", vpc: "test"
             "Ref": "Version"
           }
         }
-      ],
-      "VpcId": "test"
+      ]
     }
   }
 }

@@ -1,5 +1,5 @@
 #
-# Output ec2 subnet
+# Output subnet
 #
 require 'kumogata/template/helper'
 
