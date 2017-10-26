@@ -604,7 +604,7 @@ Test _base64_shell("test shell")
     exp_template = <<-EOS
 {
   "Test": {
-    "Fn::Base64": "#!/bin/bash\\ntest shell"
+    "Fn::Base64": "#!/bin/bash\\ntest shell\\n"
   }
 }
     EOS

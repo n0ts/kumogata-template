@@ -75,7 +75,7 @@ end
 
 def _ref_number(name, args, ref_name = '')
   return _import(args["import_#{name}".to_sym]) if args.key? "import_#{name}".to_sym
-  return args[name.to_sym].to_i || nil unless args.key? "ref_#{name}".to_sym
+  return args[name.to_sym].to_i || 0 unless args.key? "ref_#{name}".to_sym
 
   _ref(_resource_name(args["ref_#{name}".to_sym].to_s, ref_name))
 end
