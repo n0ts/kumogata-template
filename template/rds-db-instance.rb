@@ -44,9 +44,11 @@ iops =
     ""
   end
 kms = _ref_attr_string("kms", "Arn", args)
-license = _valid_values(args[:license], %w( license-included bring-your-own-license general-public-license ), "general-public-license")
+license = _valid_values(args[:license], %w( license-included bring-your-own-license general-public-license ))
 user_name = _ref_string("user_name", args, "db master user name")
 user_password = _ref_string("user_password", args, "db master user password")
+monitoring_interval = _ref_number("monitoring_interval", args, "db monitoring interval")
+monitoring_role_arn = _ref_string("monitoring_role_arn", args, "db monitoring role arn")
 multi_az = _bool("multi_az", args, false)
 option = _ref_string("option", args, "db option group")
 port = _ref_string_default("port", args, "db port", PORT[engine.to_sym])
@@ -154,6 +156,8 @@ _(name) do
     LicenseModel license unless _empty? license
     MasterUsername user_name unless _empty? user_name
     MasterUserPassword user_password unless _empty? user_password
+    MonitoringInterval monitoring_interval unless _empty? monitoring_interval
+    MonitoringRoleArn monitoring_role_arn unless _empty? monitoring_role_arn
     MultiAZ multi_az unless _empty? multi_az
     OptionGroupName option unless _empty? option
     Port port unless _empty? port

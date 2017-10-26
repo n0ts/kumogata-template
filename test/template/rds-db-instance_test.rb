@@ -46,13 +46,13 @@ _rds_db_instance "test",
       },
       "Engine": "mysql",
       "EngineVersion": "5.7.17",
-      "LicenseModel": "general-public-license",
       "MasterUsername": {
         "Ref": "TestDbMasterUserName"
       },
       "MasterUserPassword": {
         "Ref": "TestDbMasterUserPassword"
       },
+      "MonitoringInterval": "0",
       "MultiAZ": "false",
       "Port": {
         "Ref": "TestDbPort"
@@ -146,13 +146,13 @@ _rds_db_instance 'test',
       },
       "Engine": "mysql",
       "EngineVersion": "5.7.17",
-      "LicenseModel": "general-public-license",
       "MasterUsername": {
         "Ref": "TestDbMasterUserName"
       },
       "MasterUserPassword": {
         "Ref": "TestDbMasterUserPassword"
       },
+      "MonitoringInterval": "0",
       "MultiAZ": "false",
       "Port": {
         "Ref": "TestDbPort"
@@ -236,7 +236,7 @@ EOS
       "DBParameterGroupName": "default.aurora5.6",
       "Engine": "aurora",
       "EngineVersion": "5.6.10a",
-      "LicenseModel": "general-public-license",
+      "MonitoringInterval": "0",
       "PubliclyAccessible": "false",
       "Tags": [
         {
@@ -310,7 +310,7 @@ EOS
       "DBParameterGroupName": "default.mysql5.7",
       "Engine": "mysql",
       "EngineVersion": "5.7.17",
-      "LicenseModel": "general-public-license",
+      "MonitoringInterval": "0",
       "MultiAZ": "false",
       "Port": {
         "Ref": "TestDbPort"
@@ -407,13 +407,13 @@ EOS
       },
       "Engine": "mysql",
       "EngineVersion": "5.7.17",
-      "LicenseModel": "general-public-license",
       "MasterUsername": {
         "Ref": "TestDbMasterUserName"
       },
       "MasterUserPassword": {
         "Ref": "TestDbMasterUserPassword"
       },
+      "MonitoringInterval": "0",
       "MultiAZ": "true",
       "Port": {
         "Ref": "TestDbPort"

@@ -251,6 +251,8 @@ def _iam_arn(service, resource)
         "arn:aws:sts::#{v[:account_id]}:#{v[:type]}/#{v[:user]}"
       elsif v.key? :policy
         "arn:aws:iam::aws:policy/#{_iam_to_policy(v[:policy])}"
+      elsif v.key? :role
+        "#{arn_prefix}::#{v[:account_id]}:role/#{v[:role]}"
       elsif v.key? :root
         "#{arn_prefix}::#{v[:account_id]}:root"
       else

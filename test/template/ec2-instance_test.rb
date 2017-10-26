@@ -84,7 +84,7 @@ _ec2_instance "test", key_name: "test", ref_instance_type: "test", ref_iam_insta
       ],
       "Tenancy": "default",
       "UserData": {
-        "Fn::Base64": "#!/bin/bash\\ntest data"
+        "Fn::Base64": "#!/bin/bash\\ntest data\\n"
       }
     }
   }
