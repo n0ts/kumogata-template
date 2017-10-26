@@ -62,7 +62,7 @@ end
 def _real_name(name, args)
   key = _ref_key?(name, args) ? name : "name"
   real_name = _ref_string(key, args)
-  real_name.gsub!(" ", "-") if real_name.is_a? String
+  real_name = real_name.gsub(" ", "-") if real_name.is_a? String
   real_name =~ /^false/i ? false : real_name
 end
 
@@ -71,6 +71,13 @@ def _ref_key?(name, args, ref_name = '')
   return true if args.key? "ref_#{name}".to_sym
   return true unless args[name.to_sym].to_s.empty?
   false
+end
+
+def _ref_number(name, args, ref_name = '')
+  return _import(args["import_#{name}".to_sym]) if args.key? "import_#{name}".to_sym
+  return args[name.to_sym].to_i || nil unless args.key? "ref_#{name}".to_sym
+
+  _ref(_resource_name(args["ref_#{name}".to_sym].to_s, ref_name))
 end
 
 def _ref_string(name, args, ref_name = '')
@@ -200,7 +207,7 @@ def _base64(data)
 end
 
 def _base64_shell(data, shell = "/bin/bash")
-  _base64("#!#{shell}\n#{data}")
+  _base64("#!#{shell}\n#{data}\n")
 end
 
 def _find_in_map(name, top_level, secondary_level)
