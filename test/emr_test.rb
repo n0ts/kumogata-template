@@ -134,7 +134,7 @@ Test _emr_ebs(ebs: [ { size: "test" } ])
     exp_template = <<-EOS
 {
   "Test": {
-    "EbsBlockDeviceConfig": [
+    "EbsBlockDeviceConfigs": [
       {
         "VolumeSpecification": {
           "SizeInGB": "test",
@@ -184,7 +184,7 @@ Test _emr_ebs_volume({ size: "test" })
 
   def test_emr_job_flow
     template = <<-EOS
-Test _emr_job_flow(job: { core: { name: "test" }, master: { name: "test" } })
+Test _emr_job_flow(job: { core: { name: "test" }, master: { name: "test", ebs: [ { size: 42, type: "gp2" } ] } })
     EOS
     act_template = run_client_as_json(template)
     exp_template = <<-EOS
@@ -197,6 +197,16 @@ Test _emr_job_flow(job: { core: { name: "test" }, master: { name: "test" } })
       "Name": "test"
     },
     "MasterInstanceGroup": {
+      "EbsConfiguration": {
+        "EbsBlockDeviceConfigs": [
+          {
+            "VolumeSpecification": {
+              "SizeInGB": "42",
+              "VolumeType": "gp2"
+            }
+          }
+        ]
+      },
       "InstanceCount": "1",
       "InstanceType": "c4.large",
       "Market": "ON_DEMAND",
