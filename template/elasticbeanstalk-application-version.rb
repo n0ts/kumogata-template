@@ -7,7 +7,7 @@ require 'kumogata/template/helper'
 name = _resource_name(args[:name], "elasticbeanstalk application version")
 application = _ref_string_default("application", args,
                                   "elasticbeanstalk application", args[:name])
-description = _ref_string("description", args)
+description = _ref_string_default("description", args, "", "#{args[:name]} elasticbeanstalk application version description")
 s3_bucket = _join([
                    _ref_string("s3_bucket", args, "bucket"),
                    _region,

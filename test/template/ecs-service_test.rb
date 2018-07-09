@@ -3,7 +3,7 @@ require 'abstract_unit'
 class EcsServiceTest < Minitest::Test
   def test_normal
     template = <<-EOS
-_ecs_service "test", ref_cluster: "test", ref_desired_count: "test", ref_task: "test"
+_ecs_service "test", ref_cluster: "test", ref_desired: "test", ref_task: "test"
     EOS
     act_template = run_client_as_json(template)
     exp_template = <<-EOS
@@ -17,7 +17,18 @@ _ecs_service "test", ref_cluster: "test", ref_desired_count: "test", ref_task: "
       "DesiredCount": {
         "Ref": "TestEcsDesiredCount"
       },
-      "ServiceName": "test",
+      "LaunchType": "EC2",
+      "ServiceName": {
+        "Fn::Join": [
+          "-",
+          [
+            {
+              "Ref": "Service"
+            },
+            "test"
+          ]
+        ]
+      },
       "TaskDefinition": {
         "Ref": "TestEcsTaskDefinition"
       }

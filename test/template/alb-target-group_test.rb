@@ -27,9 +27,7 @@ _alb_target_group "test", attributes: [ { key: "value" } ], targets: [ { ref_ins
             {
               "Ref": "Service"
             },
-            {
-              "Ref": "Name"
-            }
+            "test"
           ]
         ]
       },

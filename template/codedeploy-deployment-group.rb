@@ -6,6 +6,7 @@ require 'kumogata/template/helper'
 require 'kumogata/template/codedeploy'
 
 name = _resource_name(args[:name], "deployment group")
+alarm = _codedeploy_alarm(args)
 application = _ref_string("application", args, "codedeploy application")
 autoscalings = _ref_array("autoscalings", args, "autoscaling group")
 deployment =
@@ -23,6 +24,7 @@ service = _ref_string("service", args, "service role")
 _(name) do
   Type "AWS::CodeDeploy::DeploymentGroup"
   Properties do
+    AlarmConfiguration alarm unless alarm.empty?
     ApplicationName application
     AutoScalingGroups autoscalings unless autoscalings.empty?
     Deployment deployment unless deployment.empty?

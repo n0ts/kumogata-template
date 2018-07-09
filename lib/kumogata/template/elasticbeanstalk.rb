@@ -241,7 +241,7 @@ def _elasticbeanstalk_to_option_vpc(args)
   array << {
     name: "aws:ec2:vpc",
     option: "VpcId",
-    value: _ref_name("vpc", args),
+    value: _ref_string("vpc", args, "vpc"),
   }
   array << {
     name: "aws:ec2:vpc",
@@ -282,15 +282,13 @@ def _elasticbeanstalk_to_option_application(args)
 end
 
 def _elasticbeanstalk_to_option_application_environment(args)
-  array = []
-  args.each do |k, v|
-    array << {
+  args.collect do |k, v|
+    {
       name: "aws:elasticbeanstalk:application:environment",
       option: k,
       value: v,
     }
   end
-  array
 end
 
 def _elasticbeanstalk_to_option_logs(args)
@@ -927,15 +925,13 @@ def _elasticbeanstalk_to_option_rds_db_instance(args)
 end
 
 def _elasticbeanstalk_options(options)
-  array = []
-  options.each do |option|
-    array << _{
+  options.collect do |option|
+    _{
       Namespace option[:name]
       OptionName option[:option]
       Value option[:value]
     }
   end
-  array
 end
 
 def _elasticbeanstalk_configuration(configuration)
@@ -959,6 +955,7 @@ def _elasticbeanstalk_tier(tier)
   end
 
   name = _valid_values(tier[:name], %w( WebServer Worker ), "WebServer")
+
   _{
     Name name
     Type (name == "WebServer") ? "Standard" : "SQS/HTTP"

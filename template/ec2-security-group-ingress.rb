@@ -11,7 +11,7 @@ group_id = _ref_string("group_id", args, "security group")
 ingress["GroupId"] = group_id unless group_id.empty?
 group_name = _ref_string("group_name", args, "security group")
 ingress["GroupName"] = group_name unless group_name.empty?
-ingress["GroupName"] = _ref_name("name", args, "security group") if group_name.empty? and group_id.empty?
+ingress["GroupName"] = _ref_string("name", args, "security group") if group_name.empty? and group_id.empty?
 
 _(name) do
   Type "AWS::EC2::SecurityGroupIngress"

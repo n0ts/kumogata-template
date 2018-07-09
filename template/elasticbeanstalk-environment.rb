@@ -8,7 +8,7 @@ require 'kumogata/template/elasticbeanstalk'
 name = _resource_name(args[:name], "elasticbeanstalk environment")
 application = _ref_string("application", args, "elasticbeanstalk application")
 cname = _ref_string("cname", args)
-description = _ref_string("description", args)
+description = _ref_string_default("description", args, '', "#{args[:name]} elasticbeanstalk environment description")
 environment = _ref_string("environment", args)
 options =
   if args.key? :options

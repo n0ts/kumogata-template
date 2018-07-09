@@ -5,6 +5,9 @@
 require 'kumogata/template/helper'
 require 'kumogata/template/ec2'
 
+args[:block_device] = [] unless args.key? :block_device
+args[:block_device] += _ec2_to_block_device_ecs(args) if args.key? :ecs
+
 name = _resource_name(args[:name], "instance")
 instance_type = _ref_string("instance_type", args, "instance type")
 affinity = _valid_values(args[:affinity], %w( host default ), "")
@@ -13,7 +16,7 @@ block_device = (args[:block_device] || []).collect{|v| _ec2_block_device(v) }
 disable_termination = _bool("disable_termination", args, false)
 host_id = args[:host_id] || ""
 iam_instance = _ref_string("iam_instance", args, "iam instance profile")
-image =_ec2_image(instance_type, args)
+image =_ec2_image(args)
 instance_initiated = args[:instance_initiated] || "stop"
 ipv6_addresses = args[:ipv6_addresses] || []
 kernel = args[:kernel] || ""

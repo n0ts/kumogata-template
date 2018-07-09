@@ -12,6 +12,7 @@ _ec2_security_group_ingress "test", from: 80
     "Type": "AWS::EC2::SecurityGroupIngress",
     "Properties": {
       "CidrIp": "0.0.0.0/0",
+      "Description": "inbound rule description",
       "FromPort": "80",
       "IpProtocol": "tcp",
       "ToPort": "80",

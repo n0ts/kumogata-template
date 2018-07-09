@@ -19,7 +19,7 @@ _elasticache_replication_group "test", ref_security_groups: "test", ref_subnet: 
         "Ref": "TestCacheSubnetGroup"
       },
       "Engine": "redis",
-      "EngineVersion": "2.8.24",
+      "EngineVersion": "2.8.6",
       "NumCacheClusters": "2",
       "Port": "6379",
       "PreferredCacheClusterAZs": {

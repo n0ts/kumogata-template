@@ -12,6 +12,7 @@ _elasticbeanstalk_application_version "test", application: "test", ref_s3_bucket
     "Type": "AWS::ElasticBeanstalk::ApplicationVersion",
     "Properties": {
       "ApplicationName": "test",
+      "Description": "test elasticbeanstalk application version description",
       "SourceBundle": {
         "S3Bucket": {
           "Fn::Join": [

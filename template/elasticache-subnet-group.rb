@@ -6,7 +6,7 @@ require 'kumogata/template/helper'
 
 name = _resource_name(args[:name], "cache subnet group")
 subnet = args[:subnet] || ""
-description = args[:description] || "#{args[:name]} cache subnet group description"
+description = _ref_string_default("description", args, '', "#{args[:name]} cache subnet group description")
 subnets = _ref_array("subnets", args, "subnet")
 
 _(name) do

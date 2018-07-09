@@ -5,8 +5,8 @@
 require 'kumogata/template/helper'
 
 name = _resource_name(args[:name], "kms alias")
-alias_name = _ref_name("alias", args)
-target = _ref_name("target", args)
+alias_name = _name("alias", args)
+target = _name("target", args)
 
 _(name) do
   Type "AWS::KMS::Alias"

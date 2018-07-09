@@ -13,6 +13,15 @@ _output_name "test"
     "Value": {
       "Ref": "Test"
     }
+  },
+  "TestNameName": {
+    "Description": "description of TestNameName",
+    "Value": {
+      "Fn::GetAtt": [
+        "Test",
+        "Name"
+      ]
+    }
   }
 }
     EOS

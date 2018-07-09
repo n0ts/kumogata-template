@@ -11,7 +11,17 @@ _iam_group "test"
   "TestGroup": {
     "Type": "AWS::IAM::Group",
     "Properties": {
-      "GroupName": "test",
+      "GroupName": {
+        "Fn::Join": [
+          "-",
+          [
+            {
+              "Ref": "Service"
+            },
+            "test"
+          ]
+        ]
+      },
       "Path": "/"
     }
   }

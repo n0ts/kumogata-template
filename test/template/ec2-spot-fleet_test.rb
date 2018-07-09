@@ -22,7 +22,7 @@ _ec2_spot_fleet "test", iam: "test", price: 1000, ref_taget: "test", launches: l
           {
             "BlockDeviceMappings": [
               {
-                "DeviceName": "/dev/sda1",
+                "DeviceName": "/dev/sdb",
                 "Ebs": {
                   "DeleteOnTermination": "true",
                   "VolumeSize": {

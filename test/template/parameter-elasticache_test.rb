@@ -18,10 +18,11 @@ _parameter_elasticache "test"
   "TestCacheNodeTypes": {
     "Type": "String",
     "Default": "#{ELASTICACHE_DEFAULT_NODE_TYPE}",
+    "Description": "test cache node types",
     "AllowedValues": [
 #{values.chomp}
     ],
-    "Description": "test cache node types"
+    "NoEcho": "false"
   }
 }
     EOS

@@ -13,6 +13,21 @@ def _codedeploy_minimum(args)
   }
 end
 
+def _codedeploy_alarm(args)
+  alarm = args[:alarm] || ""
+  return alarm if alarm.empty?
+
+  alarms = alarm[:alarms].collect{|v| _{ Name v } }
+  enabled = _bool("enabled", args, true)
+  ignore = _bool("ignore", args, false)
+
+  _{
+    Alarms alarms
+    Enabled enabled
+    IgnorePollAlarmFailure ignore
+  }
+end
+
 def _codedeploy_deployment(args)
   description = args[:description] || ""
   ignore = _bool("ignore", args, true)

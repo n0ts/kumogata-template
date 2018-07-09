@@ -15,7 +15,18 @@ _cloudwatch_alarm "test", actions: [ "test" ], alarm_name: "test", namespace: "e
       "AlarmActions": [
         "test"
       ],
-      "AlarmName": "test",
+      "AlarmDescription": "test alarm description",
+      "AlarmName": {
+        "Fn::Join": [
+          "-",
+          [
+            {
+              "Ref": "Service"
+            },
+            "test"
+          ]
+        ]
+      },
       "ComparisonOperator": "LessThanThreshold",
       "Dimensions": [
         {
@@ -28,7 +39,8 @@ _cloudwatch_alarm "test", actions: [ "test" ], alarm_name: "test", namespace: "e
       "Namespace": "AWS/EC2",
       "Period": "300",
       "Statistic": "Average",
-      "Threshold": "60"
+      "Threshold": "60",
+      "TreatMissingData": "missing"
     }
   }
 }

@@ -13,9 +13,9 @@ Parameters do
   _parameter "name", default: "#{NAME}",
                      description: "The name of this stack"
   _parameter "service", default: "service",
-                        description: "#{NAME} service"
+                        description: "The service name"
   _parameter "version", default: "0.0.1",
-                        description: "#{NAME} version"
+                        description: "The version number"
 end
 
 #Mappings do

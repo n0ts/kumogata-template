@@ -34,9 +34,7 @@ _emr_cluster "test", job: { core: { name: "test" }, master: { name: "test" } }
             {
               "Ref": "Service"
             },
-            {
-              "Ref": "Name"
-            }
+            "test"
           ]
         ]
       },
@@ -112,17 +110,7 @@ _emr_cluster "test", job: { core: core, master: master, termination: true }, clu
       "Tags": [
         {
           "Key": "Name",
-          "Value": {
-            "Fn::Join": [
-              "-",
-              [
-                {
-                  "Ref": "Service"
-                },
-                "test"
-              ]
-            ]
-          }
+          "Value": "TestCluster"
         },
         {
           "Key": "Service",

@@ -3,7 +3,7 @@ require 'abstract_unit'
 class RdsDbParameterGroupTest < Minitest::Test
   def test_normal
     template = <<-EOS
-_rds_db_parameter_group "test", parameters: { test: "test" }
+_rds_db_parameter_group "test", engine: 'mysql', parameters: { test: "test" }
     EOS
     act_template = run_client_as_json(template)
     exp_template = <<-EOS

@@ -3,6 +3,29 @@
 #
 require 'kumogata/template/helper'
 
+def _lambda_to_runtime(value)
+  case value
+  when 'node4'
+    'nodejs4.3'
+  when 'node6'
+    'nodejs6.10'
+  when 'node8'
+    'nodejs8.10'
+  when 'python2'
+    'python2.7'
+  when 'python3'
+    'python3.6'
+  when '.net1'
+    'dotnetcore1.0'
+  when '.net2'
+    'dotnetcore2.0'
+  when 'go'
+    'go1.x'
+  else
+    value
+  end
+end
+
 def _lambda_function_code(args)
   return "" unless args.key? :code
 
@@ -23,13 +46,15 @@ def _lambda_function_code(args)
     S3Bucket s3_bucket if is_s3
     S3Key s3_key if is_s3
     S3ObjectVersion s3_object_version if is_s3 and !s3_object_version.empty?
-    ZipFile _join(zip_file_code, '\n') unless is_s3
+    ZipFile _join(zip_file_code, "\n") unless is_s3
   }
 end
 
 def _lambda_function_environment(args)
   environment = args[:environment] || {}
-  environment.empty? ? '' : _{ Variables variables }
+  return {} if environment.empty?
+
+  _{ Variables environment }
 end
 
 def _lambda_vpc_config(args)
@@ -52,5 +77,21 @@ def _lambda_dead_letter(args)
   dead_letter = _ref_string("dead_letter", args)
   _{
     TargetArn dead_letter
+  }
+end
+
+def _lambda_trace_config(args)
+  trace = args[:trace] || ""
+  return trace if trace.empty?
+
+  mode =
+    case trace
+    when "active"
+      "Active"
+    else
+      "PassThrough"
+    end
+  _{
+    Mode mode
   }
 end

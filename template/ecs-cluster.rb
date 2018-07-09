@@ -5,7 +5,7 @@
 require 'kumogata/template/helper'
 
 name = _resource_name(args[:name], "ecs cluster")
-cluster = _ref_name("cluster", args)
+cluster = _name("cluster", args)
 
 _(name) do
   Type "AWS::ECS::Cluster"
