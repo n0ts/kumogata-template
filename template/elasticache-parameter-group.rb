@@ -7,7 +7,7 @@ require 'kumogata/template/helper'
 name = _resource_name(args[:name], "cache parameter group")
 family = _ref_string("family", args)
 family = "redis2.8" if family.empty?
-description = args[:description] || "#{args[:name]} cache parameter group description"
+description = _ref_string_default("description", args, '', "#{args[:name]} cache parameter group description")
 properties = args[:properties] || []
 
 _(name) do

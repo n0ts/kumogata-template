@@ -54,13 +54,13 @@ end
 
 class Kumogata2::Plugin::Ruby::Context
   def template(&block)
-    key_converter = proc do |key|
-      key = key.to_s
-      unless @options.skip_replace_underscore?
-        key.gsub!('__', '::')
-        key.gsub!('_', ':')
-      end
-      key
+    key_converter = proc do |k|
+      k = k.to_s
+      k.gsub!('____', '-')
+      k.gsub!('___', '.')
+      k.gsub!('__', '::')
+      k.gsub!('_', ':')
+      k
     end
 
     value_converter = proc do |v|

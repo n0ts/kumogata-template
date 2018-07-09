@@ -15,7 +15,7 @@ _(name) do
   Type "AWS::EC2::EIPAssociation"
   Properties do
     AllocationId allocation
-    EIP eip
+    EIP eip unless eip.empty?
     InstanceId instance unless instance.empty?
     NetworkInterfaceId network unless network.empty?
     PrivateIpAddress private_ip unless private_ip.empty?

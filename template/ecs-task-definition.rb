@@ -7,11 +7,11 @@ require 'kumogata/template/ecs'
 
 name = _resource_name(args[:name], "ecs task definition")
 volumes = _ecs_volumes(args)
-family = args[:family] || ""
-network = _valid_values(args[:network], %w( bridge host none ), "")
+family = _name("family", args)
+network = _valid_values(args[:network], %w( bridge host none ), "bridge")
 placement = _ecs_placement_definition(args)
 role = _ref_attr_string("role", "Arn", args, "role")
-definitions = _ecs_container_definitions(args)
+containers = _ecs_containers(args)
 
 _(name) do
   Type "AWS::ECS::TaskDefinition"
@@ -21,6 +21,6 @@ _(name) do
     NetworkMode network unless network.empty?
     PlacementConstraints placement unless placement.empty?
     TaskRoleArn role unless role.empty?
-    ContainerDefinitions definitions
+    ContainerDefinitions containers
   end
 end

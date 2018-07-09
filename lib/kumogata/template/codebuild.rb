@@ -61,16 +61,12 @@ def _codebuild_environement(args)
 end
 
 def _codebuild_environement_hash(args)
-  hash = args || {}
-
-  array = []
-  hash.each_pair do |k, v|
-    array << _{
-      Name k
-      Value v
+  (args || {}).collect do |name, value|
+    _{
+      Name name
+      Value value
     }
   end
-  array
 end
 
 def _codebuild_source(args)

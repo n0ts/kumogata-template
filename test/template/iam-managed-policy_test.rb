@@ -11,6 +11,7 @@ _iam_managed_policy "test", policy_document: [ { service: "s3" } ]
   "TestManagedPolicy": {
     "Type": "AWS::IAM::ManagedPolicy",
     "Properties": {
+      "Description": "test managed policy description",
       "Path": "/",
       "PolicyDocument": {
         "Version": "2012-10-17",

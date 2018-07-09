@@ -11,6 +11,7 @@ _kms_key "test", { policy: [ { service: "s3" } ] }
   "TestKmsKey": {
     "Type": "AWS::KMS::Key",
     "Properties": {
+      "Description": "test kms key description",
       "Enabled": "true",
       "EnableKeyRotation": "false",
       "KeyPolicy": {

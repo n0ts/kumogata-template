@@ -3,7 +3,7 @@ require 'abstract_unit'
 class LambdaEventSourceMappingTest < Minitest::Test
   def test_normal
     template = <<-EOS
-_lambda_event_source_mapping "test", ref_function_name: "test", ref_event_source: "test", event_source_prefix: "test"
+_lambda_event_source_mapping "test", ref_function: "test", ref_event: "test", event_prefix: "test"
 
     EOS
     act_template = run_client_as_json(template)

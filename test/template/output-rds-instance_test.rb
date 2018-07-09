@@ -1,9 +1,9 @@
 require 'abstract_unit'
 
-class OutputRdsrTest < Minitest::Test
+class OutputRdsInstanceTest < Minitest::Test
   def test_normal
     template = <<-EOS
-_output_rds "test"
+_output_rds_instance "test"
     EOS
     act_template = run_client_as_json(template)
     exp_template = <<-EOS

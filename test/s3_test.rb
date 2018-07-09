@@ -36,7 +36,7 @@ Test _s3_cors(cors: [ { headers: "test", methods: "test", origins: "test", expos
 
   def test_s3_lifecycle
     template = <<-EOS
-Test _s3_lifecycle(lifecycle: [ { expiration_date: "ExpirationDate", expiration_in_days: "test", id: "test", noncurrent_version_transitions: [ { storage: "test", transition: "test" } ], non_expiration_in_days: "test" } ])
+Test _s3_lifecycle(lifecycles: [ { id: "test", exp_in_days: "test", noncurrent_version_transitions: [ { storage: "test", transition: "test" } ], non_exp_in_days: "test" } ])
     EOS
     act_template = run_client_as_json(template)
     exp_template = <<-EOS
@@ -44,14 +44,13 @@ Test _s3_lifecycle(lifecycle: [ { expiration_date: "ExpirationDate", expiration_
   "Test": {
     "Rules": [
       {
-        "ExpirationDate": "ExpirationDate",
         "ExpirationInDays": "test",
         "Id": "test",
         "NoncurrentVersionExpirationInDays": "test",
         "NoncurrentVersionTransitions": [
           {
-            "StorageClass": "test",
-            "TransitionInDays": "test"
+            "StorageClass": "GLACIER",
+            "TransitionInDays": ""
           }
         ],
         "Status": "Enabled"
@@ -81,9 +80,11 @@ Test _s3_logging({ logging: { destination: "test", prefix: "test" } })
 
   def test_s3_notification
     template = <<-EOS
-Test _s3_notification(notification: { lambda: [ { event: "test", filter: "test", function: "test" }],
-                                      queue: [ { event: "test", filter: "test", queue: "test" }],
-                                      topic: [ { event: "test", filter: "test", topic: "test" }], })
+Test _s3_notification(notification: {
+                        lambda: [ { event: "new", filters: [ name: "test" ], function: "test" }],
+                        queue: [ { event: "post", filters: [ name: "test" ], queue: "test" }],
+                        topic: [ { event: "delete", filters: [ name: "test" ], topic: "test" }],
+                      })
     EOS
     act_template = run_client_as_json(template)
     exp_template = <<-EOS
@@ -91,27 +92,48 @@ Test _s3_notification(notification: { lambda: [ { event: "test", filter: "test",
   "Test": {
     "LambdaConfigurations": [
       {
-        "Event": "test",
+        "Event": "s3:ObjectCreated:*",
         "Filter": {
-          "S3Key": "test"
+          "S3Key": {
+            "Rules": [
+              {
+                "Name": "name",
+                "Value": "test"
+              }
+            ]
+          }
         },
         "Function": "test"
       }
     ],
     "QueueConfigurations": [
       {
-        "Event": "test",
+        "Event": "s3:ObjectCreated:Post",
         "Filter": {
-          "S3Key": "test"
+          "S3Key": {
+            "Rules": [
+              {
+                "Name": "name",
+                "Value": "test"
+              }
+            ]
+          }
         },
         "Queue": "test"
       }
     ],
     "TopicConfigurations": [
       {
-        "Event": "test",
+        "Event": "s3:ObjectRemoved:Delete",
         "Filter": {
-          "S3Key": "test"
+          "S3Key": {
+            "Rules": [
+              {
+                "Name": "name",
+                "Value": "test"
+              }
+            ]
+          }
         },
         "Topic": "test"
       }
@@ -150,13 +172,26 @@ Test _s3_replication(replication: { role: "test" , rules: [ { destination: { buc
 
   def test_s3_versioning
     template = <<-EOS
-Test _s3_versioning(versioning: { status: "test" })
+Test _s3_versioning({ versioning: true })
     EOS
     act_template = run_client_as_json(template)
     exp_template = <<-EOS
 {
   "Test": {
     "Status": "Enabled"
+  }
+}
+    EOS
+    assert_equal exp_template.chomp, act_template
+
+    template = <<-EOS
+Test _s3_versioning({ versioning: false })
+    EOS
+    act_template = run_client_as_json(template)
+    exp_template = <<-EOS
+{
+  "Test": {
+    "Status": "Suspended"
   }
 }
     EOS

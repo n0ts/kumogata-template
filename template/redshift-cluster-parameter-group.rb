@@ -6,9 +6,10 @@ require 'kumogata/template/helper'
 require 'kumogata/template/redshift'
 
 name = _resource_name(args[:name], "redshift cluster parameter group")
-description = args[:description] || "#{args[:name]} redshift cluster parameter group description"
+description = _ref_string_default("description", args, '', "#{args[:name]} redshift cluster parameter group description")
 family = args[:family] || "redshift-1.0"
 parameters = _redshift_parameters(args)
+tags = _tags(args)
 
 _(name) do
   Type "AWS::Redshift::ClusterParameterGroup"
@@ -16,5 +17,6 @@ _(name) do
     Description description
     ParameterGroupFamily family
     Parameters parameters
+    Tags tags
   end
 end

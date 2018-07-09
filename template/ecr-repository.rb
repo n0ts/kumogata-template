@@ -6,7 +6,7 @@ require 'kumogata/template/helper'
 require 'kumogata/template/ecr'
 
 name = _resource_name(args[:name], "ecr repository")
-repo_name = _ref_name("name", args)
+repo_name = _name("repository", args)
 policy = _ecr_policy("policy", args)
 
 _(name) do
@@ -16,6 +16,6 @@ _(name) do
     RepositoryPolicyText do
       Version "2012-10-17"
       Statement policy
-    end
+    end unless policy.empty?
   end
 end

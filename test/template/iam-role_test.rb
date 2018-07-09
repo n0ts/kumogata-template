@@ -18,7 +18,7 @@ _iam_role "test", user: "test", service: "s3"
             "Effect": "Allow",
             "Principal": {
               "Service": [
-                "s3.amazonaws.com"
+                "s3.#{DOMAIN}"
               ]
             },
             "Action": [
@@ -28,7 +28,17 @@ _iam_role "test", user: "test", service: "s3"
         ]
       },
       "Path": "/",
-      "RoleName": "test"
+      "RoleName": {
+        "Fn::Join": [
+          "-",
+          [
+            {
+              "Ref": "Service"
+            },
+            "test"
+          ]
+        ]
+      }
     }
   }
 }

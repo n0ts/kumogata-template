@@ -18,9 +18,7 @@ _logs_log_stream "test"
             {
               "Ref": "Service"
             },
-            {
-              "Ref": "Name"
-            }
+            "test"
           ]
         ]
       },
@@ -31,9 +29,7 @@ _logs_log_stream "test"
             {
               "Ref": "Service"
             },
-            {
-              "Ref": "Name"
-            }
+            "test"
           ]
         ]
       }

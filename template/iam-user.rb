@@ -6,7 +6,7 @@ require 'kumogata/template/helper'
 require 'kumogata/template/iam'
 
 name = _resource_name(args[:name], "user")
-group = _ref_array("group", args)
+groups = _ref_array("groups", args, "group")
 login_profile =
   if args.key? :login_profile
     _iam_login_profile(args[:login_profile])
@@ -21,16 +21,16 @@ managed_policies =
   end
 path = args[:path] || "/"
 policies = _iam_policies("policies", args)
-user = _real_name("user", args)
+user = _name("user", args)
 
 _(name) do
   Type "AWS::IAM::User"
   Properties do
-    Group group unless group.empty?
+    Groups groups unless groups.empty?
     LoginProfile login_profile unless login_profile.empty?
     ManagedPolicyArns managed_policies unless managed_policies.empty?
     Path path
     Policies policies unless policies.empty?
-    UserName user if user
+    UserName user
   end
 end

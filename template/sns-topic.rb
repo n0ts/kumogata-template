@@ -6,9 +6,9 @@ require 'kumogata/template/helper'
 require 'kumogata/template/sns'
 
 name = _resource_name(args[:name], "topic")
-display = _real_name("display", args)
+display = _name("display", args)
 subscription = _sns_subscription_list(args)
-topic = _real_name("topic", args)
+topic = _name("topic", args)
 
 _(name) do
   Type "AWS::SNS::Topic"

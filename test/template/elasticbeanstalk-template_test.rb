@@ -12,6 +12,7 @@ _elasticbeanstalk_configuration_template "test", application: "test", solution: 
     "Type": "AWS::ElasticBeanstalk::ConfigurationTemplate",
     "Properties": {
       "ApplicationName": "test",
+      "Description": "test elasticbeanstalk configuration template description",
       "OptionSettings": [
         {
           "Namespace": "test",

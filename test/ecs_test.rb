@@ -4,7 +4,7 @@ require 'kumogata/template/ecs'
 class EcsTest < Minitest::Test
   def test_ecs_load_balancers
     template = <<-EOS
-Test _ecs_load_balancers(load_balancers: [ { container_name: "test", container_port: 80, lb_name: "test" } ])
+Test _ecs_load_balancers(load_balancers: [ { name: "test", port: 80, lb_name: "test" } ])
     EOS
     act_template = run_client_as_json(template)
     exp_template = <<-EOS
@@ -21,25 +21,40 @@ Test _ecs_load_balancers(load_balancers: [ { container_name: "test", container_p
     assert_equal exp_template.chomp, act_template
   end
 
-  def test_ecs_container_definitions
+  def test_ecs_container
     template = <<-EOS
-Test _ecs_container_definitions(container_definitions: [ { name: "test", image: "test" } ])
+Test _ecs_containers(containers: [ { name: "test", image: "test", port_mappings: [ { port: 80 } ] } ])
     EOS
     act_template = run_client_as_json(template)
     exp_template = <<-EOS
 {
   "Test": [
     {
-      "Cpu": "10",
+      "Cpu": "1",
+      "DisableNetworking": "false",
       "Essential": "true",
+      "Hostname": {
+        "Fn::Join": [
+          "-",
+          [
+            {
+              "Ref": "Service"
+            },
+            "test"
+          ]
+        ]
+      },
       "Image": "test",
       "Memory": "300",
       "Name": "test",
       "PortMappings": [
         {
-          "ContainerPort": "80"
+          "ContainerPort": "80",
+          "Protocol": "tcp"
         }
-      ]
+      ],
+      "Privileged": "false",
+      "ReadonlyRootFilesystem": "false"
     }
   ]
 }
@@ -49,7 +64,7 @@ Test _ecs_container_definitions(container_definitions: [ { name: "test", image: 
 
   def test_ecs_mount_points
     template = <<-EOS
-Test _ecs_mount_points(mount_points: [ { container_path: "/", source_volume: "/" } ])
+Test _ecs_mount_points(mount_points: [ { path: "/", source: "/" } ])
     EOS
     act_template = run_client_as_json(template)
     exp_template = <<-EOS
@@ -68,14 +83,15 @@ Test _ecs_mount_points(mount_points: [ { container_path: "/", source_volume: "/"
 
   def test_ecs_port_mappings
     template = <<-EOS
-Test _ecs_port_mappings(port_mappings: [ { container_port: 80 } ])
+Test _ecs_port_mappings(port_mappings: [ { port: 80 } ])
     EOS
     act_template = run_client_as_json(template)
     exp_template = <<-EOS
 {
   "Test": [
     {
-      "ContainerPort": "80"
+      "ContainerPort": "80",
+      "Protocol": "tcp"
     }
   ]
 }
@@ -103,31 +119,19 @@ Test _ecs_volumes_from(volumes_from: [ { source: "test" } ])
 
   def test_ecs_volumes
     template = <<-EOS
-Test _ecs_volumes(volumes: [ { name: "test" } ])
+Test _ecs_volumes(volumes: [ { test: "test1" } ])
     EOS
     act_template = run_client_as_json(template)
     exp_template = <<-EOS
 {
   "Test": [
     {
-      "Name": "test"
+      "Name": "test",
+      "Host": {
+        "SourcePath": "test1"
+      }
     }
   ]
-}
-    EOS
-    assert_equal exp_template.chomp, act_template
-  end
-
-  def test_ecs_volumes_host
-    template = <<-EOS
-Test _ecs_volumes_host(source_path: "test")
-    EOS
-    act_template = run_client_as_json(template)
-    exp_template = <<-EOS
-{
-  "Test": {
-    "SourcePath": "test"
-  }
 }
     EOS
     assert_equal exp_template.chomp, act_template

@@ -25,9 +25,7 @@ _emr_instance_group_config "test", ref_cluster: "test"
             {
               "Ref": "Service"
             },
-            {
-              "Ref": "Name"
-            }
+            "test"
           ]
         ]
       }
@@ -40,7 +38,7 @@ _emr_instance_group_config "test", ref_cluster: "test"
 
   def test_aws
     template = <<-EOS
-_emr_instance_group_config "test", ref_cluster: "cluster", instance_count: 2, instance_type: "m3.xlarge", instance_role: "TASK", config_name: "cfnTask2"
+_emr_instance_group_config "test", ref_cluster: "cluster", instance_count: 2, instance_type: "m3.xlarge", instance_role: "TASK", config: "cfnTask2"
     EOS
     act_template = run_client_as_json(template)
     exp_template = <<-EOS

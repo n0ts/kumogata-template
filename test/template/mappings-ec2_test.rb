@@ -26,10 +26,16 @@ _mappings_ec2 "test"
   "AWSRegionArch2AMIAmazonLinuxOfficial": {
 #{images.chomp}
   },
+  "AWSRegionArch2AMIAmazonLinux2Official": {
+#{images.chomp}
+  },
   "AWSRegionArch2AMICentos7Official": {
 #{images.chomp}
   },
   "AWSRegionArch2AMIUbuntu16Official": {
+#{images.chomp}
+  },
+  "AWSRegionArch2AMIEcsOfficial": {
 #{images.chomp}
   }
 }
@@ -40,10 +46,11 @@ _mappings_ec2 "test"
   private
   def generate_image_values
     values = ''
-    AWS_REGION.each_with_index do |v, i|
-      region, location = v
+    AWS_REGION.each_with_index do |region, i|
+      key, value = region
+      next if key =~ /local/
       values += <<-EOS
-    "#{location}": {
+    "#{value}": {
       "HVM64": "ami-*"
     }#{i == (AWS_REGION.size - 1) ? '' : ','}
     EOS

@@ -32,9 +32,7 @@ _iam_policy "test", user: "test", ref_roles: "test", policy_document: [ { servic
             {
               "Ref": "Service"
             },
-            {
-              "Ref": "Name"
-            }
+            "test"
           ]
         ]
       },

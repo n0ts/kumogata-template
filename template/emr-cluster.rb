@@ -18,10 +18,10 @@ configurations = _emr_configurations(args)
 instance = _emr_job_flow(args)
 job_flow_role = args[:job_flow_role] || "EMR_EC2_DefaultRole"
 log = args[:log] || ""
-cluster_name = _ref_name("cluster", args)
+cluster = _name("cluster", args)
 release = args[:release] || EMR_DEFAULT_RELEASE
 service_role = args[:service_role] || "EMR_DefaultRole"
-tags = _tags(args)
+tags = _tags(args, "cluster")
 visible = _bool("visible", args, false)
 
 _(name) do
@@ -35,7 +35,7 @@ _(name) do
     Instances instance
     JobFlowRole String job_flow_role
     LogUri log unless log.empty?
-    Name cluster_name
+    Name cluster
     ReleaseLabel release
     ServiceRole service_role
     Tags tags

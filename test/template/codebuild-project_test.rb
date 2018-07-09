@@ -18,6 +18,7 @@ _codebuild_project "test", { artifacts: { type: "test" },
       "Artifacts": {
         "Type": "no_artifacts"
       },
+      "Description": "test codebuild project description",
       "Environment": {
         "ComputeType": "BUILD_GENERAL1_LARGE",
         "EnvironmentVariables": [
@@ -38,17 +39,7 @@ _codebuild_project "test", { artifacts: { type: "test" },
       "Tags": [
         {
           "Key": "Name",
-          "Value": {
-            "Fn::Join": [
-              "-",
-              [
-                {
-                  "Ref": "Service"
-                },
-                "test"
-              ]
-            ]
-          }
+          "Value": "test"
         },
         {
           "Key": "Service",

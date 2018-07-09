@@ -84,7 +84,25 @@ _dynamodb_table "test", table: "test",
         "ReadCapacityUnits": "10",
         "WriteCapacityUnits": "10"
       },
-      "TableName": "test"
+      "TableName": "test",
+      "Tags": [
+        {
+          "Key": "Name",
+          "Value": "test"
+        },
+        {
+          "Key": "Service",
+          "Value": {
+            "Ref": "Service"
+          }
+        },
+        {
+          "Key": "Version",
+          "Value": {
+            "Ref": "Version"
+          }
+        }
+      ]
     }
   }
 }
