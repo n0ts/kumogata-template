@@ -7,8 +7,8 @@ require 'kumogata/template/helper'
 name = _resource_name(args[:name], "lambda event source mapping")
 batch_size = args[:batch_size] || 100
 enabled = _bool("enabled", args, true)
-event_source = _ref_attr_string("event_source", "Arn", args, args[:event_source_prefix])
-function_name = _ref_attr_string("function_name", "Arn", args, "lambda function")
+event = _ref_attr_string("event", "Arn", args, args[:event_source_prefix])
+function = _ref_attr_string("function", "Arn", args, "lambda function")
 starting_position = _valid_values(args[:starting_position],
                                   %w( trim_horizon latest ), "latest")
 
@@ -17,8 +17,8 @@ _(name) do
   Properties do
     BatchSize batch_size
     Enabled enabled
-    EventSourceArn event_source
-    FunctionName function_name
+    EventSourceArn event
+    FunctionName function
     StartingPosition starting_position.upcase
   end
 end

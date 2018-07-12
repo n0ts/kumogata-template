@@ -5,7 +5,7 @@
 require 'kumogata/template/helper'
 
 name = _resource_name(args[:name], "db subnet group")
-description = args[:description] || "#{args[:name]} db subnet group description"
+description = _ref_string_default("description", args, '', "#{args[:name]} db subnet group description")
 subnets = _ref_array("subnets", args, "subnet")
 tags = _tags(args)
 

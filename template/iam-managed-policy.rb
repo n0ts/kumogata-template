@@ -6,7 +6,7 @@ require 'kumogata/template/helper'
 require 'kumogata/template/iam'
 
 name = _resource_name(args[:name], "managed policy")
-description = args[:description] || ""
+description = _ref_string_default("description", args, '', "#{args[:name]} managed policy description")
 groups = _ref_array("groups", args)
 path = args[:path] || "/"
 roles = _ref_array("roles", args)

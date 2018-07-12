@@ -7,7 +7,7 @@ require 'kumogata/template/iam'
 
 name = _resource_name(args[:name], "policy")
 groups = _ref_array("groups", args, "group")
-policy = _ref_name("policy", args)
+policy = _name("policy", args)
 roles = _ref_array("roles", args, "role")
 users = _ref_array("users", args, "user")
 

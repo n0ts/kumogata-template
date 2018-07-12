@@ -3,5 +3,10 @@
 #
 require 'kumogata/template/helper'
 
-_output "#{args[:name]} name",
-        ref_value: args[:name], export: _export_string(args, "name")
+prefix = args[:prefix] || "name"
+
+_output "#{args[:name]} #{prefix}",
+        ref_value: args[:name], export: _export_string(args, prefix)
+
+_output "#{args[:name]} #{prefix} name",
+        ref_value: [ args[:name], "Name" ], export: _export_string(args, "#{prefix}-name")

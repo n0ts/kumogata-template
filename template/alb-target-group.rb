@@ -8,18 +8,17 @@ require 'kumogata/template/alb'
 name = _resource_name(args[:name], "target group")
 health_check = _alb_health_check(args[:health_check] || {})
 matcher = _alb_matcher(args)
-target_name = _ref_name("target_name", args)
-target_name = args[:name] if target_name.empty?
+target = _name("target", args)
 attributes = _alb_attributes(args)
-full_name = _ref_string("full_name", args)
+full = _ref_key?("full", args) ? _name("full", args) : ""
 protocol = _valid_values(args[:protocol], %w( http https ), "http")
 port =
-  if PORT.key? protocol.to_sym
-    PORT[protocol.to_sym]
+  if args.key? :port
+    args[:port]
   else
-    args[:port] || PORT[:http]
+    PORT[protocol.to_sym] || PORT[:http]
   end
-tags = _tags(args)
+tags = _tags(args, "target")
 targets = _alb_targets(args)
 vpc = _ref_string("vpc", args, "vpc")
 
@@ -33,12 +32,12 @@ _(name) do
     HealthCheckTimeoutSeconds health_check[:timeout]
     HealthyThresholdCount health_check[:healthy]
     Matcher matcher
-    Name target_name
+    Name target
     Port port
     Protocol protocol.upcase
     Tags tags
     TargetGroupAttributes attributes unless attributes.empty?
-    TargetGroupFullName full_name unless full_name.empty?
+    TargetGroupFullName full unless full.empty?
     Targets targets unless targets.empty?
     UnhealthyThresholdCount health_check[:unhealthly]
     VpcId vpc

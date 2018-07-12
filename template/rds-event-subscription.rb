@@ -3,6 +3,7 @@
 # http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-resource-rds-eventsubscription.html
 #
 require 'kumogata/template/helper'
+require 'kumogata/template/rds'
 
 name = _resource_name(args[:name], "event subscription")
 enabled = _bool("enabled", args, true)
@@ -13,10 +14,7 @@ event_categories = args[:categories] ||
 sns = _ref_attr_string("sns", "Arn", args, "role")
 sns = _ref_string("sns_arn", args) if sns.empty?
 sources = _ref_array("sources", args, "db instance")
-source_type = _valid_values(args[:source_type],
-                            %w( db-instance db-parameter-group
-                                db-security-group db-snapshot ),
-                            "db-instance")
+source_type = _rds_to_event_subscription_source(args[:source_type])
 source_prefix =
   case source_type
   when "db-instance"

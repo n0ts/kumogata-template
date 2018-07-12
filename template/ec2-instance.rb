@@ -5,6 +5,9 @@
 require 'kumogata/template/helper'
 require 'kumogata/template/ec2'
 
+args[:block_device] = [] unless args.key? :block_device
+args[:block_device] += _ec2_to_block_device_ecs(args) if args.key? :ecs
+
 name = _resource_name(args[:name], "instance")
 instance_type = _ref_string("instance_type", args, "instance type")
 affinity = _valid_values(args[:affinity], %w( host default ), "")

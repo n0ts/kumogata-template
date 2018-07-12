@@ -6,8 +6,8 @@ require 'kumogata/template/helper'
 require 'kumogata/template/codecommit'
 
 name = _resource_name(args[:name], "codecommit repository")
-description = args[:description] || ""
-repository = _ref_name_default("repository", args)
+description = _ref_string_default("description", args, '', "#{args[:name]} codecommit repository description")
+repository = _name("repository", args)
 triggers = _codecommit_triggers(args)
 
 _(name) do

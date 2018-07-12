@@ -6,7 +6,7 @@ require 'kumogata/template/helper'
 require 'kumogata/template/codedeploy'
 
 name = _resource_name(args[:name], "deployment config")
-deployment = _ref_name("deployment", args, "codedeploy deployment")
+deployment = _name("deployment", args)
 minimum =
   if args.key? :minimum
     _codedeploy_minimum(args[:minimum])

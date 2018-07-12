@@ -1,5 +1,5 @@
 #
-# Output rds
+# Output rds instance
 #
 require 'kumogata/template/helper'
 

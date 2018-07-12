@@ -6,8 +6,9 @@ require 'kumogata/template/helper'
 require 'kumogata/template/logs'
 
 name = _resource_name(args[:name], "logs log stream")
-group = _ref_name("group", args)
-stream = _ref_name("stream", args)
+group = _name("group", args)
+stream = _name("stream", args)
+depends = _depends([ { ref_log_group: 'logs log group' } ], args)
 
 _(name) do
   Type "AWS::Logs::LogStream"
@@ -15,4 +16,5 @@ _(name) do
     LogGroupName group
     LogStreamName stream
   end
+  DependsOn depends unless depends.empty?
 end

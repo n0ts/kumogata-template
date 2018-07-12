@@ -17,11 +17,12 @@ value =
     if args[:ref_value].is_a?(Array) and args[:ref_value].length == 2
       _attr_string(args[:ref_value][0], args[:ref_value][1])
     else
-      _ref_string("", { ref_: args[:ref_value] })
+      _ref(_resource_name(args[:ref_value]))
     end
   else
-    name
+    _ref(name)
   end
+value = _select(args[:select], value) if args.key? :select
 export = _export(args)
 
 _(name) do

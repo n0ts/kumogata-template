@@ -3,10 +3,13 @@
 # https://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-resource-ec2-vpcendpoint.html
 #
 require 'kumogata/template/helper'
+require 'kumogata/template/iam'
 
 name = _resource_name(args[:name], "vpc endpoint")
 route_tables = _ref_array("route_tables", args, "route table")
-service_name = "com.amazonaws.#{args[:region]}.s3" # now s3 support only
+region = _ref_string("region", args)
+region = _region if region.empty?
+service = args[:service] || "s3"
 vpc = _ref_string("vpc", args, "vpc")
 
 _(name) do
@@ -17,7 +20,7 @@ _(name) do
       Statement _iam_policy_document("policy_document", args)
     end
     RouteTableIds route_tables
-    ServiceName service_name
+    ServiceName _join([ "com.amazonaws", region, service ], ".")
     VpcId vpc
   end
 end

@@ -1,11 +1,10 @@
 #
-# Cloudtrail Trail resource
+# CloudTrail Trail resource
 # http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-resource-cloudtrail-trail.html
 #
 require 'kumogata/template/helper'
 
 name = _resource_name(args[:name], "trail")
-depends = args[:depends] || []
 group = _ref_attr_string("group", "Arn", args)
 role = _ref_attr_string("role", "Arn", args)
 enable = _bool("enable", args, false)
@@ -20,10 +19,11 @@ sns =
   else
     ""
   end
-tags = _tags(args)
+tags = _tags(args, "trail")
+depends = _depends([], args)
+trail = _name("trail", args)
 
 _(name) do
-  DependsOn depends unless depends.empty?
   Type "AWS::CloudTrail::Trail"
   Properties do
     CloudWatchLogsLogGroupArn group unless group.empty?
@@ -37,5 +37,7 @@ _(name) do
     S3KeyPrefix s3_key unless s3_key.empty?
     SnsTopicName sns unless sns.empty?
     Tags tags unless tags.empty?
+    TrailName trail
   end
+  DependsOn depends unless depends.empty?
 end

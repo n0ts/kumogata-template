@@ -17,7 +17,9 @@ stream =
   else
     []
   end
-table = _ref_name("table", args)
+table = _name("table", args)
+tags = _tags(args, "table")
+ttl = _dynamodb_ttl(args)
 
 _(name) do
   Type "AWS::DynamoDB::Table"
@@ -29,5 +31,7 @@ _(name) do
     ProvisionedThroughput provisioned
     StreamSpecification stream unless stream.empty?
     TableName table
+    Tags tags
+    TimeToLiveSpecification ttl unless ttl.empty?
   end
 end
