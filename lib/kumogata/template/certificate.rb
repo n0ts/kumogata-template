@@ -4,15 +4,18 @@
 require 'kumogata/template/helper'
 
 def _certificate_validations(args)
-  validation = args[:validation] || []
-  validation << { domain: args[:domain], validation: args[:domain] } if validation.empty?
+  validations = args[:validation] || []
+  return [ _{
+             DomainName _ref_string("domain", args, "domain")
+             ValidationDomain _ref_string("domain", args, "domain")
+           } ] if validations.empty?
 
-  result = []
-  validation.each do |val|
-    result << _{
-      DomainName val[:domain]
-      ValidationDomain val[:validation]
+  validations.collect do |validation|
+    domain = _ref_string("domain", validation, "domain")
+    validation = _ref_string("validation", validation, "domain")
+    _{
+      DomainName domain
+      ValidationDomain validation || domain
     }
   end
-  result
 end

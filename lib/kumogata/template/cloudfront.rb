@@ -5,9 +5,9 @@ require 'kumogata/template/helper'
 
 def _cloudfront_distribution_config(args)
   aliases = args[:aliases] || []
-  cache =
-    if args.key? :cache
-      _cloudfront_cache_behavior(args[:cache])
+  behaivors =
+    if args.key? :behaivors
+      args[:behaivors].collect{|v| _cloudfront_cache_behavior(v) }
     else
       ""
     end
@@ -20,7 +20,7 @@ def _cloudfront_distribution_config(args)
     end
   default_cache =
     if args.key? :default_cache
-      _cloudfront_cache_behavior(args[:default_cache], true)
+      _cloudfront_cache_behavior(args[:default_cache], args[:origins], true)
     else
       ""
    end
@@ -46,7 +46,7 @@ def _cloudfront_distribution_config(args)
 
   _{
     Aliases aliases unless aliases.empty?
-    CacheBehaviors cache unless comment.empty?
+    CacheBehaviors behaivors unless behaivors.empty?
     Comment comment unless comment.empty?
     CustomErrorResponses custom_errors unless custom_errors.empty?
     DefaultCacheBehavior default_cache unless default_cache.empty?
@@ -62,7 +62,7 @@ def _cloudfront_distribution_config(args)
   }
 end
 
-def _cloudfront_cache_behavior(args, default = false)
+def _cloudfront_cache_behavior(args, origins = [], default = false)
   allowed_methods =
     if args.key? :allowed_methods
       case args[:allowed_methods]
@@ -93,23 +93,20 @@ def _cloudfront_cache_behavior(args, default = false)
     else
       ""
     end
-  default_ttl = args[:default_ttl] || nil
-  forwarded_values =
-    if args.key? :forwarded
-      _cloudfront_forwarded_values(args[:forwarded])
-    else
-      ""
-    end
-  max_ttl = args[:max_ttl] || ""
-  min_ttl = args[:min_ttl] || ""
+  default_ttl = args[:default_ttl] || 86400
+  forwarded_values = _cloudfront_forwarded_values(args[:forwarded] || {})
+  lambda = (args[:lambda_functions] || []).collect{|v| _cloudfront_lambda(v) }
+  max_ttl = args[:max_ttl] || 31536000
+  min_ttl = args[:min_ttl] || 0
   path = args[:path]
   smooth =
     if args.key? :smooth
-      _bool(args[:smooth])
+      _bool("smooth", args, false)
     else
       ""
     end
-  target = args[:target]
+  target = args[:target] || ""
+  target = origins[0][:id] if target.empty? and (origins[0] and origins[0].is_a? Hash and origins[0][:id])
   trusted = args[:trusted] || ""
   viewer = _valid_values(args[:viewer], %w( allow-all redirect-to-https https-only ), "redirect-to-https")
 
@@ -119,8 +116,9 @@ def _cloudfront_cache_behavior(args, default = false)
     Compress compress unless compress.empty?
     DefaultTTL default_ttl unless default_ttl.nil?
     ForwardedValues forwarded_values
-    MaxTTL max_ttl unless max_ttl.empty?
-    MinTTL min_ttl unless min_ttl.empty?
+    LambdaFunctionAssociations lambda unless lambda.empty?
+    MaxTTL max_ttl unless max_ttl.nil?
+    MinTTL min_ttl unless min_ttl.nil?
     PathPattern path if default == false
     SmoothStreaming smooth unless smooth.empty?
     TargetOriginId target
@@ -158,8 +156,22 @@ def _cloudfront_forwarded_values(args)
   }
 end
 
+def _cloudfront_lambda(args)
+  return '' if args.empty?
+
+  event = _valid_values(args[:envet],
+                        %w( viewer-request origin-request origin-response viewer-response ),
+                        'viewer-request')
+  function = _ref_string('version', args, 'lambda version')
+
+  _{
+    EventType event
+    LambdaFunctionARN function
+  }
+end
+
 def _cloudfront_custom_error(args)
-  error_min_ttl = args[:error_min_ttl] || ""
+  error_min_ttl = args[:error_min_ttl] || 300
   error_code = args[:error_code] || 404
   response_code =
     if args.key? :response_code
@@ -175,21 +187,15 @@ def _cloudfront_custom_error(args)
     end
 
   _{
-    ErrorCachingMinTTL error_min_ttl unless error_min_ttl.empty?
+    ErrorCachingMinTTL error_min_ttl
     ErrorCode error_code
-    ResponseCode response_code unless response_code.nil?
-    ResponsePagePath response_page unless response_page.empty?
+    ResponseCode response_code
+    ResponsePagePath response_page
   }
 end
 
 def _cloudfront_custom_errors(args)
-  errors = args || []
-
-  array = []
-  errors.each do |error|
-    array << _cloudfront_custom_error(error)
-  end
-  array
+  (args || []).collect{|error| _cloudfront_custom_error(error) }
 end
 
 def _cloudfront_logging(args)
@@ -214,7 +220,7 @@ def _cloudfront_origin(args)
     if args.key? :custom
       _cloudfront_custom_origin(args[:custom])
     else
-      nil
+      {}
     end
   domain = _ref_attr_string("domain", "DomainName", args, "bucket")
   id = args[:id]
@@ -224,50 +230,49 @@ def _cloudfront_origin(args)
     else
       ""
     end
-  path = args[:origin_path] || ""
-  s3 =
-    if args.key? :s3
-      _cloudfront_s3_origin(args[:s3])
-    else
-      nil
-    end
+  path = args[:path] || ""
+  s3 = _cloudfront_s3_origin(args)
 
   _{
-    CustomOriginConfig custom if s3.nil?
-    DomainName domain
+    CustomOriginConfig custom if s3.empty? and !custom.empty?
+    DomainName "#{domain}.s3.#{DOMAIN}"
     Id id
     OriginCustomHeaders headers unless headers.empty?
     OriginPath path unless path.empty?
-    S3OriginConfig s3 if custom.nil?
+    S3OriginConfig s3 if custom.empty?
   }
 end
 
 def _cloudfront_origins(args)
-  origins = args || []
-
-  array = []
-  origins.each do |origin|
-    array << _cloudfront_origin(origin)
-  end
-  array
+  (args || []).collect{|origin| _cloudfront_origin(origin) }
 end
 
 def _cloudfront_custom_origin(args)
-  http_port = args[:http_port] || ""
-  https_port = args[:https_port] || ""
-  origin_protocol = args[:origin_protocol] || ""
-  origin_ssl_protocols = args[:origin_ssl_protocols] || []
+  http_port = args[:http] || 80
+  https_port = args[:https] || 443
+  keepalive = args[:keepalive] || 5
+  protocol = _valid_values(args[:protocol],
+                           %w( https-only http-only match-viewer ), "match-viewer")
+  read_timeout = args[:read_timeout] || 30
+  ssl_protocols = (_array(args[:ssl_protocols]) || [ '' ] ).collect{|v|
+    _valid_values(v, %w( SSLv3 TLSv1 TLSv1.1 TLSv1.2 ), "TLSv1.1")
+  }
 
   _{
-    HTTPPort http_port unless http_port.empty?
-    HTTPSPort https_port unless https_port.empty?
-    OriginProtocolPolicy origin_protocol unless origin_protocol.empty?
-    OriginSSLProtocols origin_ssl_protocols unless origin_ssl_protocols.empty?
+    HTTPPort http_port
+    HTTPSPort https_port
+    OriginKeepaliveTimeout keepalive
+    OriginProtocolPolicy protocol
+    OriginReadTimeout read_timeout
+    OriginSSLProtocols ssl_protocols
   }
 end
 
 def _cloudfront_s3_origin(args)
-  origin = args[:origin] || ""
+  s3 = _ref_string("s3", args, 'origin access identity')
+  return {} if s3.empty?
+
+  origin = _join([ 'origin-access-identity', 'cloudfront', s3 ], '/')
 
   _{
     OriginAccessIdentity origin unless origin.empty?
@@ -293,12 +298,14 @@ def _cloudfront_viewer_cert(args)
       ""
     end
   iam = args[:iam] || ""
-  min_protocol = args[:min_protocol] || ""
+  min_protocol = _valid_values(args[:min_protocol],
+                               %w( SSLv3 | TLSv1 | TLSv1_2016 | TLSv1.1_2016 | TLSv1.2_2018 ),
+                               "TLSv1.1_2016")
   ssl = _valid_values(args[:ssl], %w( vip sni-only ), "sni-only")
 
  _{
    AcmCertificateArn acm unless acm.empty?
-   CloudFrontDefaultCertificate default_cert unless default.empty?
+   CloudFrontDefaultCertificate default unless default.empty?
    IamCertificateId iam unless iam.empty?
    MinimumProtocolVersion min_protocol unless min_protocol.empty?
    SslSupportMethod ssl unless acm.empty? and iam.empty?

@@ -3,6 +3,27 @@
 #
 require 'kumogata/template/helper'
 
+def _ec2_to_block_device_ecs(args)
+  root_device = {
+    device: "/dev/xvda",
+    delete: _bool("root_delete", args, true),
+    size: args[:root_size] || 8,
+    type: "gp2",
+  }
+  root_device[:ref_size] = "#{args[:ref_root_size]} root" if _ref_key? "root_size", args, '', false
+
+  # /dev/xvdcz is Docker's use storage
+  data_device = {
+     device: "/dev/xvdcz",
+     delete: _bool("data_delete", args, true),
+     size: args[:data_size],
+     type: "gp2",
+  }
+  data_device[:ref_size] = "#{args[:ref_data_size]} data" if _ref_key? "data_size", args, '', false
+
+  [ root_device, data_device ]
+end
+
 def _ec2_tags(args)
   if args.key? :tags_append
     tags_append = {}
@@ -33,6 +54,7 @@ def _ec2_security_group_egress_rule(args)
   cidr = args[:cidr] || "0.0.0.0/0"
   cidr_ipv6 = args[:cidr_ipv6] || ""
   dest_security = _ref_string("dest_security", args, "security group")
+  description = _ref_string_default("description", args, '', "inbound rule description")
   from = _ref_string("from", args)
   ip = args[:ip] || "tcp"
   dest_prefix = _ref_string("dest_prefix", args, "vpc endpoint")
@@ -43,6 +65,7 @@ def _ec2_security_group_egress_rule(args)
     CidrIp cidr if dest_security.empty?
     CidrIpv6 cidr_ipv6 unless cidr_ipv6.empty?
     DestinationPrefixListId dest_prefix unless dest_prefix.empty?
+    Description description
     FromPort from unless ip == "icmp"
     IpProtocol ip
     DestinationSecurityGroupId dest_security unless dest_security.empty?
@@ -69,18 +92,20 @@ end
 def _ec2_security_group_ingress_rule(args)
   cidr = args[:cidr] || "0.0.0.0/0"
   cidr_ipv6 = args[:cidr_ipv6] || ""
+  description = _ref_string_default("description", args, '', "inbound rule description")
   from = _ref_string("from", args)
   ip = args[:ip] || "tcp"
   source_group_name = _ref_string("source_group_name", args, "security group")
   source_group_id = _ref_string("source_group_id", args, "security group")
   source_group_owner_id = _ref_string("source_group_owner_id", args, "account id")
   to = _ref_string("to", args)
-  to = from if to.empty?
+  to = from.clone if to.empty?
   ip = -1 and from = 0 and to = 65535 if ip == "all"
 
   _{
     CidrIp cidr if source_group_name.empty? and source_group_id.empty?
     CidrIpv6 cidr_ipv6 unless cidr_ipv6.empty?
+    Description description
     FromPort from unless ip == "icmp"
     IpProtocol ip
     SourceSecurityGroupName source_group_name unless source_group_name.empty?
@@ -91,7 +116,7 @@ def _ec2_security_group_ingress_rule(args)
 end
 
 def _ec2_block_device(args)
-  device = args[:device] || "/dev/sda1"
+  device = args[:device] || "/dev/sdb"
   delete = _bool("delete", args, true)
   encrypted = _bool("encrypted", args, false)
   iops = args[:iops] || 300
@@ -147,12 +172,17 @@ def _ec2_network_interface_embedded(args, is_spot = false)
   }
 end
 
-def _ec2_image(instance_type, args)
-  image_id = args[:image_id] || false
-  return args[:image_id] if image_id
+def _ec2_image(args)
+  return args[:image_id] if args.key? :image_id
 
-  resource_image = _resource_name(args[:image] || EC2_DEFAULT_IMAGE)
-  _find_in_map("AWSRegionArch2AMI#{resource_image}",
+  image =
+    if args.key? :ecs
+      "ecs official"
+    else
+      args[:image] || EC2_DEFAULT_IMAGE
+    end
+  instance_type = _ref_string("instance_type", args, "instance type")
+  _find_in_map("AWSRegionArch2AMI#{_resource_name(image)}",
                _region,
                _find_in_map("AWSInstanceType2Arch", instance_type, "Arch"))
 end
@@ -179,12 +209,37 @@ def _ec2_protocol_number(protocol)
 end
 
 def _ec2_user_data(args)
-  user_data = _ref_string("user_data", args, "user data")
-  return "" if user_data.empty?
+  if args.key? :user_data
+    user_data = args[:user_data]
+  else
+    user_data = _ref_string("user_data", args, "user data")
+  end
 
   if user_data.is_a? Hash
     _base64(user_data)
   else
+    if user_data.is_a? String
+      if user_data.nil? or user_data.empty?
+        user_data = []
+      else
+        user_data = [ user_data ]
+      end
+    end
+    amazon_linux =
+      if args.key? :ecs or args.key? :amazon_linux
+        true
+      else
+        false
+      end
+    if args.key? :ecs
+      # http://docs.aws.amazon.com/AmazonECS/latest/developerguide/ecs-agent-config.html
+      ecs_user_data =<<"EOS"
+cat <<'EOF' >> /etc/ecs/ecs.config
+ECS_CLUSTER=#{_name("ecs", args)}
+EOF
+EOS
+      user_data = user_data.insert(0, ecs_user_data)
+    end
     _base64_shell(user_data)
   end
 end

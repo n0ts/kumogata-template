@@ -16,16 +16,12 @@ def _elb_access_logging_policy(args)
 end
 
 def _elb_app_cookie_stickiness_policy(args)
-  array = []
-  apps = args[:app_cookie] || []
-
-  apps.each do |app|
-    array << _{
+  (args[:app_cookie] || []).collect do |app|
+    _{
       CookieName app[:cookie]
       PolicyName app[:policy]
-    }
+     }
   end
-  array
 end
 
 def _elb_connection_draining_policy(args)
@@ -65,24 +61,19 @@ def _elb_health_check(args)
 end
 
 def _elb_cookie_stickiness_policy(args)
-  cookies = args[:cookie_stickiness] || []
-
-  array = []
-  cookies.each do |cookie|
-    array << _{
+  (args[:cookie_stickiness] || []).collect do |cookie|
+    _{
       CookieExpirationPeriod cookie[:expiration]
       PolicyName cookie[:policy]
     }
   end
-  array
 end
 
 def _elb_listeners(args)
   listeners = args[:listeners] || []
   listeners = [ { protocol: "http" } ] if listeners.empty?
 
-  array = []
-  listeners.each do |listener|
+  listeners.collect do |listener|
     proto = listener[:protocol] || "http"
     protocol = _valid_values(proto, %w( http https tcp ssl ), "http")
     lb_port =
@@ -108,7 +99,7 @@ def _elb_listeners(args)
     end
     ssl = _ref_string("ssl", listener)
 
-    array << _{
+    _{
       InstancePort instance_port
       InstanceProtocol instance_protocol.upcase
       LoadBalancerPort lb_port
@@ -117,22 +108,17 @@ def _elb_listeners(args)
       SSLCertificateId ssl if protocol == "https"
     }
   end
-  array
 end
 
 def _elb_policy_types(args)
-  policies = args[:policy] || []
-  return [] if policies.empty?
-
-  array = []
-  policies.each do |policy|
+  (args[:policy] || []).collect do |policy|
     attributes = []
     instance_ports = []
     lb_ports = []
     policy_name = policy[:name]
     policy_type = policy[:type]
 
-    array << _{
+    _{
       Attributes attributes unless attributes.empty?
       InstancePorts instance_ports unless instance_ports.empty?
       LoadBalancerPorts lb_ports unless lb_ports.empty?
@@ -140,5 +126,4 @@ def _elb_policy_types(args)
       PolicyType policy_type
     }
   end
-  array
 end
