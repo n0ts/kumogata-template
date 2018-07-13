@@ -119,7 +119,7 @@ AWSRegionArch2AMIUbuntu16Official do
     sydney:     'ed77b18f',
     seoul:      'e546eb8b',
     tokyo:      '64612102',
-    mumbai:     '',  ## N/A
+    mumbai:     '00000000',  ## N/A
     saopaulo:   '4a733826',
   }
 
