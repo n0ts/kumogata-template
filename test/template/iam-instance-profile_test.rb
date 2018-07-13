@@ -15,7 +15,17 @@ _iam_instance_profile "test", roles: [ "test" ]
       "Roles": [
         "test"
       ],
-      "InstanceProfileName": "test"
+      "InstanceProfileName": {
+        "Fn::Join": [
+          "-",
+          [
+            {
+              "Ref": "Service"
+            },
+            "test"
+          ]
+        ]
+      }
     }
   }
 }

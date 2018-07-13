@@ -10,7 +10,7 @@ class ParameterRdsInstanceTest < Minitest::Test
 EOS
     end
     template = <<-EOS
-_parameter_redshift "test"
+_parameter_redshift "test", port: "test", user_name: "test", user_password: "test", db_name: "test"
     EOS
     act_template = run_client_as_json(template)
     exp_template = <<-EOS
@@ -18,10 +18,35 @@ _parameter_redshift "test"
   "TestRedshiftClusterNodeTypes": {
     "Type": "String",
     "Default": "#{REDSHIFT_DEFAULT_NODE_TYPE}",
+    "Description": "test redshift cluster node types",
     "AllowedValues": [
 #{values.chomp}
-    ],
-    "Description": "test redshift cluster node types"
+    ]
+  },
+  "TestRedshiftClusterPort": {
+    "Type": "Number",
+    "Default": "test",
+    "Description": "test redshift cluster port"
+  },
+  "TestRedshiftClusterDbName": {
+    "Type": "String",
+    "Default": "test",
+    "Description": "test redshift cluster db name"
+  },
+  "TestRedshiftClusterMasterUserName": {
+    "Type": "String",
+    "Default": "test",
+    "Description": "test redshift cluster master user name",
+    "MaxLength": "16",
+    "MinLength": "2"
+  },
+  "TestRedshiftClusterMasterUserPassword": {
+    "Type": "String",
+    "Default": "test",
+    "Description": "test redshift cluster master user password",
+    "MaxLength": "64",
+    "MinLength": "8",
+    "NoEcho": "true"
   }
 }
     EOS

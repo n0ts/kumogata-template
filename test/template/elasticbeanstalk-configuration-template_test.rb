@@ -13,7 +13,8 @@ _elasticbeanstalk_configuration_template "test", ref_application: "test"
     "Properties": {
       "ApplicationName": {
         "Ref": "TestElasticbeanstalkApplication"
-      }
+      },
+      "Description": "test elasticbeanstalk configuration template description"
     }
   }
 }

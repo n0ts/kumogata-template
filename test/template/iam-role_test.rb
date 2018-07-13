@@ -28,7 +28,17 @@ _iam_role "test", user: "test", service: "s3"
         ]
       },
       "Path": "/",
-      "RoleName": "test"
+      "RoleName": {
+        "Fn::Join": [
+          "-",
+          [
+            {
+              "Ref": "Service"
+            },
+            "test"
+          ]
+        ]
+      }
     }
   }
 }

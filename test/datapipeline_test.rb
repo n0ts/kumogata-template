@@ -117,26 +117,4 @@ Test _datapipeline_pipeline_object_fields(fields: fields)
     EOS
     assert_equal exp_template.chomp, act_template
   end
-
-  def test_datapipeline_pipeline_tags
-    template = <<-EOS
-Test _datapipeline_pipeline_tags(tags: { test: "test", test1: "test1" })
-    EOS
-    act_template = run_client_as_json(template)
-    exp_template = <<-EOS
-{
-  "Test": [
-    {
-      "Key": "test",
-      "Value": "test"
-    },
-    {
-      "Key": "test1",
-      "Value": "test1"
-    }
-  ]
-}
-    EOS
-    assert_equal exp_template.chomp, act_template
-  end
 end

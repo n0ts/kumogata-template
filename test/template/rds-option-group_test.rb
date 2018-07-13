@@ -3,7 +3,7 @@ require 'abstract_unit'
 class RdsOptionGroupTest < Minitest::Test
   def test_normal
     template = <<-EOS
-_rds_option_group "test", configurations: [ { OptionName: "MEMCACHED" } ]
+_rds_option_group "test", configurations: [ { name: "MEMCACHED" } ]
     EOS
     act_template = run_client_as_json(template)
     exp_template = <<-EOS
@@ -14,7 +14,7 @@ _rds_option_group "test", configurations: [ { OptionName: "MEMCACHED" } ]
       "EngineName": "mysql",
       "MajorEngineVersion": "5.7",
       "OptionGroupDescription": "test option group description",
-      "OptionGroupConfigurations": [
+      "OptionConfigurations": [
         {
           "OptionName": "MEMCACHED"
         }

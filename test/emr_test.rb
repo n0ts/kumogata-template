@@ -134,7 +134,7 @@ Test _emr_ebs(ebs: [ { size: "test" } ])
     exp_template = <<-EOS
 {
   "Test": {
-    "EbsBlockDeviceConfigs": [
+    "EbsBlockDeviceConfig": [
       {
         "VolumeSpecification": {
           "SizeInGB": "test",
@@ -184,7 +184,7 @@ Test _emr_ebs_volume({ size: "test" })
 
   def test_emr_job_flow
     template = <<-EOS
-Test _emr_job_flow(job: { core: { name: "test" }, master: { name: "test", ebs: [ { size: 42, type: "gp2" } ] } })
+Test _emr_job_flow(job: { core: { name: "test" }, master: { name: "test" } })
     EOS
     act_template = run_client_as_json(template)
     exp_template = <<-EOS
@@ -197,20 +197,68 @@ Test _emr_job_flow(job: { core: { name: "test" }, master: { name: "test", ebs: [
       "Name": "test"
     },
     "MasterInstanceGroup": {
-      "EbsConfiguration": {
-        "EbsBlockDeviceConfigs": [
-          {
-            "VolumeSpecification": {
-              "SizeInGB": "42",
-              "VolumeType": "gp2"
-            }
-          }
-        ]
-      },
       "InstanceCount": "1",
       "InstanceType": "c4.large",
       "Market": "ON_DEMAND",
       "Name": "test"
+    },
+    "TerminationProtected": "false"
+  }
+}
+    EOS
+    assert_equal exp_template.chomp, act_template
+
+    template = <<-EOS
+Test _emr_job_flow(job: { core: { fleet: { name: "test", configs: [ { bid: 1 } ], on_demand: 1, spot: 2 } },
+                          master: { fleet: { name: "test", configs: [ { bid: 1 } ], on_demand: 1, spot: 2  } } } )
+    EOS
+    act_template = run_client_as_json(template)
+    exp_template = <<-EOS
+{
+  "Test": {
+    "CoreInstanceFleet": {
+      "InstanceTypeConfigs": [
+        {
+          "BidPrice": "1",
+          "InstanceType": "c4.large",
+          "WeightedCapacity": "1"
+        }
+      ],
+      "Name": {
+        "Fn::Join": [
+          "-",
+          [
+            {
+              "Ref": "Service"
+            },
+            "test"
+          ]
+        ]
+      },
+      "TargetOnDemandCapacity": "1",
+      "TargetSpotCapacity": "2"
+    },
+    "MasterInstanceFleet": {
+      "InstanceTypeConfigs": [
+        {
+          "BidPrice": "1",
+          "InstanceType": "c4.large",
+          "WeightedCapacity": "1"
+        }
+      ],
+      "Name": {
+        "Fn::Join": [
+          "-",
+          [
+            {
+              "Ref": "Service"
+            },
+            "test"
+          ]
+        ]
+      },
+      "TargetOnDemandCapacity": "1",
+      "TargetSpotCapacity": "2"
     },
     "TerminationProtected": "false"
   }
@@ -252,19 +300,52 @@ Test _emr_hadoop_jar_step_config(jar: "test")
     assert_equal exp_template.chomp, act_template
   end
 
-  def test_emr_step_properties
+  def test_emr_instance_autoscaling
     template = <<-EOS
-Test _emr_step_properties(step_properties: [ { key: "test", value: "test" } ])
+autoscaling = {
+  max: 1,
+  min: 0,
+  rules: [
+    { rule: "test1", type: "change", cool: 60, scaling: 1, operator: ">=", definition: "test2", threshold: 60, unit: "sec" },
+  ],
+}
+Test _emr_instance_autoscaling({ autoscaling: autoscaling })
     EOS
     act_template = run_client_as_json(template)
     exp_template = <<-EOS
 {
-  "Test": [
-    {
-      "Key": "test",
-      "Value": "test"
-    }
-  ]
+  "Test": {
+    "Constraints": {
+      "MaxCapacity": "1",
+      "MinCapacity": "0"
+    },
+    "Rules": [
+      {
+        "Action": {
+          "Market": "ON_DEMAND",
+          "SimpleScalingPolicyConfiguration": {
+            "AdjustmentType": "CHANGE_IN_CAPACITY",
+            "CoolDown": "60",
+            "ScalingAdjustment": "1"
+          }
+        },
+        "Description": "test1 instance autoscaling rules description",
+        "Name": "test1",
+        "Trigger": {
+          "CloudWatchAlarmDefinition": {
+            "ComparisonOperator": "GREATER_THAN_OR_EQUAL",
+            "EvaluationPeriods": "1",
+            "MetricName": "test2",
+            "Namespace": "AWS/ElasticMapReduce",
+            "Period": "300",
+            "Statistic": "AVERAGE",
+            "Threshold": "60",
+            "Unit": "Seconds"
+          }
+        }
+      }
+    ]
+  }
 }
     EOS
     assert_equal exp_template.chomp, act_template

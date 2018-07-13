@@ -20,9 +20,7 @@ _logs_subscription_filter "test", dest: "test", pattern: "test", role: "test"
             {
               "Ref": "Service"
             },
-            {
-              "Ref": "Name"
-            }
+            "test"
           ]
         ]
       },

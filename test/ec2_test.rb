@@ -121,6 +121,7 @@ Test _ec2_security_group_egress_rules("egress", args)
   "Test": [
     {
       "CidrIp": "0.0.0.0/0",
+      "Description": "inbound rule description",
       "FromPort": "80",
       "IpProtocol": "tcp",
       "ToPort": "80"
@@ -140,6 +141,7 @@ Test _ec2_security_group_egress_rules("egress", args)
   "Test": [
     {
       "CidrIp": "0.0.0.0/0",
+      "Description": "inbound rule description",
       "FromPort": "80",
       "IpProtocol": "tcp",
       "ToPort": "80"
@@ -159,6 +161,7 @@ Test _ec2_security_group_egress_rule(to: 80)
 {
   "Test": {
     "CidrIp": "0.0.0.0/0",
+    "Description": "inbound rule description",
     "FromPort": "80",
     "IpProtocol": "tcp",
     "ToPort": "80"
@@ -179,6 +182,7 @@ Test _ec2_security_group_ingress_rules("ingress", args)
   "Test": [
     {
       "CidrIp": "0.0.0.0/0",
+      "Description": "inbound rule description",
       "FromPort": "80",
       "IpProtocol": "tcp",
       "ToPort": "80"
@@ -198,12 +202,14 @@ Test _ec2_security_group_ingress_rules("ingress", args)
   "Test": [
     {
       "CidrIp": "0.0.0.0/0",
+      "Description": "inbound rule description",
       "FromPort": "22",
       "IpProtocol": "tcp",
       "ToPort": "22"
     },
     {
       "CidrIp": "0.0.0.0/0",
+      "Description": "inbound rule description",
       "FromPort": "80",
       "IpProtocol": "tcp",
       "ToPort": "80"
@@ -223,6 +229,7 @@ Test _ec2_security_group_ingress_rule(from: 80)
 {
   "Test": {
     "CidrIp": "0.0.0.0/0",
+    "Description": "inbound rule description",
     "FromPort": "80",
     "IpProtocol": "tcp",
     "ToPort": "80"
@@ -240,7 +247,7 @@ Test _ec2_block_device(ref_size: "test")
     exp_template = <<-EOS
 {
   "Test": {
-    "DeviceName": "/dev/sda1",
+    "DeviceName": "/dev/sdb",
     "Ebs": {
       "DeleteOnTermination": "true",
       "VolumeSize": {
@@ -276,14 +283,14 @@ Test _ec2_network_interface_embedded(ref_subnet: "test")
 
   def test_ec2_image
     template = <<-EOS
-Test _ec2_image("test", {})
+Test _ec2_image({ image: 'test', instance_type: 'test' })
     EOS
     act_template = run_client_as_json(template)
     exp_template = <<-EOS
 {
   "Test": {
     "Fn::FindInMap": [
-      "AWSRegionArch2AMIAmazonLinuxOfficial",
+      "AWSRegionArch2AMITest",
       {
         "Ref": "AWS::Region"
       },
@@ -301,59 +308,12 @@ Test _ec2_image("test", {})
     assert_equal exp_template.chomp, act_template
 
     template = <<-EOS
-Test _ec2_image("test", { image_id: "test" })
+Test _ec2_image({ image_id: "test" })
     EOS
     act_template = run_client_as_json(template)
     exp_template = <<-EOS
 {
   "Test": "test"
-}
-    EOS
-    assert_equal exp_template.chomp, act_template
-
-    template = <<-EOS
-Test _ec2_image("test", { image_id: false })
-    EOS
-    act_template = run_client_as_json(template)
-    exp_template = <<-EOS
-{
-  "Test": {
-    "Fn::FindInMap": [
-      "AWSRegionArch2AMIAmazonLinuxOfficial",
-      {
-        "Ref": "AWS::Region"
-      },
-      {
-        "Fn::FindInMap": [
-          "AWSInstanceType2Arch",
-          "test",
-          "Arch"
-        ]
-      }
-    ]
-  }
-
-    template = <<-EOS
-Test _ec2_image("test", { image_id: nil })
-    EOS
-    act_template = run_client_as_json(template)
-    exp_template = <<-EOS
-{
-  "Test": {
-    "Fn::FindInMap": [
-      "AWSRegionArch2AMIAmazonLinuxOfficial",
-      {
-        "Ref": "AWS::Region"
-      },
-      {
-        "Fn::FindInMap": [
-          "AWSInstanceType2Arch",
-          "test",
-          "Arch"
-        ]
-      }
-    ]
-  }
 }
     EOS
     assert_equal exp_template.chomp, act_template
@@ -434,7 +394,7 @@ Test _ec2_spot_fleet_launches({ block_devices: [ { ref_size: "test" } ], iam: "t
   "Test": {
     "BlockDeviceMappings": [
       {
-        "DeviceName": "/dev/sda1",
+        "DeviceName": "/dev/sdb",
         "Ebs": {
           "DeleteOnTermination": "true",
           "VolumeSize": {

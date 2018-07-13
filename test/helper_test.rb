@@ -2,28 +2,6 @@ require 'abstract_unit'
 require 'kumogata/template/helper'
 
 class HelperTest < Minitest::Test
-  def test_region
-    template = <<-EOS
-Test _region()
-    EOS
-    act_template = run_client_as_json(template)
-    exp_template = <<-EOS
-{
-  "Test": {
-    "Ref": "AWS::Region"
-  }
-}
-    EOS
-    assert_equal exp_template.chomp, act_template
-  end
-
-  def test_resource_name
-    assert_equal _resource_name("test"), "Test"
-    assert_equal _resource_name("test", "Resource"), "TestResource"
-    assert_equal _resource_name("test-name", "Resource"), "TestnameResource"
-    assert_equal _resource_name("test Name", "Resource"), "TestNameResource"
-  end
-
   def test_array
     assert_equal _array("test"), [ "test" ]
     assert_equal _array([ "test" ]), [ "test" ]
@@ -56,16 +34,128 @@ EOS
     assert_equal description, "test description, test"
   end
 
-  def test_empty
-    assert_equal _empty?(nil), true
-    assert_equal _empty?(""), true
-    assert_equal _empty?("test"), false
-    assert_equal _empty?([]), true
-    assert_equal _empty?([ "test" ]), false
-    assert_equal _empty?(true), false
-    assert_equal _empty?(false), false
-    assert_equal _empty?({}), true
-    assert_equal _empty?({ test: "test" }), false
+  def test_pair_value
+    template = <<-EOS
+Test _pair_value({ test: { "test key": "test value" } }, "test")
+    EOS
+    act_template = run_client_as_json(template)
+    exp_template = <<-EOS
+{
+  "Test": [
+    {
+      "Key": "test key",
+      "Value": "test value"
+    }
+  ]
+}
+    EOS
+    assert_equal exp_template.chomp, act_template
+
+    template = <<-EOS
+Test _pair_value({ test: { "test key": "test value" } }, "test1")
+    EOS
+    act_template = run_client_as_json(template)
+    exp_template = <<-EOS
+{
+  "Test": [
+
+  ]
+}
+    EOS
+    assert_equal exp_template.chomp, act_template
+  end
+
+  def test_name
+    template = <<-EOS
+Test _name("test", { name: "test name" })
+    EOS
+    act_template = run_client_as_json(template)
+    exp_template = <<-EOS
+{
+  "Test": {
+    "Fn::Join": [
+      "-",
+      [
+        {
+          "Ref": "Service"
+        },
+        "test-name"
+      ]
+    ]
+  }
+}
+    EOS
+    assert_equal exp_template.chomp, act_template
+
+    template = <<-EOS
+Test _name("test", { name: "test name", ref_name: "test name ref" })
+    EOS
+    act_template = run_client_as_json(template)
+    exp_template = <<-EOS
+{
+  "Test": {
+    "Fn::Join": [
+      "-",
+      [
+        {
+          "Ref": "Service"
+        },
+        {
+          "Ref": "TestNameRef"
+        }
+      ]
+    ]
+  }
+}
+    EOS
+    assert_equal exp_template.chomp, act_template
+
+
+    template = <<-EOS
+Test _name("test", { name: "test name", test: "test test" })
+    EOS
+    act_template = run_client_as_json(template)
+    exp_template = <<-EOS
+{
+  "Test": "test-test"
+}
+    EOS
+    assert_equal exp_template.chomp, act_template
+
+    template = <<-EOS
+Test _name("test", { name: "test name", ref_test: "test test ref" })
+    EOS
+    act_template = run_client_as_json(template)
+    exp_template = <<-EOS
+{
+  "Test": {
+    "Ref": "TestTestRef"
+  }
+}
+    EOS
+    assert_equal exp_template.chomp, act_template
+
+    template = <<-EOS
+Test _name("test", { name: "test name", import_test: "test test import" })
+    EOS
+    act_template = run_client_as_json(template)
+    exp_template = <<-EOS
+{
+  "Test": {
+    "Fn::ImportValue": {
+      "Fn::Sub": "test-test-import"
+    }
+  }
+}
+    EOS
+    assert_equal exp_template.chomp, act_template
+  end
+
+  def test_resource_name
+    assert_equal _resource_name("test"), "Test"
+    assert_equal _resource_name("test", "Resource"), "TestResource"
+    assert_equal _resource_name("test-name", "Resource"), "TestnameResource"
+    assert_equal _resource_name("test Name", "Resource"), "TestNameResource"
   end
 
   def test_valid_values
@@ -80,12 +170,6 @@ EOS
     assert_equal _valid_numbers(2, 0, 1, 2), 2
     assert_nil _valid_numbers(3, 0, 1)
     assert_nil _valid_numbers(nil, 0, 1)
-  end
-
-  def test_real_name
-    assert_equal _real_name("test", { name: "test" }), "test"
-    assert_equal _real_name("test", { name: "test", test: "test test" }), "test-test"
-    assert_equal _real_name("test", { name: "test", test: false }), false
   end
 
   def test_ref_key
@@ -246,6 +330,33 @@ Test _ref_array("tests", import_tests: [ "test1", "test2" ])
 }
     EOS
     assert_equal exp_template.chomp, act_template
+
+
+    template = <<-EOS
+Tests _ref_array("tests", { name: "tests", ref_tests: [ "test1", "test2" ] }, "", "test")
+    EOS
+    act_template = run_client_as_json(template)
+    exp_template = <<-EOS
+{
+  "Tests": [
+    {
+      "Fn::GetAtt": [
+        "Test1",
+        "test"
+      ]
+    },
+    {
+      "Fn::GetAtt": [
+        "Test2",
+        "test"
+      ]
+    }
+  ]
+}
+    EOS
+    assert_equal exp_template.chomp, act_template
+
+
   end
 
   def test_ref_attr_string
@@ -271,145 +382,6 @@ Test _ref_attr_string("test", "test1", ref_test: "test")
       "Test",
       "test1"
     ]
-  }
-}
-    EOS
-    assert_equal exp_template.chomp, act_template
-  end
-
-  def test_ref_name
-    template = <<-EOS
-Test _ref_name("test", test: "test")
-    EOS
-    act_template = run_client_as_json(template)
-    exp_template = <<-EOS
-{
-  "Test": "test"
-}
-    EOS
-    assert_equal exp_template.chomp, act_template
-
-    template = <<-EOS
-Test _ref_name("test", test: "test test")
-    EOS
-    act_template = run_client_as_json(template)
-    exp_template = <<-EOS
-{
-  "Test": "test-test"
-}
-    EOS
-    assert_equal exp_template.chomp, act_template
-
-    template = <<-EOS
-Test _ref_name("test", ref_test: "test")
-    EOS
-    act_template = run_client_as_json(template)
-    exp_template = <<-EOS
-{
-  "Test": {
-    "Fn::Join": [
-      "-",
-      [
-        {
-          "Ref": "Service"
-        },
-        {
-          "Ref": "Test"
-        }
-      ]
-    ]
-  }
-}
-    EOS
-    assert_equal exp_template.chomp, act_template
-
-    template = <<-EOS
-Test _ref_name("test", raw_test: "test")
-    EOS
-    act_template = run_client_as_json(template)
-    exp_template = <<-EOS
-{
-  "Test": "test"
-}
-    EOS
-    assert_equal exp_template.chomp, act_template
-
-    template = <<-EOS
-Test _ref_name("test", ref_raw_test: "test")
-    EOS
-    act_template = run_client_as_json(template)
-    exp_template = <<-EOS
-{
-  "Test": {
-    "Ref": "Test"
-  }
-}
-    EOS
-    assert_equal exp_template.chomp, act_template
-
-    template = <<-EOS
-Test _ref_name("test", import_test: "test")
-    EOS
-    act_template = run_client_as_json(template)
-    exp_template = <<-EOS
-{
-  "Test": {
-    "Fn::ImportValue": {
-      "Fn::Sub": "test"
-    }
-  }
-}
-    EOS
-    assert_equal exp_template.chomp, act_template
-
-    template = <<-EOS
-Test _ref_name("test", {})
-    EOS
-    act_template = run_client_as_json(template)
-    exp_template = <<-EOS
-{
-  "Test": {
-    "Fn::Join": [
-      "-",
-      [
-        {
-          "Ref": "Service"
-        },
-        {
-          "Ref": "Name"
-        }
-      ]
-    ]
-  }
-}
-    EOS
-    assert_equal exp_template.chomp, act_template
-  end
-
-  def test_ref_name_default
-    template = <<-EOS
-Test _ref_name_default("test", { name: "test1" })
-    EOS
-    act_template = run_client_as_json(template)
-    exp_template = <<-EOS
-{
-  "Test": "test1"
-}
-    EOS
-    assert_equal exp_template.chomp, act_template
-
-    # _ref_name_default(name, args, ref_name = '')
-  end
-
-  def test_azs
-    template = <<-EOS
-Test _azs("test")
-    EOS
-    act_template = run_client_as_json(template)
-    exp_template = <<-EOS
-{
-  "Test": {
-    "Fn::GetAZs": "test"
   }
 }
     EOS
@@ -604,7 +576,7 @@ Test _base64_shell("test shell")
     exp_template = <<-EOS
 {
   "Test": {
-    "Fn::Base64": "#!/bin/bash\\ntest shell\\n"
+    "Fn::Base64": "#!/bin/bash\\ntest shell"
   }
 }
     EOS
@@ -682,6 +654,26 @@ Test _sub("test")
 }
     EOS
     assert_equal exp_template.chomp, act_template
+
+    template = <<-EOS
+Test _sub("test.${Test}", [ { "test": "test" } ])
+    EOS
+    act_template = run_client_as_json(template)
+    exp_template = <<-EOS
+{
+  "Test": {
+    "Fn::Sub": [
+      "test.${Test}",
+      {
+        "Test": {
+          "Ref": "Test"
+        }
+      }
+    ]
+  }
+}
+    EOS
+    assert_equal exp_template.chomp, act_template
   end
 
   def test_ref
@@ -732,6 +724,34 @@ Test _export({})
     assert_equal exp_template.chomp, act_template
   end
 
+  def test_depends
+    template = <<-EOS
+Test _depends([ { test: "test" } ], { test: "test" })
+    EOS
+    act_template = run_client_as_json(template)
+    exp_template = <<-EOS
+{
+  "Test": [
+    "TestTest"
+  ]
+}
+    EOS
+    assert_equal exp_template.chomp, act_template
+
+    template = <<-EOS
+Test _depends([ "test" ], { test: "test" })
+    EOS
+    act_template = run_client_as_json(template)
+    exp_template = <<-EOS
+{
+  "Test": [
+    "Test"
+  ]
+}
+    EOS
+    assert_equal exp_template.chomp, act_template
+  end
+
   def test_join
     template = <<-EOS
 Test _join({ test: "test" })
@@ -763,6 +783,36 @@ Test _import("test")
     "Fn::ImportValue": {
       "Fn::Sub": "test"
     }
+  }
+}
+    EOS
+    assert_equal exp_template.chomp, act_template
+
+    template = <<-EOS
+Test _import("test test1", "ref test")
+    EOS
+    act_template = run_client_as_json(template)
+    exp_template = <<-EOS
+{
+  "Test": {
+    "Fn::ImportValue": {
+      "Fn::Sub": "test-test1-ref-test"
+    }
+  }
+}
+    EOS
+    assert_equal exp_template.chomp, act_template
+  end
+
+  def test_region
+    template = <<-EOS
+Test _region()
+    EOS
+    act_template = run_client_as_json(template)
+    exp_template = <<-EOS
+{
+  "Test": {
+    "Ref": "AWS::Region"
   }
 }
     EOS
@@ -885,129 +935,45 @@ Test _tags({ name: "test", tags_append: { ref_test: "test" } })
     assert_equal exp_template.chomp, act_template
   end
 
-  def test_tag_name
+  def test_tags_string
     template = <<-EOS
-Test _tag_name(name: "test")
+Test _tags_string({ name: "test" })
     EOS
     act_template = run_client_as_json(template)
     exp_template = <<-EOS
 {
   "Test": {
-    "Fn::Join": [
-      "-",
-      [
-        {
-          "Ref": "Service"
-        },
-        "test"
+    "Name": {
+      "Fn::Join": [
+        "-",
+        [
+          {
+            "Ref": "Service"
+          },
+          "test"
+        ]
       ]
-    ]
+    },
+    "Service": {
+      "Ref": "Service"
+    },
+    "Version": {
+      "Ref": "Version"
+    }
   }
 }
     EOS
     assert_equal exp_template.chomp, act_template
+  end
 
+  def test_var
     template = <<-EOS
-Test _tag_name(ref_name: "test")
+Test _var("test")
     EOS
     act_template = run_client_as_json(template)
     exp_template = <<-EOS
 {
-  "Test": {
-    "Fn::Join": [
-      "-",
-      [
-        {
-          "Ref": "Service"
-        },
-        {
-          "Ref": "Test"
-        }
-      ]
-    ]
-  }
-}
-    EOS
-    assert_equal exp_template.chomp, act_template
-
-    template = <<-EOS
-Test _tag_name(tag_name: "test")
-    EOS
-    act_template = run_client_as_json(template)
-    exp_template = <<-EOS
-{
-  "Test": "test"
-}
-    EOS
-    assert_equal exp_template.chomp, act_template
-
-    template = <<-EOS
-Test _tag_name(ref_tag_name: "test")
-    EOS
-    act_template = run_client_as_json(template)
-    exp_template = <<-EOS
-{
-  "Test": {
-    "Ref": "Test"
-  }
-}
-    EOS
-    assert_equal exp_template.chomp, act_template
-
-    template = <<-EOS
-Test _tag_name({ name: "test", ref_tag_name: "test" })
-    EOS
-    act_template = run_client_as_json(template)
-    exp_template = <<-EOS
-{
-  "Test": {
-    "Ref": "Test"
-  }
-}
-    EOS
-    assert_equal exp_template.chomp, act_template
-
-    template = <<-EOS
-Test _tag_name(ref_raw_tag_name: "test")
-    EOS
-    act_template = run_client_as_json(template)
-    exp_template = <<-EOS
-{
-  "Test": {
-    "Ref": "Test"
-  }
-}
-    EOS
-    assert_equal exp_template.chomp, act_template
-
-    template = <<-EOS
-Test _tag_name(raw_tag_name: "test")
-    EOS
-    act_template = run_client_as_json(template)
-    exp_template = <<-EOS
-{
-  "Test": "test"
-}
-    EOS
-    assert_equal exp_template.chomp, act_template
-
-    template = <<-EOS
-Test _tag_name(name: "test", tag_service: "test")
-    EOS
-    act_template = run_client_as_json(template)
-    exp_template = <<-EOS
-{
-  "Test": {
-    "Fn::Join": [
-      "-",
-      [
-        {
-          "Ref": "Test"
-        },
-        "test"
-      ]
-    ]
-  }
+  "Test": "${test}"
 }
     EOS
     assert_equal exp_template.chomp, act_template
@@ -1037,7 +1003,7 @@ Test _availability_zone({ ref_subnet: "test", ref_az: "test" }, false)
     exp_template = <<-EOS
 {
   "Test": {
-    "Ref": "Test"
+    "Ref": "TestZoneName"
   }
 }
     EOS

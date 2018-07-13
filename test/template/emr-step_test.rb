@@ -25,9 +25,7 @@ _emr_step "test", ref_cluster: "test", jar: "test"
             {
               "Ref": "Service"
             },
-            {
-              "Ref": "Name"
-            }
+            "test"
           ]
         ]
       }
@@ -67,9 +65,7 @@ _emr_step "test", ref_cluster: "test", jar: "s3://emr-cfn-test/hadoop-mapreduce-
             {
               "Ref": "Service"
             },
-            {
-              "Ref": "Name"
-            }
+            "test"
           ]
         ]
       }

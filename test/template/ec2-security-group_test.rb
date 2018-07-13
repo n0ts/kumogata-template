@@ -11,7 +11,17 @@ _ec2_security_group "test", vpc: "test"
   "TestSecurityGroup": {
     "Type": "AWS::EC2::SecurityGroup",
     "Properties": {
-      "GroupName": "test",
+      "GroupName": {
+        "Fn::Join": [
+          "-",
+          [
+            {
+              "Ref": "Service"
+            },
+            "test"
+          ]
+        ]
+      },
       "GroupDescription": "test security group description",
       "Tags": [
         {

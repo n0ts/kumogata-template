@@ -22,14 +22,12 @@ _elasticache_cache_cluster "test", ref_security_groups: "test"
             {
               "Ref": "Service"
             },
-            {
-              "Ref": "Name"
-            }
+            "test"
           ]
         ]
       },
       "Engine": "redis",
-      "EngineVersion": "2.8.24",
+      "EngineVersion": "2.8.6",
       "NumCacheNodes": "1",
       "Port": "6379",
       "PreferredMaintenanceWindow": "Thu:20:15-Thu:21:15",

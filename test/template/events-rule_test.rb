@@ -11,6 +11,7 @@ _events_rule "test"
   "TestEventsRule": {
     "Type": "AWS::Events::Rule",
     "Properties": {
+      "Description": "test events rule description",
       "Name": {
         "Fn::Join": [
           "-",
@@ -18,9 +19,7 @@ _events_rule "test"
             {
               "Ref": "Service"
             },
-            {
-              "Ref": "Name"
-            }
+            "test"
           ]
         ]
       },

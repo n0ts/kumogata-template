@@ -3,7 +3,7 @@ require 'abstract_unit'
 class AlbLoadbalancerTest < Minitest::Test
   def test_normal
     template = <<-EOS
-_alb_load_balancer "test", attributes: [ { "test": "test" } ], ref_security_groups: [ "test" ]
+_alb_load_balancer "test", attributes: [ { test: "test" } ], ref_security_groups: [ "test" ]
     EOS
     act_template = run_client_as_json(template)
     exp_template = <<-EOS
@@ -24,9 +24,7 @@ _alb_load_balancer "test", attributes: [ { "test": "test" } ], ref_security_grou
             {
               "Ref": "Service"
             },
-            {
-              "Ref": "Name"
-            }
+            "test"
           ]
         ]
       },

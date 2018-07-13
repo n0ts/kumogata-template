@@ -21,18 +21,46 @@ _redshift_cluster "test", ref_db_name: "test", ref_parameter: "test", ref_subnet
       },
       "ClusterType": "single-node",
       "DBName": {
-        "Ref": "TestDbName"
+        "Ref": "TestRedshiftClusterDbName"
       },
       "MasterUsername": {
-        "Ref": "TestClusterMasterUserName"
+        "Ref": "TestRedshiftClusterMasterUserName"
       },
       "MasterUserPassword": {
-        "Ref": "TestClusterMasterUserPassword"
+        "Ref": "TestRedshiftClusterMasterUserPassword"
       },
-      "NodeType": "ds1.xlarge",
+      "NodeType": "dc1.large",
       "Port": "5439",
       "PreferredMaintenanceWindow": "Thu:20:45-Thu:21:15",
       "PubliclyAccessible": "false",
+      "Tags": [
+        {
+          "Key": "Name",
+          "Value": {
+            "Fn::Join": [
+              "-",
+              [
+                {
+                  "Ref": "Service"
+                },
+                "test"
+              ]
+            ]
+          }
+        },
+        {
+          "Key": "Service",
+          "Value": {
+            "Ref": "Service"
+          }
+        },
+        {
+          "Key": "Version",
+          "Value": {
+            "Ref": "Version"
+          }
+        }
+      ],
       "VpcSecurityGroupIds": [
         {
           "Ref": "TestSecurityGroup"

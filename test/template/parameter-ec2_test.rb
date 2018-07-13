@@ -6,11 +6,7 @@ class ParameterEc2Test < Minitest::Test
 _parameter_ec2 "test"
     EOS
     act_template = run_client_as_json(template)
-    allowed_values = []
-    EC2_INSTANCE_TYPES.each do |type|
-      allowed_values << "#{type}"
-    end
-    allowed_values = JSON.generate(allowed_values)
+    values = JSON.generate(EC2_INSTANCE_TYPES)
                        .gsub("[", "[\n      ")
                        .gsub("\",", "\",\n      ")
                        .gsub("\"]", "\"\n    ]")
@@ -19,11 +15,11 @@ _parameter_ec2 "test"
   "TestInstanceType": {
     "Type": "String",
     "Default": "#{EC2_DEFAULT_INSTANCE_TYPE}",
-    "AllowedValues": #{allowed_values},
-    "Description": "test instance type"
+    "Description": "test instance type",
+    "AllowedValues": #{values}
   },
   "TestDataVolumeSize": {
-    "Type": "String",
+    "Type": "Number",
     "Default": "100",
     "Description": "test data volume size"
   }
@@ -35,11 +31,7 @@ _parameter_ec2 "test"
 _parameter_ec2 "test", iam_instance: "test", key_name: "test"
     EOS
     act_template = run_client_as_json(template)
-    allowed_values = []
-    EC2_INSTANCE_TYPES.each do |type|
-      allowed_values << "#{type}"
-    end
-    allowed_values = JSON.generate(allowed_values)
+    values = JSON.generate(EC2_INSTANCE_TYPES)
                        .gsub("[", "[\n      ")
                        .gsub("\",", "\",\n      ")
                        .gsub("\"]", "\"\n    ]")
@@ -48,8 +40,8 @@ _parameter_ec2 "test", iam_instance: "test", key_name: "test"
   "TestInstanceType": {
     "Type": "String",
     "Default": "#{EC2_DEFAULT_INSTANCE_TYPE}",
-    "AllowedValues": #{allowed_values},
-    "Description": "test instance type"
+    "Description": "test instance type",
+    "AllowedValues": #{values}
   },
   "TestIamInstanceProfile": {
     "Type": "String",
@@ -57,7 +49,7 @@ _parameter_ec2 "test", iam_instance: "test", key_name: "test"
     "Description": "test iam instance profile"
   },
   "TestDataVolumeSize": {
-    "Type": "String",
+    "Type": "Number",
     "Default": "100",
     "Description": "test data volume size"
   },

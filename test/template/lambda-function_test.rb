@@ -3,7 +3,7 @@ require 'abstract_unit'
 class LambdaFunctionTest < Minitest::Test
   def test_normal
     template = <<-EOS
-_lambda_function "test", code: { s3_bucket: "test", s3_key: "test" }, function_name: "test", ref_role: "test"
+_lambda_function "test", code: { s3_bucket: "test", s3_key: "test" }, function: "test", ref_role: "test"
     EOS
     act_template = run_client_as_json(template)
     exp_template = <<-EOS
@@ -15,6 +15,7 @@ _lambda_function "test", code: { s3_bucket: "test", s3_key: "test" }, function_n
         "S3Bucket": "test",
         "S3Key": "test"
       },
+      "Description": "test lambda function description",
       "FunctionName": "test",
       "Handler": "test.handler",
       "MemorySize": "128",
@@ -29,17 +30,7 @@ _lambda_function "test", code: { s3_bucket: "test", s3_key: "test" }, function_n
       "Tags": [
         {
           "Key": "Name",
-          "Value": {
-            "Fn::Join": [
-              "-",
-              [
-                {
-                  "Ref": "Service"
-                },
-                "test"
-              ]
-            ]
-          }
+          "Value": "test"
         },
         {
           "Key": "Service",
@@ -61,7 +52,7 @@ _lambda_function "test", code: { s3_bucket: "test", s3_key: "test" }, function_n
     assert_equal exp_template.chomp, act_template
 
     template = <<-EOS
-_lambda_function "test", code: { zip_file: "test/data/lambda_function.py" }, function_name: "test", ref_role: "test", runtime: "python2.7"
+_lambda_function "test", code: { zip_file: "test/data/lambda_function.py" }, function: "test", ref_role: "test", runtime: "python2.7"
     EOS
     act_template = run_client_as_json(template)
     exp_template = <<-EOS
@@ -82,6 +73,7 @@ _lambda_function "test", code: { zip_file: "test/data/lambda_function.py" }, fun
           ]
         }
       },
+      "Description": "test lambda function description",
       "FunctionName": "test",
       "Handler": "test.lambda_handler",
       "MemorySize": "128",
@@ -96,17 +88,7 @@ _lambda_function "test", code: { zip_file: "test/data/lambda_function.py" }, fun
       "Tags": [
         {
           "Key": "Name",
-          "Value": {
-            "Fn::Join": [
-              "-",
-              [
-                {
-                  "Ref": "Service"
-                },
-                "test"
-              ]
-            ]
-          }
+          "Value": "test"
         },
         {
           "Key": "Service",

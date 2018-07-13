@@ -12,6 +12,7 @@ _lambda_alias "test", ref_function_name: "test", ref_function_version: "test"
   "TestLambdaAlias": {
     "Type": "AWS::Lambda::Alias",
     "Properties": {
+      "Description": "test lambda alias description",
       "FunctionName": {
         "Fn::GetAtt": [
           "TestLambdaFunction",
@@ -31,9 +32,7 @@ _lambda_alias "test", ref_function_name: "test", ref_function_version: "test"
             {
               "Ref": "Service"
             },
-            {
-              "Ref": "Name"
-            }
+            "test"
           ]
         ]
       }

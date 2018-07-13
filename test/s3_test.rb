@@ -36,7 +36,7 @@ Test _s3_cors(cors: [ { headers: "test", methods: "test", origins: "test", expos
 
   def test_s3_lifecycle
     template = <<-EOS
-Test _s3_lifecycle(lifecycle: [ { expiration_date: "ExpirationDate", expiration_in_days: "test", id: "test", noncurrent_version_transitions: [ { storage: "test", transition: "test" } ], non_expiration_in_days: "test" } ])
+Test _s3_lifecycle(lifecycle: [ { id: "test", exp_in_days: "test", noncurrent_version_transitions: [ { storage: "test", transition: "test" } ], non_exp_in_days: "test" } ])
     EOS
     act_template = run_client_as_json(template)
     exp_template = <<-EOS
@@ -44,14 +44,13 @@ Test _s3_lifecycle(lifecycle: [ { expiration_date: "ExpirationDate", expiration_
   "Test": {
     "Rules": [
       {
-        "ExpirationDate": "ExpirationDate",
         "ExpirationInDays": "test",
         "Id": "test",
         "NoncurrentVersionExpirationInDays": "test",
         "NoncurrentVersionTransitions": [
           {
-            "StorageClass": "test",
-            "TransitionInDays": "test"
+            "StorageClass": "GLACIER",
+            "TransitionInDays": ""
           }
         ],
         "Status": "Enabled"

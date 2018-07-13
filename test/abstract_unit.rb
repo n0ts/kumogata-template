@@ -9,16 +9,8 @@ require 'yaml'
 # for only test
 ENV['TZ'] = 'Asia/Tokyo'
 
-class Kumogata2::Client
-  include Kumogata2::Logger::Helper
-
-  def initialize(options)
-    @options = options.kind_of?(Hashie::Mash) ? options : Hashie::Mash.new(options)
-    @plugin_by_ext = {}
-  end
-end
-
 class Kumogata2::Plugin::Ruby::Context
+  remove_method :define_template_func
   def define_template_func(scope, path_or_url)
     functions = ""
     Dir.glob("template/*.rb").all? do |file|

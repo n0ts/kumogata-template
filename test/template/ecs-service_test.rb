@@ -17,7 +17,17 @@ _ecs_service "test", ref_cluster: "test", ref_desired_count: "test", ref_task: "
       "DesiredCount": {
         "Ref": "TestEcsDesiredCount"
       },
-      "ServiceName": "test",
+      "ServiceName": {
+        "Fn::Join": [
+          "-",
+          [
+            {
+              "Ref": "Service"
+            },
+            "test"
+          ]
+        ]
+      },
       "TaskDefinition": {
         "Ref": "TestEcsTaskDefinition"
       }

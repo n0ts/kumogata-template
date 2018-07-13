@@ -9,9 +9,6 @@ _cloudtrail "test", depends: %w( test ), s3_bucket: "test"
     exp_template = <<-EOS
 {
   "TestTrail": {
-    "DependsOn": [
-      "test"
-    ],
     "Type": "AWS::CloudTrail::Trail",
     "Properties": {
       "EnableLogFileValidation": "false",
@@ -46,8 +43,22 @@ _cloudtrail "test", depends: %w( test ), s3_bucket: "test"
             "Ref": "Version"
           }
         }
-      ]
-    }
+      ],
+      "TrailName": {
+        "Fn::Join": [
+          "-",
+          [
+            {
+              "Ref": "Service"
+            },
+            "test"
+          ]
+        ]
+      }
+    },
+    "DependsOn": [
+      "Test"
+    ]
   }
 }
     EOS
