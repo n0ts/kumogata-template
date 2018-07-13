@@ -56,8 +56,8 @@ def _pair_value(args, name, key_prefix = "key")
       }.merge({ "#{key_prefix.capitalize}": key.to_s })
     end
   else
-    pair.collect do |pair|
-      pair.map.collect do |key, value|
+    pair.collect do |p|
+      p.map.collect do |_, value|
         _{
           Value value
         }

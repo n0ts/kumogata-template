@@ -244,7 +244,7 @@ end
 def _ecs_mount_points(args)
   (args[:mount_points] || []).collect do |point|
     _{
-      ContainerPath point[:container]
+      ContainerPath point[:path]
       SourceVolume point[:source]
       ReadOnly _bool("read_only", point, false)
     }
@@ -255,7 +255,7 @@ def _ecs_port_mappings(args)
   (args[:port_mappings] || []).collect do |port|
     host = _ref_string_default("host", port)
     _{
-      ContainerPort _ref_string("container", port)
+      ContainerPort _ref_string("port", port)
       HostPort host unless host.empty?
       Protocol _valid_values(port[:protocol], %w( tcp udp ), 'tcp')
     }

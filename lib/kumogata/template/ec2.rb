@@ -215,6 +215,8 @@ def _ec2_user_data(args)
     user_data = _ref_string("user_data", args, "user data")
   end
 
+  return '' if user_data.empty?
+
   if user_data.is_a? Hash
     _base64(user_data)
   else
@@ -284,7 +286,7 @@ def _ec2_spot_fleet_launches(args)
   iam = _ref_string("iam", args, "iam instance profile")
   iam = _ref_attr_string("iam", "Arn", args, "iam instance profile") if iam.empty?
   instance_type = _ref_string("instance_type", args, "instance type")
-  image =_ec2_image(instance_type, args)
+  image = _ec2_image(args)
   kernel = args[:kernel] || ""
   key_name = _ref_string("key_name", args, "key name")
   monitoring = _bool("monitoring", args, false)
