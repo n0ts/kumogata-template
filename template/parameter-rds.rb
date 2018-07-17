@@ -29,7 +29,7 @@ no_echo = _bool("no_echo", args, true)
 
 _parameter "#{args[:name]} db instance class",
            default: args[:instance_class] || class_default,
-           description: "#{args[:name]} #{prefix} db instance class",
+           description: "#{args[:name]} #{prefix} db instance classes",
            values: classes
 
 _parameter "#{args[:name]} db port",

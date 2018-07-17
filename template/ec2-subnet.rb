@@ -21,7 +21,7 @@ _(name) do
     AvailabilityZone az unless az.empty?
     CidrBlock cidr
     Ipv6CidrBlock ipv6_cidr unless ipv6_cidr.empty?
-    MapPublicIpOnLaunch public_ip unless ipv6_cidr.empty?
+    MapPublicIpOnLaunch public_ip
     Tags tags
     VpcId vpc
   end

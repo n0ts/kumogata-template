@@ -26,7 +26,7 @@ source_arn_prefix =
 source_arn =
   case principal
   when 'sns'
-    _ref_string("source_arn", args, source_arn)
+    _ref_string("source_arn", args, source_arn_prefix)
   else
     _ref_attr_string('source_arn', 'Arn', args, source_arn_prefix)
   end

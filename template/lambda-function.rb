@@ -18,7 +18,7 @@ handler =
   when /^nodejs/
     "#{handler_index}.handler"
   when /^python/
-    "#{handlerindex}.lambda_handler"
+    "#{handler_index}.handler"
   else
     'lambda.handler'
   end

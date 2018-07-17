@@ -19,7 +19,7 @@ default_family =
 name = _resource_name(args[:name], "db cluster parameter group")
 description = _ref_string_default("description", args, '',
                                   "#{args[:name]} db cluster parameter group description")
-family = _ref_string("family", args, "db parameter group", default_family)
+family = _ref_string_default("family", args, "db parameter group", default_family)
 parameters = args[:parameters] || {}
 tags = _tags(args)
 
