@@ -23,7 +23,7 @@ def _cloudfront_distribution_config(args)
       _cloudfront_cache_behavior(args[:default_cache], args[:origins], true)
     else
       ""
-   end
+    end
   default_root = args[:default_root] || "index.html"
   enabled = _bool("enabled", args, true)
   http = _valid_values(args[:http], %w( http1.1 http2 ), "http2")

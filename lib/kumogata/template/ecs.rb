@@ -20,7 +20,7 @@ def _ecs_to_log_option(args)
       _ecs_to_log_option_gelf(args)
     else
       {}
-  end
+    end
   option.merge(_ecs_to_log_option_common(args))
 end
 
@@ -176,7 +176,7 @@ def _ecs_containers(args)
                       ], "")
       else
         container[:image] || "nginx:latest"
-       end
+      end
     links = _array(container[:links] || [])
     log_config = _ecs_log_configuration(container)
     memory = container[:memory] || 300
@@ -242,7 +242,7 @@ def _ecs_log_configuration(args)
 end
 
 def _ecs_mount_points(args)
-  (args[:mount_points] || []).collect do |point|
+  (args[:mount_points] || args[:mounts] || []).collect do |point|
     _{
       ContainerPath point[:path]
       SourceVolume point[:source]
@@ -252,10 +252,10 @@ def _ecs_mount_points(args)
 end
 
 def _ecs_port_mappings(args)
-  (args[:port_mappings] || []).collect do |port|
-    host = _ref_string_default("host", port)
+  (args[:port_mappings] || args[:ports] || []).collect do |port|
+    host = _ref_string("host", port, 'host port')
     _{
-      ContainerPort _ref_string("port", port)
+      ContainerPort _ref_string("port", port, 'container port')
       HostPort host unless host.empty?
       Protocol _valid_values(port[:protocol], %w( tcp udp ), 'tcp')
     }
@@ -273,7 +273,7 @@ def _ecs_ulimits(args)
 end
 
 def _ecs_volumes_from(args)
-  (args[:volumes_from] || []).collect do |volume|
+  (args[:volumes_from] || args[:volumes] || []).collect do |volume|
     _{
       SourceContainer _ref_string("source", volume)
       ReadOnly _bool("read_only", volume, false)

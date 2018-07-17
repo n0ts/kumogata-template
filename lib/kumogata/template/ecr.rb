@@ -8,16 +8,14 @@ def _ecr_policy(name, args)
   policy = args[name.to_sym] || {}
   return policy if policy.empty?
 
-  principal = policy[:principal] || {}
-  action = policy[:action] || ""
-  actions = policy[:actions] || []
   iam_policy = {
-    service: "ecr",
-    principal: principal,
+    service: 'ecr',
     no_resource: true,
-    aciton: action,
-    actions: ations,
   }
+  iam_policy[:sid] = policy[:sid] if policy.key? :sid
+  iam_policy[:principal] = policy[:principal] if policy.key? :principal
+  iam_policy[:actions] = policy[:actions] if policy.key? :actions
+  iam_policy[:action] = policy[:action] if policy.key? :action
 
-  _iam_policy_document("policy", { policy: [ iam_policy ] })
+  _iam_policy_document('policy', { policy: [ iam_policy ] })
 end

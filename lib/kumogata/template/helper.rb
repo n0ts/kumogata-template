@@ -51,9 +51,9 @@ def _pair_value(args, name, key_prefix = "key")
         value = _import($1)
       end
 
-      _{
-        Value value
-      }.merge({ "#{key_prefix.capitalize}": key.to_s })
+      p = { "#{key_prefix.capitalize}": key.to_s }
+      p['Value'] = value
+      p
     end
   else
     pair.collect do |p|
@@ -287,7 +287,7 @@ def _export(args)
 end
 
 def _depends(keys, args)
-  return '' if keys.emtpy?
+  return '' if keys.empty?
 
   depends =
      if args.key? :depends

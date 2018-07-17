@@ -10,11 +10,6 @@ def _iam_to_policy(value)
     'AdministratorAccess'
   when 'power'
     'PowerUserAccess'
-  when / full/
-    #
-    "AWSMobileHub_FullAccess"
-
-    #_resource_name
   when /readonly/
     'ReadOnlyAccess'
   when 'database', 'network', 'system'
@@ -36,7 +31,6 @@ def _iam_policies(name, args)
     end
 
     v[:name] = "policy-#{i + 1}"
-    policy =
     _{
       PolicyDocument do
         Version "2012-10-17"
@@ -116,6 +110,8 @@ def _iam_policy_document(name, args)
         v[:actions] || [ "*" ]
       end
 
+    sid = v[:sid] || ''
+
     actions = []
     _services.each do |s|
       _actions.each do |a|
@@ -128,7 +124,6 @@ def _iam_policy_document(name, args)
       end
     end
 
-    resources = []
     resource =
       if v.key? :resources
         _services.collect{|s| _iam_arn(s, v[:resources]) }.flatten
@@ -141,9 +136,9 @@ def _iam_policy_document(name, args)
     not_principal = _iam_policy_principal(v, "not_principal")
 
     _{
-      Sid v[:sid] if v.key? :sid
-      Effect v[:effect] || "Allow"
-      NotAction no_action v[:no_action] if v.key? :no_action
+      Sid sid unless sid.empty?
+      Effect v[:effect] || 'Allow'
+      NotAction v[:no_action] if v.key? :no_action
       Action actions
       Resource resource unless v.key? :no_resource
       Principal principal unless principal.empty?
@@ -180,10 +175,10 @@ def _iam_assume_role_policy_document(args)
   cond_amr = args[:cond_amr] || ""
   condition =
     unless cond_auds.empty? and cond_external.empty? and cond_amr.empty?
-       true
-     else
-       false
-     end
+      true
+    else
+      false
+    end
 
   [
    _{
@@ -610,7 +605,7 @@ def _iam_arn_resource(prefix, resource)
         if values.empty?
           _arn(arn, "*:*")
         else
-          if values.select{|v| v.is_a? Hash }.empty?
+          if values.select{|vv| vv.is_a? Hash }.empty?
             _arn(arn, values.join(""))
           else
             values.collect!{|vv| (vv.is_a? String) ? vv : _ref_string("", vv) }

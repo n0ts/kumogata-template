@@ -190,10 +190,10 @@ def _s3_notification_configuration(args, key)
         S3Key _{
           Rules value[:filters].collect{|v|
             filter = []
-            v.each_pair do |name, value|
+            v.each_pair do |kk, vv|
               filter << _{
-                Name name
-                Value value
+                Name kk
+                Value vv
               }
             end
             filter

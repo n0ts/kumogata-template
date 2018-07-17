@@ -31,8 +31,9 @@ PORT = {
   memcached: 11211,
   mysql: 3306,
   mariadb: 3306,
-  aurora: 3306,
+  "aurora-mysql": 3306,
   postgres: 5432,
+  "aurora-postgres": 5432,
   redis: 6379,
   redshift: 5439,
 }

@@ -30,6 +30,6 @@ def _redshift_logging(args)
 
   _{
     BucketName bucket
-    S3KeyPrefix s3_key
+    S3KeyPrefix key
   }
 end

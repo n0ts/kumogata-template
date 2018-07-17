@@ -92,7 +92,7 @@ def _kinesis_firehose_delivery_stream_elasticsearch_destination(args)
                                  %w( NoRotation OneHour OneDay OneWeek OneMonth ),
                                  'NoRotation')
   processing = _kinesis_firehose_delivery_stream_processing(args[:processing])
-  retry_option = _kinesis_firehose_delivery_stream_elasticsearch_retry(args[:retry])
+  retry_options = _kinesis_firehose_delivery_stream_elasticsearch_retry(args[:retry])
   role = _ref_attr_string('role', 'Arn', args, 'role')
   s3_backup = _kinesis_firehose_to_elasticsearch_destination(args[:s3_backup])
   s3_dest = _kinesis_firehose_delivery_stream_s3_destnation(args[:s3_dest])
@@ -105,7 +105,7 @@ def _kinesis_firehose_delivery_stream_elasticsearch_destination(args)
     IndexName index_name
     IndexRotationPeriod index_rotation
     ProcessingConfiguration processing unless processing.empty?
-    RetryOptions retries
+    RetryOptions retry_options
     RoleARN role
     S3BackupMode s3_backup
     S3Configuration s3_dest

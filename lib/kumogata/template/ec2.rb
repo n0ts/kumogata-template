@@ -54,7 +54,7 @@ def _ec2_security_group_egress_rule(args)
   cidr = args[:cidr] || "0.0.0.0/0"
   cidr_ipv6 = args[:cidr_ipv6] || ""
   dest_security = _ref_string("dest_security", args, "security group")
-  description = _ref_string_default("description", args, '', "inbound rule description")
+  description = _ref_string_default("description", args, '', "egress rule description")
   from = _ref_string("from", args)
   ip = args[:ip] || "tcp"
   dest_prefix = _ref_string("dest_prefix", args, "vpc endpoint")
@@ -227,12 +227,6 @@ def _ec2_user_data(args)
         user_data = [ user_data ]
       end
     end
-    amazon_linux =
-      if args.key? :ecs or args.key? :amazon_linux
-        true
-      else
-        false
-      end
     if args.key? :ecs
       # http://docs.aws.amazon.com/AmazonECS/latest/developerguide/ecs-agent-config.html
       ecs_user_data =<<"EOS"
