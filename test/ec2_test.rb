@@ -121,7 +121,7 @@ Test _ec2_security_group_egress_rules("egress", args)
   "Test": [
     {
       "CidrIp": "0.0.0.0/0",
-      "Description": "inbound rule description",
+      "Description": "egress rule description",
       "FromPort": "80",
       "IpProtocol": "tcp",
       "ToPort": "80"
@@ -141,7 +141,7 @@ Test _ec2_security_group_egress_rules("egress", args)
   "Test": [
     {
       "CidrIp": "0.0.0.0/0",
-      "Description": "inbound rule description",
+      "Description": "egress rule description",
       "FromPort": "80",
       "IpProtocol": "tcp",
       "ToPort": "80"
@@ -161,7 +161,7 @@ Test _ec2_security_group_egress_rule(to: 80)
 {
   "Test": {
     "CidrIp": "0.0.0.0/0",
-    "Description": "inbound rule description",
+    "Description": "egress rule description",
     "FromPort": "80",
     "IpProtocol": "tcp",
     "ToPort": "80"

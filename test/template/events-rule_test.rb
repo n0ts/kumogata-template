@@ -23,6 +23,7 @@ _events_rule "test"
           ]
         ]
       },
+      "ScheduleExpression": "rate(5 minute)",
       "State": "ENABLED"
     }
   }

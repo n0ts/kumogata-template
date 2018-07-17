@@ -13,7 +13,7 @@ actions = [
   'complete layer upload',
 ]
 account = { id: 1, name: "test" }
-_ecr_repository "test", { policy: { actions: actions, account: account } }
+_ecr_repository "test", policy: { actions: actions, principal: { account: account } }
     EOS
     act_template = run_client_as_json(template)
     exp_template = <<-EOS
@@ -61,7 +61,7 @@ _ecr_repository "test", { policy: { actions: actions, account: account } }
     template = <<-EOS
 action = 'get download url for layer'
 account = { id: 1, name: "test" }
-_ecr_repository "test", { policy: { action: action, account: account } }
+_ecr_repository "test", { policy: { action: action, principal: { account: account } } }
     EOS
     act_template = run_client_as_json(template)
     exp_template = <<-EOS

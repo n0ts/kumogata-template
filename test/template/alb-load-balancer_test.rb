@@ -60,7 +60,8 @@ _alb_load_balancer "test", attributes: [ { test: "test" } ], ref_security_groups
             "Ref": "Version"
           }
         }
-      ]
+      ],
+      "Type": "application"
     }
   }
 }

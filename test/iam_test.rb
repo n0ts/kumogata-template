@@ -918,7 +918,7 @@ Condition _iam_policy_conditions(conds)
   "Condition": {
     "StringEquals": {
       "kms:EncryptionContext:aws:kinesis:arn": {
-
+        "Fn::Sub": "arn:aws:kinesis:${AWS::Region}:${AWS::AccountId}:stream/%FIREHOSE_STREAM_NAME%"
       }
     }
   }

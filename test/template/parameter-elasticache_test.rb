@@ -21,7 +21,8 @@ _parameter_elasticache "test"
     "Description": "test cache node types",
     "AllowedValues": [
 #{values.chomp}
-    ]
+    ],
+    "NoEcho": "false"
   }
 }
     EOS

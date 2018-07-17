@@ -131,9 +131,7 @@ _s3_bucket "test"
             {
               "Ref": "Service"
             },
-            {
-              "Ref": "Name"
-            }
+            "test"
           ]
         ]
       },

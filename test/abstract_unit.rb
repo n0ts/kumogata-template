@@ -5,6 +5,7 @@ require 'kumogata2/plugin/ruby'
 require 'json'
 require 'tempfile'
 require 'yaml'
+require 'kumogata/template/const'
 
 # for only test
 ENV['TZ'] = 'Asia/Tokyo'

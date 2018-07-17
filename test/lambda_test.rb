@@ -26,7 +26,7 @@ Test _lambda_function_code(code: { zip_file: "test/data/lambda_function.py" })
   "Test": {
     "ZipFile": {
       "Fn::Join": [
-        "\\\\n",
+        "\\n",
         [
           "import boto3",
           "",

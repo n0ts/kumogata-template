@@ -21,8 +21,8 @@ _rds_db_cluster "test", ref_parameter: "test", ref_subnet_group: "test", ref_db_
       "DBSubnetGroupName": {
         "Ref": "TestDbSubnetGroup"
       },
-      "Engine": "aurora",
-      "EngineVersion": "5.6.10a",
+      "Engine": "aurora-mysql",
+      "EngineVersion": "#{RDS_DEFAULT_ENGINE_VERSION[:'aurora-mysql']}",
       "MasterUsername": {
         "Ref": "TestDbMasterUserName"
       },

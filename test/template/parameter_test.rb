@@ -11,7 +11,8 @@ _parameter "test"
   "Test": {
     "Type": "String",
     "Default": "",
-    "Description": "test parameter description"
+    "Description": "test parameter description",
+    "NoEcho": "false"
   }
 }
     EOS
@@ -30,14 +31,15 @@ _parameter "test", { default: "default", description: "desc", values: %w( 1 2 ) 
     "AllowedValues": [
       "1",
       "2"
-    ]
+    ],
+    "NoEcho": "false"
   }
 }
     EOS
     assert_equal exp_template.chomp, act_template
 
     template = <<-EOS
-_parameter "test password", { default: "default" }
+_parameter "test password", { default: "default", no_echo: true }
     EOS
     act_template = run_client_as_json(template)
     exp_template = <<-EOS
@@ -61,7 +63,8 @@ _parameter "test", { default: "default", type: "instance id" }
   "Test": {
     "Type": "AWS::EC2::Instance::Id",
     "Default": "default",
-    "Description": "test parameter description"
+    "Description": "test parameter description",
+    "NoEcho": "false"
   }
 }
     EOS

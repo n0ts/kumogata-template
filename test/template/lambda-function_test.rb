@@ -3,7 +3,7 @@ require 'abstract_unit'
 class LambdaFunctionTest < Minitest::Test
   def test_normal
     template = <<-EOS
-_lambda_function "test", code: { s3_bucket: "test", s3_key: "test" }, function: "test", ref_role: "test"
+_lambda_function "test", runtime: 'node6', code: { s3_bucket: "test", s3_key: "test" }, function: "test", ref_role: "test"
     EOS
     act_template = run_client_as_json(template)
     exp_template = <<-EOS
@@ -17,7 +17,7 @@ _lambda_function "test", code: { s3_bucket: "test", s3_key: "test" }, function: 
       },
       "Description": "test lambda function description",
       "FunctionName": "test",
-      "Handler": "test.handler",
+      "Handler": "lambda.handler",
       "MemorySize": "128",
       "Role": {
         "Fn::GetAtt": [
@@ -25,8 +25,8 @@ _lambda_function "test", code: { s3_bucket: "test", s3_key: "test" }, function: 
           "Arn"
         ]
       },
-      "Runtime": "nodejs",
-      "Timeout": "3",
+      "Runtime": "nodejs6.10",
+      "Timeout": "300",
       "Tags": [
         {
           "Key": "Name",
@@ -45,14 +45,17 @@ _lambda_function "test", code: { s3_bucket: "test", s3_key: "test" }, function: 
           }
         }
       ]
-    }
+    },
+    "DependsOn": [
+      "TestRole"
+    ]
   }
 }
     EOS
     assert_equal exp_template.chomp, act_template
 
     template = <<-EOS
-_lambda_function "test", code: { zip_file: "test/data/lambda_function.py" }, function: "test", ref_role: "test", runtime: "python2.7"
+_lambda_function "test", code: { zip_file: "test/data/lambda_function.py" }, function: "test", ref_role: "test", runtime: "python2"
     EOS
     act_template = run_client_as_json(template)
     exp_template = <<-EOS
@@ -63,7 +66,7 @@ _lambda_function "test", code: { zip_file: "test/data/lambda_function.py" }, fun
       "Code": {
         "ZipFile": {
           "Fn::Join": [
-            "\\\\n",
+            "\\n",
             [
               "import boto3",
               "",
@@ -75,7 +78,7 @@ _lambda_function "test", code: { zip_file: "test/data/lambda_function.py" }, fun
       },
       "Description": "test lambda function description",
       "FunctionName": "test",
-      "Handler": "test.lambda_handler",
+      "Handler": "lambda.handler",
       "MemorySize": "128",
       "Role": {
         "Fn::GetAtt": [
@@ -84,7 +87,7 @@ _lambda_function "test", code: { zip_file: "test/data/lambda_function.py" }, fun
         ]
       },
       "Runtime": "python2.7",
-      "Timeout": "3",
+      "Timeout": "300",
       "Tags": [
         {
           "Key": "Name",
@@ -103,7 +106,10 @@ _lambda_function "test", code: { zip_file: "test/data/lambda_function.py" }, fun
           }
         }
       ]
-    }
+    },
+    "DependsOn": [
+      "TestRole"
+    ]
   }
 }
     EOS

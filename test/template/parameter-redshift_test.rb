@@ -21,24 +21,28 @@ _parameter_redshift "test", port: "test", user_name: "test", user_password: "tes
     "Description": "test redshift cluster node types",
     "AllowedValues": [
 #{values.chomp}
-    ]
+    ],
+    "NoEcho": "false"
   },
   "TestRedshiftClusterPort": {
     "Type": "Number",
     "Default": "test",
-    "Description": "test redshift cluster port"
+    "Description": "test redshift cluster port",
+    "NoEcho": "false"
   },
   "TestRedshiftClusterDbName": {
     "Type": "String",
     "Default": "test",
-    "Description": "test redshift cluster db name"
+    "Description": "test redshift cluster db name",
+    "NoEcho": "false"
   },
   "TestRedshiftClusterMasterUserName": {
     "Type": "String",
     "Default": "test",
     "Description": "test redshift cluster master user name",
     "MaxLength": "16",
-    "MinLength": "2"
+    "MinLength": "2",
+    "NoEcho": "false"
   },
   "TestRedshiftClusterMasterUserPassword": {
     "Type": "String",

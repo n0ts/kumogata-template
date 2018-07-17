@@ -12,7 +12,35 @@ _ec2_nat_gateway "test", allocation: "test", subnet: "test"
     "Type": "AWS::EC2::NatGateway",
     "Properties": {
       "AllocationId": "test",
-      "SubnetId": "test"
+      "SubnetId": "test",
+      "Tags": [
+        {
+          "Key": "Name",
+          "Value": {
+            "Fn::Join": [
+              "-",
+              [
+                {
+                  "Ref": "Service"
+                },
+                "test"
+              ]
+            ]
+          }
+        },
+        {
+          "Key": "Service",
+          "Value": {
+            "Ref": "Service"
+          }
+        },
+        {
+          "Key": "Version",
+          "Value": {
+            "Ref": "Version"
+          }
+        }
+      ]
     }
   }
 }

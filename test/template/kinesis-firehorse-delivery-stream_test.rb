@@ -46,6 +46,18 @@ _kinesis_firehose_delivery_stream "test",
       "DeliveryStreamName": "kinesis",
       "DeliveryStreamType": "KinesisStreamAsSource",
       "KinesisStreamSourceConfiguration": {
+        "KinesisStreamARN": {
+          "Fn::GetAtt": [
+            "TestKinesisStream",
+            "Arn"
+          ]
+        },
+        "RoleARN": {
+          "Fn::GetAtt": [
+            "TestRole",
+            "Arn"
+          ]
+        }
       }
     }
   }

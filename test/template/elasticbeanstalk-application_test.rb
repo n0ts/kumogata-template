@@ -11,7 +11,8 @@ _elasticbeanstalk_application "test", application: "test"
   "TestElasticbeanstalkApplication": {
     "Type": "AWS::ElasticBeanstalk::Application",
     "Properties": {
-      "ApplicationName": "test"
+      "ApplicationName": "test",
+      "Description": "test elasticbeanstalk application description"
     }
   }
 }

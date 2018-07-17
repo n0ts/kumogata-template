@@ -3,7 +3,7 @@ require 'abstract_unit'
 class Ec2SubnetTest < Minitest::Test
   def test_normal
     template = <<-EOS
-_ec2_subnet "test", { vpc: "test" }
+_ec2_subnet "test", { vpc: "test", public_ip: true }
     EOS
     act_template = run_client_as_json(template)
     exp_template = <<-EOS

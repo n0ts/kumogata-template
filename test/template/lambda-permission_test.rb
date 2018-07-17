@@ -3,7 +3,7 @@ require 'abstract_unit'
 class LambdaPermissionTest < Minitest::Test
   def test_normal
     template = <<-EOS
-_lambda_permission "test", action: "test", ref_function_name: "test", ref_source_arn: "test"
+_lambda_permission "test", principal: 'sns', ref_function: "test", ref_source_arn: "test"
 
     EOS
     act_template = run_client_as_json(template)
@@ -12,7 +12,7 @@ _lambda_permission "test", action: "test", ref_function_name: "test", ref_source
   "TestLambdaPermission": {
     "Type": "AWS::Lambda::Permission",
     "Properties": {
-      "Action": "test",
+      "Action": "lambda:InvokeFunction",
       "FunctionName": {
         "Fn::GetAtt": [
           "TestLambdaFunction",
@@ -23,7 +23,10 @@ _lambda_permission "test", action: "test", ref_function_name: "test", ref_source
       "SourceArn": {
         "Ref": "TestTopic"
       }
-    }
+    },
+    "DependsOn": [
+      "TestLambdaFunction"
+    ]
   }
 }
     EOS

@@ -57,9 +57,7 @@ Test _pair_value({ test: { "test key": "test value" } }, "test1")
     act_template = run_client_as_json(template)
     exp_template = <<-EOS
 {
-  "Test": [
-
-  ]
+  "Test": ""
 }
     EOS
     assert_equal exp_template.chomp, act_template
@@ -154,7 +152,7 @@ Test _name("test", { name: "test name", import_test: "test test import" })
   def test_resource_name
     assert_equal _resource_name("test"), "Test"
     assert_equal _resource_name("test", "Resource"), "TestResource"
-    assert_equal _resource_name("test-name", "Resource"), "TestnameResource"
+    assert_equal _resource_name("test-name", "Resource"), "TestNameResource"
     assert_equal _resource_name("test Name", "Resource"), "TestNameResource"
   end
 
@@ -355,8 +353,6 @@ Tests _ref_array("tests", { name: "tests", ref_tests: [ "test1", "test2" ] }, ""
 }
     EOS
     assert_equal exp_template.chomp, act_template
-
-
   end
 
   def test_ref_attr_string
@@ -576,7 +572,15 @@ Test _base64_shell("test shell")
     exp_template = <<-EOS
 {
   "Test": {
-    "Fn::Base64": "#!/bin/bash\\ntest shell"
+    "Fn::Base64": {
+      "Fn::Join": [
+        "\\n",
+        [
+          "#!/bin/bash",
+          "test shell"
+        ]
+      ]
+    }
   }
 }
     EOS

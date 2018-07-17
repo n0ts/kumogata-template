@@ -11,7 +11,7 @@ _ec2_vpc_cidr_block "test", ref_vpc: "test"
   "TestVpcCidrBlock": {
     "Type": "AWS::EC2::VPCCidrBlock",
     "Properties": {
-      "AmazonProvidedIpv6CidrBlock": "true",
+      "AmazonProvidedIpv6CidrBlock": "false",
       "VpcId": {
         "Ref": "TestVpc"
       }

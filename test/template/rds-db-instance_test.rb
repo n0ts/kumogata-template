@@ -36,13 +36,14 @@ _rds_db_instance "test", ref_db_name: "test", ref_port: "test", ref_subnet_group
         "Ref": "TestDbSubnetGroup"
       },
       "Engine": "mysql",
-      "EngineVersion": "5.7.17",
+      "EngineVersion": "#{RDS_DEFAULT_ENGINE_VERSION[:mysql]}",
       "MasterUsername": {
         "Ref": "TestDbMasterUserName"
       },
       "MasterUserPassword": {
         "Ref": "TestDbMasterUserPassword"
       },
+      "MonitoringInterval": "0",
       "MultiAZ": "false",
       "Port": {
         "Ref": "TestDbPort"

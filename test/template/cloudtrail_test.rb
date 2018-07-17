@@ -3,7 +3,7 @@ require 'abstract_unit'
 class CloudtrailTest < Minitest::Test
   def test_normal
     template = <<-EOS
-_cloudtrail "test", depends: %w( test ), s3_bucket: "test"
+_cloudtrail "test", s3_bucket: "test"
     EOS
     act_template = run_client_as_json(template)
     exp_template = <<-EOS
@@ -55,10 +55,7 @@ _cloudtrail "test", depends: %w( test ), s3_bucket: "test"
           ]
         ]
       }
-    },
-    "DependsOn": [
-      "Test"
-    ]
+    }
   }
 }
     EOS

@@ -10,7 +10,9 @@ _output "test"
 {
   "Test": {
     "Description": "description of Test",
-    "Value": "Test"
+    "Value": {
+      "Ref": "Test"
+    }
   }
 }
     EOS

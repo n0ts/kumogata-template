@@ -16,12 +16,14 @@ _parameter_ec2 "test"
     "Type": "String",
     "Default": "#{EC2_DEFAULT_INSTANCE_TYPE}",
     "Description": "test instance type",
-    "AllowedValues": #{values}
+    "AllowedValues": #{values},
+    "NoEcho": "false"
   },
-  "TestDataVolumeSize": {
+  "TestRootVolumeSize": {
     "Type": "Number",
-    "Default": "100",
-    "Description": "test data volume size"
+    "Default": "8",
+    "Description": "test root volume size",
+    "NoEcho": "false"
   }
 }
     EOS
@@ -41,22 +43,26 @@ _parameter_ec2 "test", iam_instance: "test", key_name: "test"
     "Type": "String",
     "Default": "#{EC2_DEFAULT_INSTANCE_TYPE}",
     "Description": "test instance type",
-    "AllowedValues": #{values}
+    "AllowedValues": #{values},
+    "NoEcho": "false"
   },
   "TestIamInstanceProfile": {
     "Type": "String",
     "Default": "test",
-    "Description": "test iam instance profile"
+    "Description": "test iam instance profile",
+    "NoEcho": "false"
   },
-  "TestDataVolumeSize": {
+  "TestRootVolumeSize": {
     "Type": "Number",
-    "Default": "100",
-    "Description": "test data volume size"
+    "Default": "8",
+    "Description": "test root volume size",
+    "NoEcho": "false"
   },
   "TestKeyName": {
     "Type": "AWS::EC2::KeyPair::KeyName",
     "Default": "test",
-    "Description": "test key name"
+    "Description": "test key name",
+    "NoEcho": "false"
   }
 }
     EOS

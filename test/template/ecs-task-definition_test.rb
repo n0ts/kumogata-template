@@ -3,7 +3,7 @@ require 'abstract_unit'
 class EcsTaskDefinitionTest < Minitest::Test
   def test_normal
     template = <<-EOS
-_ecs_task_definition "test", container_definitions: [ { name: "test", image: "test" } ], volumes: [ { name: "test" } ]
+_ecs_task_definition "test", containers: [ { name: "test", image: "test", ports: [ { port: 80 } ] } ], volumes: [ "test": "/test" ]
     EOS
     act_template = run_client_as_json(template)
     exp_template = <<-EOS
@@ -13,21 +13,51 @@ _ecs_task_definition "test", container_definitions: [ { name: "test", image: "te
     "Properties": {
       "Volumes": [
         {
-          "Name": "test"
+          "Name": "test",
+          "Host": {
+            "SourcePath": "/test"
+          }
         }
       ],
+      "Family": {
+        "Fn::Join": [
+          "-",
+          [
+            {
+              "Ref": "Service"
+            },
+            "test"
+          ]
+        ]
+      },
+      "NetworkMode": "bridge",
       "ContainerDefinitions": [
         {
-          "Cpu": "10",
+          "Cpu": "1",
+          "DisableNetworking": "false",
           "Essential": "true",
+          "Hostname": {
+            "Fn::Join": [
+              "-",
+              [
+                {
+                  "Ref": "Service"
+                },
+                "test"
+              ]
+            ]
+          },
           "Image": "test",
           "Memory": "300",
           "Name": "test",
           "PortMappings": [
             {
-              "ContainerPort": "80"
+              "ContainerPort": "80",
+              "Protocol": "tcp"
             }
-          ]
+          ],
+          "Privileged": "false",
+          "ReadonlyRootFilesystem": "false"
         }
       ]
     }
@@ -44,8 +74,8 @@ container1 = {
   entry_point: [ "/usr/sbin/apache2", "-D", "FOREGROUND" ],
   image: "amazon/amazon-ecs-sample",
   memory: 500,
-  mount_points: [ { source_volume: "my-vol", container_path: "/var/www/my-vol" } ],
-  port_mappings: [ { ref_container_port: "app", ref_host_port: "app" } ],
+  mounts: [ { source: "my-vol", path: "/var/www/my-vol" } ],
+  ports: [ { ref_port: "app", ref_host: "app" } ],
 }
 container2 = {
   name: "busybox",
@@ -56,14 +86,14 @@ container2 = {
   image: "busybox",
   memory: 500,
   port_mappings: nil,
-  volumes_from: [
+  volumes: [
     { ref_source: "app" }
   ],
 }
 volumes = [
-    { name: "my-vol", host: { source_path: "/var/lib/docker/vfs/dir/" } },
+    { "my-vol": "/var/lib/docker/vfs/dir/" },
 ]
-_ecs_task_definition "test", container_definitions: [ container1, container2 ], volumes: volumes
+_ecs_task_definition "test", containers: [ container1, container2 ], volumes: volumes
     EOS
     act_template = run_client_as_json(template)
     exp_template = <<-EOS
@@ -79,15 +109,41 @@ _ecs_task_definition "test", container_definitions: [ container1, container2 ], 
           }
         }
       ],
+      "Family": {
+        "Fn::Join": [
+          "-",
+          [
+            {
+              "Ref": "Service"
+            },
+            "test"
+          ]
+        ]
+      },
+      "NetworkMode": "bridge",
       "ContainerDefinitions": [
         {
-          "Cpu": "10",
+          "Cpu": "1",
+          "DisableNetworking": "false",
           "EntryPoint": [
             "/usr/sbin/apache2",
             "-D",
             "FOREGROUND"
           ],
           "Essential": "true",
+          "Hostname": {
+            "Fn::Join": [
+              "-",
+              [
+                {
+                  "Ref": "Service"
+                },
+                {
+                  "Ref": "App"
+                }
+              ]
+            ]
+          },
           "Image": "amazon/amazon-ecs-sample",
           "Memory": "500",
           "MountPoints": [
@@ -107,23 +163,40 @@ _ecs_task_definition "test", container_definitions: [ container1, container2 ], 
               },
               "HostPort": {
                 "Ref": "AppHostPort"
-              }
+              },
+              "Protocol": "tcp"
             }
-          ]
+          ],
+          "Privileged": "false",
+          "ReadonlyRootFilesystem": "false"
         },
         {
           "Command": [
             "/bin/sh -c \\"while true; do /bin/date > /var/www/my-vol/date; sleep 1; done\\""
           ],
           "Cpu": "10",
+          "DisableNetworking": "false",
           "EntryPoint": [
             "sh",
             "-c"
           ],
           "Essential": "false",
+          "Hostname": {
+            "Fn::Join": [
+              "-",
+              [
+                {
+                  "Ref": "Service"
+                },
+                "busybox"
+              ]
+            ]
+          },
           "Image": "busybox",
           "Memory": "500",
           "Name": "busybox",
+          "Privileged": "false",
+          "ReadonlyRootFilesystem": "false",
           "VolumesFrom": [
             {
               "SourceContainer": {
