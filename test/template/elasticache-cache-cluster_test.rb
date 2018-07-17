@@ -26,10 +26,10 @@ _elasticache_cache_cluster "test", ref_security_groups: "test"
           ]
         ]
       },
-      "Engine": "redis",
-      "EngineVersion": "2.8.6",
+      "Engine": "#{ELASTICACHE_DEFAULT_ENGINE}",
+      "EngineVersion": "#{ELASTICACHE_DEFAULT_ENGINE_VERSION[:redis]}",
       "NumCacheNodes": "1",
-      "Port": "6379",
+      "Port": "#{PORT[:redis]}",
       "PreferredMaintenanceWindow": "Thu:20:15-Thu:21:15",
       "SnapshotRetentionLimit": "10",
       "SnapshotWindow": "21:15-22:15",

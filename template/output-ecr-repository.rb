@@ -10,7 +10,7 @@ _output "#{args[:name]} ecr repository uri",
          value: _join([ _account_id,
                         ".dkr.ecr.",
                         _region,
-                        ".amazonaws.com/",
+                        ".#{DOMAIN}/",
                         _ref(_resource_name("#{args[:name]} ecr repository")),
                       ], ""),
          export: _export_string(args, "ecr repository uri")

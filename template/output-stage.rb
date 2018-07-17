@@ -12,7 +12,7 @@ url = _join([ "https://",
               _ref_string("", { ref_: "#{args[:name]} rest api" }),
               ".execute-api.",
               _region,
-              ".amazonaws.com/",
+              ".#{DOMAIN}/",
               _ref_string("", { ref_: "#{args[:name]} stage" }) ], "")
 _output "#{args[:name]} stage invoke url",
         value: url,

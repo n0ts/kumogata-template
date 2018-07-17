@@ -61,7 +61,7 @@ _s3_bucket "test"
 
   def test_aws_website
     template = <<-EOS
-_s3_bucket "test", bucket: "bucket", website: { error: "error.html", index: "index.html", routing: [ routing: { http: "404", key_prefix: "out1/" }, redirect: { host: "ec2-11-22-333-44.compute-1.amazonaws.com", replace_key_prefix: "report-404/" } ] }
+_s3_bucket "test", bucket: "bucket", website: { error: "error.html", index: "index.html", routing: [ routing: { http: "404", key_prefix: "out1/" }, redirect: { host: "ec2-11-22-333-44.compute-1.#{DOMAIN}", replace_key_prefix: "report-404/" } ] }
     EOS
     act_template = run_client_as_json(template)
     exp_template = <<-EOS
@@ -95,7 +95,7 @@ _s3_bucket "test", bucket: "bucket", website: { error: "error.html", index: "ind
         "RoutingRules": [
           {
             "RedirectRule": {
-              "HostName": "ec2-11-22-333-44.compute-1.amazonaws.com",
+              "HostName": "ec2-11-22-333-44.compute-1.#{DOMAIN}",
               "ReplaceKeyPrefixWith": "report-404/"
             },
             "RoutingRuleCondition": {

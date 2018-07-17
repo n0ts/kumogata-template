@@ -28,7 +28,7 @@ _output_stage "test"
           {
             "Ref": "AWS::Region"
           },
-          ".amazonaws.com/",
+          ".#{DOMAIN}/",
           {
             "Ref": "TestStage"
           }

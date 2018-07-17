@@ -153,7 +153,7 @@ def _iam_assume_role_policy_document(args)
   aws = args[:aws] || []
   federated =
     if cognito
-      "cognito-identity.amazonaws.com"
+      "cognito-identity.#{DOMAIN}"
     else
       args[:federated] || ""
     end

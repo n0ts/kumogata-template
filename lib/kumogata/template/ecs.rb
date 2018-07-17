@@ -169,7 +169,7 @@ def _ecs_containers(args)
         _join([ _account_id,
                         ".dkr.ecr.",
                         _region,
-                        ".amazonaws.com/",
+                        ".#{DOMAIN}/",
                         container[:my_image],
                         ":",
                         container[:my_image_tag] || "latest"

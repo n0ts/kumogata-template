@@ -381,7 +381,7 @@ Statement _iam_assume_role_policy_document({ service: "ec2" })
       "Effect": "Allow",
       "Principal": {
         "Service": [
-          "ec2.amazonaws.com"
+          "ec2.#{DOMAIN}"
         ]
       },
       "Action": [
@@ -403,17 +403,17 @@ Statement _iam_assume_role_policy_document({ cognito: true, cond_auds: "test", c
     {
       "Effect": "Allow",
       "Principal": {
-        "Federated": "cognito-identity.amazonaws.com"
+        "Federated": "cognito-identity.#{DOMAIN}"
       },
       "Action": [
         "sts:AssumeRoleWithWebIdentity"
       ],
       "Condition": {
         "StringEquals": {
-          "cognito-identity.amazonaws.com:aud": "test"
+          "cognito-identity.#{DOMAIN}:aud": "test"
         },
         "ForAnyValue:StringLike": {
-          "cognito-identity.amazonaws.com:amr": "test"
+          "cognito-identity.#{DOMAIN}:amr": "test"
         }
       }
     }

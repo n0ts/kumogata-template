@@ -30,7 +30,7 @@ _redshift_cluster "test", ref_db_name: "test", ref_parameter: "test", ref_subnet
         "Ref": "TestRedshiftClusterMasterUserPassword"
       },
       "NodeType": "#{REDSHIFT_DEFAULT_NODE_TYPE}",
-      "Port": "5439",
+      "Port": "#{PORT[:redshift]}",
       "PreferredMaintenanceWindow": "Thu:20:45-Thu:21:15",
       "PubliclyAccessible": "false",
       "Tags": [

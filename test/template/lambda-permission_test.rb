@@ -19,7 +19,7 @@ _lambda_permission "test", principal: 'sns', ref_function: "test", ref_source_ar
           "Arn"
         ]
       },
-      "Principal": "sns.amazonaws.com",
+      "Principal": "sns.#{DOMAIN}",
       "SourceArn": {
         "Ref": "TestTopic"
       }
