@@ -4,6 +4,8 @@ cache: bundler
 rvm:
   - 2.5.1
 gemfile: Gemfile
+before_install:
+  - export TZ=Tokyo/Asia
 script:
   - bundle install --path vendor/bundle
   - bundle exec rake
