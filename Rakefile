@@ -9,7 +9,7 @@ Rake::TestTask.new do |t|
   t.libs << 'test'
   t.pattern = 'test/**/*_test.rb'
   # disable output - warning: assigned but unused variable
-  t.warning = false
+  t.warning = true
   t.verbose = false
   t.ruby_opts = ["--dev"] if defined?(JRUBY_VERSION)
 end
