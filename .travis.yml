@@ -5,7 +5,7 @@ rvm:
   - 2.5.1
 gemfile: Gemfile
 before_install:
-  - export TZ=Tokyo/Asia
+  - export TZ=Asia/Tokyo
 script:
   - bundle install --path vendor/bundle
   - bundle exec rake
