@@ -2,8 +2,10 @@ sudo: false
 language: ruby
 cache: bundler
 rvm:
-  - 2.4.1
-gemfile: n0ts/kumogata-template/Gemfile
+  - 2.5.1
+gemfile: Gemfile
+before_install:
+  - export TZ=Asia/Tokyo
 script:
   - bundle install --path vendor/bundle
   - bundle exec rake
