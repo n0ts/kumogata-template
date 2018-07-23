@@ -9,4 +9,4 @@ default = "cache.#{default}" if default !~ /cache./
 _parameter "#{args[:name]} cache node types",
            default: default,
            description: "#{args[:name]} cache node types",
-           allowed_values: ELASTICACHE_NODE_TYPES
+           values: ELASTICACHE_NODE_TYPES

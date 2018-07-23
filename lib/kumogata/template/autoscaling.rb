@@ -107,53 +107,26 @@ def _autoscaling_step(args)
   }
 end
 
-def _autoscaling_tags(args)
-  tags = [
-          _{
-            Key "Name"
-            Value _tag_name(args)
-            PropagateAtLaunch _bool("tag_name_launch", args, true)
-          },
-          _{
-            Key "Service"
-            Value { Ref _resource_name("service") }
-            PropagateAtLaunch _bool("tag_service_launch", args, true)
-          },
-          _{
-            Key "Version"
-            Value { Ref _resource_name("version") }
-            PropagateAtLaunch _bool("tag_version_launch", args, true)
-          },
-         ]
-  if args.key? :tags_append
-    args[:tags_append].each do|key, value|
-      tag = _tag({ key: key, value: value })
-      tag["PropagateAtLaunch"] = _bool("tag_#{key}_launch", args, true)
-      tags << tag
-    end
+def _autoscaling_tags(args, tag_name = "tag_name")
+  _tags(args, tag_name).collect do |tag|
+    tag["PropagateAtLaunch"] = _bool("#{tag["Key"].downcase}_launch", args, true).to_s
+    tag
   end
-  tags
 end
 
 def _autoscaling_terminations(args)
-  terminations = args[:terminations]
-  return [] if terminations.nil?
-
-  array = []
-  terminations.each do |termination|
-    array <<
-      case termination.downcase
-      when "old instance"
-        "OldestInstance"
-      when "new instance"
-        "NewestInstance"
-      when "old launch"
-        "OldestLaunchConfiguration"
-      when "close"
-        "ClosestToNextInstanceHour"
-      else
-        "Default"
-      end
+  (args[:terminations] || []).collect do |termination|
+    case termination.downcase
+    when "old instance"
+      "OldestInstance"
+    when "new instance"
+      "NewestInstance"
+    when "old launch"
+      "OldestLaunchConfiguration"
+    when "close"
+      "ClosestToNextInstanceHour"
+    else
+      "Default"
+    end
   end
-  array
 end

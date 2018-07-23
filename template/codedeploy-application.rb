@@ -5,7 +5,7 @@
 require 'kumogata/template/helper'
 
 name = _resource_name(args[:name], "codedeploy application")
-application = _ref_name("application", args)
+application = _name("application", args)
 
 _(name) do
   Type "AWS::CodeDeploy::Application"

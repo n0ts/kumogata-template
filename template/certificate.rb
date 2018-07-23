@@ -6,9 +6,9 @@ require 'kumogata/template/helper'
 require 'kumogata/template/certificate'
 
 name = _resource_name(args[:name], "certificate")
-domain = args[:domain]
+domain = _ref_string("domain", args, "domain")
 validation = _certificate_validations(args)
-subject = args[:subject] || ""
+subject = _ref_array("subject", args)
 
 _(name) do
   Type "AWS::CertificateManager::Certificate"

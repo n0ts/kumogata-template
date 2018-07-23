@@ -8,6 +8,15 @@ _output_s3 "test", domain: true
     act_template = run_client_as_json(template)
     exp_template = <<-EOS
 {
+  "TestBucketS3Arn": {
+    "Description": "description of TestBucketS3Arn",
+    "Value": {
+      "Fn::GetAtt": [
+        "TestBucket",
+        "Arn"
+      ]
+    }
+  },
   "TestBucketS3DomainName": {
     "Description": "description of TestBucketS3DomainName",
     "Value": {

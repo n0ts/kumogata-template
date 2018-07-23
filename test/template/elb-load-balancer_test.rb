@@ -38,9 +38,7 @@ _elb_load_balancer "test", ref_security_groups: [ "test" ], listeners: [ protoco
             {
               "Ref": "Service"
             },
-            {
-              "Ref": "Name"
-            }
+            "test"
           ]
         ]
       },

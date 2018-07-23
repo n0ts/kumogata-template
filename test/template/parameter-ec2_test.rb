@@ -6,11 +6,7 @@ class ParameterEc2Test < Minitest::Test
 _parameter_ec2 "test"
     EOS
     act_template = run_client_as_json(template)
-    allowed_values = []
-    EC2_INSTANCE_TYPES.each do |type|
-      allowed_values << "#{type}"
-    end
-    allowed_values = JSON.generate(allowed_values)
+    values = JSON.generate(EC2_INSTANCE_TYPES)
                        .gsub("[", "[\n      ")
                        .gsub("\",", "\",\n      ")
                        .gsub("\"]", "\"\n    ]")
@@ -19,13 +15,15 @@ _parameter_ec2 "test"
   "TestInstanceType": {
     "Type": "String",
     "Default": "#{EC2_DEFAULT_INSTANCE_TYPE}",
-    "AllowedValues": #{allowed_values},
-    "Description": "test instance type"
+    "Description": "test instance type",
+    "AllowedValues": #{values},
+    "NoEcho": "false"
   },
-  "TestDataVolumeSize": {
-    "Type": "String",
-    "Default": "100",
-    "Description": "test data volume size"
+  "TestRootVolumeSize": {
+    "Type": "Number",
+    "Default": "8",
+    "Description": "test root volume size",
+    "NoEcho": "false"
   }
 }
     EOS
@@ -35,11 +33,7 @@ _parameter_ec2 "test"
 _parameter_ec2 "test", iam_instance: "test", key_name: "test"
     EOS
     act_template = run_client_as_json(template)
-    allowed_values = []
-    EC2_INSTANCE_TYPES.each do |type|
-      allowed_values << "#{type}"
-    end
-    allowed_values = JSON.generate(allowed_values)
+    values = JSON.generate(EC2_INSTANCE_TYPES)
                        .gsub("[", "[\n      ")
                        .gsub("\",", "\",\n      ")
                        .gsub("\"]", "\"\n    ]")
@@ -48,23 +42,27 @@ _parameter_ec2 "test", iam_instance: "test", key_name: "test"
   "TestInstanceType": {
     "Type": "String",
     "Default": "#{EC2_DEFAULT_INSTANCE_TYPE}",
-    "AllowedValues": #{allowed_values},
-    "Description": "test instance type"
+    "Description": "test instance type",
+    "AllowedValues": #{values},
+    "NoEcho": "false"
   },
   "TestIamInstanceProfile": {
     "Type": "String",
     "Default": "test",
-    "Description": "test iam instance profile"
+    "Description": "test iam instance profile",
+    "NoEcho": "false"
   },
-  "TestDataVolumeSize": {
-    "Type": "String",
-    "Default": "100",
-    "Description": "test data volume size"
+  "TestRootVolumeSize": {
+    "Type": "Number",
+    "Default": "8",
+    "Description": "test root volume size",
+    "NoEcho": "false"
   },
   "TestKeyName": {
     "Type": "AWS::EC2::KeyPair::KeyName",
     "Default": "test",
-    "Description": "test key name"
+    "Description": "test key name",
+    "NoEcho": "false"
   }
 }
     EOS

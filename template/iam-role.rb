@@ -4,6 +4,21 @@
 #
 require 'kumogata/template/helper'
 require 'kumogata/template/iam'
+require 'kumogata/template/kinesis'
+require 'kumogata/template/pinpoint'
+
+args[:managed_policies].collect!{|v| "service-role/#{v}" } if args.key? :managed_policies
+args[:policies].each_with_index do |v, i|
+  next unless v.key? :type
+  case v[:type]
+  when /^kinesis firehose/
+    args[:policies][i][:document] = _kinesis_firehose_to_delivery_stream_role(v[:document])
+  when /^pinpoint kinesis stream/
+    args[:policies][i][:document] = _pinpoint_to_kinesis_stream_role(v[:document])
+  when /^pinpoint kinesis firehose/
+    args[:policies][i][:document] = _pinpoint_to_kinesis_firehose_delivery_stream_role(v[:document])
+  end
+end if args.key? :policies
 
 name = _resource_name(args[:name], "role")
 policy = _iam_assume_role_policy_document(args)
@@ -15,7 +30,7 @@ managed_policies =
   end
 path = args[:path] || "/"
 policies = _iam_policies("policies", args)
-role_name = _real_name("role", args)
+role = _name("role", args)
 
 _(name) do
   Type "AWS::IAM::Role"
@@ -27,6 +42,6 @@ _(name) do
     ManagedPolicyArns managed_policies unless managed_policies.empty?
     Path path
     Policies policies unless policies.empty?
-    RoleName role_name if role_name
+    RoleName role
   end
 end

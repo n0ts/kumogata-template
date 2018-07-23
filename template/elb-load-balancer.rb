@@ -15,13 +15,13 @@ cross = _bool("cross", args, true)
 health = _elb_health_check(args)
 instances = _ref_array("instances", args, "instance")
 cookie = _elb_cookie_stickiness_policy(args)
-lb_name = _ref_name("lb_name", args)
+lb_name = _name("lb_name", args)
 listeners = _elb_listeners(args)
 policies = _elb_policy_types(args)
 scheme = _valid_values("scheme", %w( internal internal-facing ), "")
 security_groups = _ref_array("security_groups", args, "security group")
 subnets = _ref_array("subnets", args, "subnet")
-tags = _tags(args)
+tags = _tags(args, "lb_name")
 
 _(name) do
   Type "AWS::ElasticLoadBalancing::LoadBalancer"

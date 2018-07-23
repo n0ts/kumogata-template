@@ -16,6 +16,34 @@ _redshift_cluster_subnet_group "test", ref_subnets: "test"
         {
           "Ref": "TestSubnet"
         }
+      ],
+      "Tags": [
+        {
+          "Key": "Name",
+          "Value": {
+            "Fn::Join": [
+              "-",
+              [
+                {
+                  "Ref": "Service"
+                },
+                "test"
+              ]
+            ]
+          }
+        },
+        {
+          "Key": "Service",
+          "Value": {
+            "Ref": "Service"
+          }
+        },
+        {
+          "Key": "Version",
+          "Value": {
+            "Ref": "Version"
+          }
+        }
       ]
     }
   }

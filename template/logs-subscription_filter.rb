@@ -10,7 +10,7 @@ dest = _ref_attr_string("dest", "Arn", args, "role")
 # Filter and Pattern Syntax
 # http://docs.aws.amazon.com/AmazonCloudWatch/latest/logs/FilterAndPatternSyntax.html
 pattern = args[:pattern]
-group = _ref_name("group", args)
+group = _name("group", args)
 role = _ref_attr_string("role", "Arn", args, "role")
 
 _(name) do

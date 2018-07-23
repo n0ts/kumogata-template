@@ -20,7 +20,7 @@ fifo =
   end
 max = args[:max] || 262144   # default 256KiB
 retention = args[:retention] || 345600   # default 4 days
-queue = _ref_name("queue", args)
+queue = _name("queue", args)
 receive = args[:receive] || 0
 redrive = args[:redrive] || ""
 visibility = args[:visibility] || 30   # default 30 seconds

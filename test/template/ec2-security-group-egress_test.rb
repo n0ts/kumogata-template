@@ -12,6 +12,7 @@ _ec2_security_group_egress "test", group: "test", to: 80
     "Type": "AWS::EC2::SecurityGroupEgress",
     "Properties": {
       "CidrIp": "0.0.0.0/0",
+      "Description": "egress rule description",
       "FromPort": "80",
       "IpProtocol": "tcp",
       "ToPort": "80",

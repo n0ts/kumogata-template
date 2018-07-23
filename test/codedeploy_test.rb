@@ -18,6 +18,27 @@ Test _codedeploy_minimum(type: "fleet_percent", value: "75")
     assert_equal exp_template.chomp, act_template
   end
 
+  def test_codedeploy_alarm
+    template = <<-EOS
+Test _codedeploy_alarm(alarm: { alarms: [ "test" ] })
+    EOS
+    act_template = run_client_as_json(template)
+    exp_template = <<-EOS
+{
+  "Test": {
+    "Alarms": [
+      {
+        "Name": "test"
+      }
+    ],
+    "Enabled": "true",
+    "IgnorePollAlarmFailure": "false"
+  }
+}
+    EOS
+    assert_equal exp_template.chomp, act_template
+  end
+
   def test_codedeploy_deployment
     template = <<-EOS
 Test _codedeploy_deployment(description: "test", revision: { s3: { bucket: "test", key: "test", version: "test" } })

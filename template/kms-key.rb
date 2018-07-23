@@ -6,7 +6,7 @@ require 'kumogata/template/helper'
 require 'kumogata/template/iam'
 
 name = _resource_name(args[:name], "kms key")
-description = args[:description] || ""
+description = _ref_string_default('description', args, '', "#{args[:name]} kms key description")
 enabled = _bool("enabled", args, true)
 rotation = _bool("rotation", args, false)
 policy = _iam_policy_document("policy", args)

@@ -13,8 +13,7 @@ def _dynamodb_attribute(args)
     end
   end
 
-  array = []
-  attributes.each do |attribute|
+  attributes.collect do |attribute|
     type =
       case attribute[:type].to_sym
       when :binary
@@ -24,12 +23,11 @@ def _dynamodb_attribute(args)
       else
         "S"
       end
-    array << _{
+    _{
       AttributeName attribute[:value]
       AttributeType type
     }
   end
-  array
 end
 
 def _dynamodb_key_schema(args)
@@ -42,8 +40,7 @@ def _dynamodb_key_schema(args)
     end
   end
 
-  array = []
-  schemas.each do |schema|
+  schemas.collect do |schema|
     type =
       case schema[:type].to_sym
       when :range
@@ -51,12 +48,11 @@ def _dynamodb_key_schema(args)
       else
         "hash"
       end
-    array << _{
+    _{
       AttributeName schema[:value]
       KeyType type.upcase
     }
   end
-  array
 end
 
 def _dynamodb_projection(args)
@@ -107,5 +103,18 @@ def _dynamodb_local(args)
     IndexName index
     KeySchema key_schema
     Projection projection
+  }
+end
+
+def _dynamodb_ttl(args)
+  ttl = args[:ttl] || {}
+  return ttl if ttl.empty?
+
+  attr = args[:attr] || ""
+  enabled = _bool("enabled", args, true)
+
+  _{
+    AttributeName attr unless attr.empty?
+    Enabled enabled
   }
 end

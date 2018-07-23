@@ -19,9 +19,7 @@ _logs_metric_filter "test", { pattern: "test", transformations: [ { name: "test"
             {
               "Ref": "Service"
             },
-            {
-              "Ref": "Name"
-            }
+            "test"
           ]
         ]
       },

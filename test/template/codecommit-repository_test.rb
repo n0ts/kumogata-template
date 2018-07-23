@@ -11,7 +11,18 @@ _codecommit_repository "test"
   "TestCodecommitRepository": {
     "Type": "AWS::CodeCommit::Repository",
     "Properties": {
-      "RepositoryName": "test"
+      "RepositoryDescription": "test codecommit repository description",
+      "RepositoryName": {
+        "Fn::Join": [
+          "-",
+          [
+            {
+              "Ref": "Service"
+            },
+            "test"
+          ]
+        ]
+      }
     }
   }
 }

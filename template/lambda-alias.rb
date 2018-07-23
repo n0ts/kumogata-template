@@ -5,10 +5,10 @@
 require 'kumogata/template/helper'
 
 name = _resource_name(args[:name], "lambda alias")
-description = args[:description] || ""
+description = _ref_string_default("description", args, '', "#{args[:name]} lambda alias description")
 function_name = _ref_attr_string("function_name", "Arn", args, "lambda function")
 function_version = _ref_attr_string("function_version", "Version", args, "lambda version")
-alias_name = _ref_name("alias_name", args)
+alias_name = _name("alias_name", args)
 
 _(name) do
   Type "AWS::Lambda::Alias"

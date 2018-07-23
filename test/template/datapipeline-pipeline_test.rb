@@ -18,6 +18,7 @@ _datapipeline_pipeline "test", parameter_objects: parameter_objects, parameter_v
     "Type": "AWS::DataPipeline::Pipeline",
     "Properties": {
       "Activate": "true",
+      "Description": "test pipeline description",
       "Name": {
         "Fn::Join": [
           "-",
@@ -25,9 +26,7 @@ _datapipeline_pipeline "test", parameter_objects: parameter_objects, parameter_v
             {
               "Ref": "Service"
             },
-            {
-              "Ref": "Name"
-            }
+            "test"
           ]
         ]
       },
@@ -63,8 +62,30 @@ _datapipeline_pipeline "test", parameter_objects: parameter_objects, parameter_v
       ],
       "PipelineTags": [
         {
-          "Key": "test",
-          "Value": "test"
+          "Key": "Name",
+          "Value": {
+            "Fn::Join": [
+              "-",
+              [
+                {
+                  "Ref": "Service"
+                },
+                "test"
+              ]
+            ]
+          }
+        },
+        {
+          "Key": "Service",
+          "Value": {
+            "Ref": "Service"
+          }
+        },
+        {
+          "Key": "Version",
+          "Value": {
+            "Ref": "Version"
+          }
         }
       ]
     }
@@ -108,7 +129,7 @@ objects = [
 ]
 tags = []
 _datapipeline_pipeline "dynamo d b input s3 output hive",
-                       { pl_name: "DynamoDBInputS3OutputHive",
+                       { pipeline: "DynamoDBInputS3OutputHive",
                          description: description,
                          parameter_objects: parameter_objects, parameter_values: parameter_values,
                          objects: objects, tags: tags }
@@ -347,6 +368,24 @@ _datapipeline_pipeline "dynamo d b input s3 output hive",
           ],
           "Id": "EmrClusterForBackup",
           "Name": "EmrClusterForBackup"
+        }
+      ],
+      "PipelineTags": [
+        {
+          "Key": "Name",
+          "Value": "DynamoDBInputS3OutputHive"
+        },
+        {
+          "Key": "Service",
+          "Value": {
+            "Ref": "Service"
+          }
+        },
+        {
+          "Key": "Version",
+          "Value": {
+            "Ref": "Version"
+          }
         }
       ]
     }

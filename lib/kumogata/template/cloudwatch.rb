@@ -249,20 +249,15 @@ def _cloudwatch_dimension(args)
 end
 
 def _cloudwatch_actions(args)
-  actions = args[:actions] || args[:ref_actions] || []
-  is_ref = args.key? :ref_actions
-
-  array = []
-  actions.each do |v|
-    if v =~ /ec2 (\w)/
-      array << _cloudwatch_to_ec2_action($1)
+  (args[:actions] || args[:ref_actions] || []).collect do |action|
+    if action =~ /ec2 (\w)/
+      _cloudwatch_to_ec2_action($1)
     else
-      if is_ref
-        array << _ref_string("action", { ref_action: v })
+      if args.key? :ref_actions
+        _ref_string("action", { ref_action: action })
       else
-        array << v
+        action
       end
     end
   end
-  array
 end
