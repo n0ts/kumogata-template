@@ -13,6 +13,24 @@ _output_elasticache "test"
     "Value": {
       "Ref": "TestCacheCluster"
     }
+  },
+  "TestCacheClusterRedisEndpointAddress": {
+    "Description": "description of TestCacheClusterRedisEndpointAddress",
+    "Value": {
+      "Fn::GetAtt\": [
+        "TestCacheCluster",
+        "RedisEndpoint.Address"
+      ]
+    }
+  },
+  "TestCacheClusterRedisEndpointPort": {
+    "Description": "description of TestCacheClusterRedisEndpointPort",
+    "Value": {
+      "Fn::GetAtt": [
+        "TestCacheCluster",
+        "RedisEndpoint.Port"
+      ]
+    }
   }
 }
     EOS
@@ -28,24 +46,6 @@ _output_elasticache "test", replication: true, engine: "redis"
     "Description": "description of TestCacheReplicationGroup",
     "Value": {
       "Ref": "TestCacheReplicationGroup"
-    }
-  },
-  "TestCacheReplicationGroupConfigurationAddress": {
-    "Description": "description of TestCacheReplicationGroupConfigurationAddress",
-    "Value": {
-      "Fn::GetAtt": [
-        "TestCacheReplicationGroup",
-        "ConfigurationEndPoint.Address"
-      ]
-    }
-  },
-  "TestCacheReplicationGroupConfigurationPort": {
-    "Description": "description of TestCacheReplicationGroupConfigurationPort",
-    "Value": {
-      "Fn::GetAtt": [
-        "TestCacheReplicationGroup",
-        "ConfigurationEndPoint.Port"
-      ]
     }
   },
   "TestCacheReplicationGroupPrimaryAddress": {
@@ -86,8 +86,8 @@ _output_elasticache "test", replication: true, engine: "redis"
   }
 }
     EOS
-
     assert_equal exp_template.chomp, act_template
+
     template = <<-EOS
 _output_elasticache "test", engine: "memcached"
     EOS
@@ -100,8 +100,8 @@ _output_elasticache "test", engine: "memcached"
       "Ref": "TestCacheCluster"
     }
   },
-  "TestCacheClusterAddress": {
-    "Description": "description of TestCacheClusterAddress",
+  "TestCacheClusterConfigurationAddress": {
+    "Description": "description of TestCacheClusterConfigurationAddress",
     "Value": {
       "Fn::GetAtt": [
         "TestCacheCluster",
@@ -109,8 +109,8 @@ _output_elasticache "test", engine: "memcached"
       ]
     }
   },
-  "TestCacheClusterPort": {
-    "Description": "description of TestCacheClusterPort",
+  "TestCacheClusterConfigurationPort": {
+    "Description": "description of TestCacheClusterConfigurationPort",
     "Value": {
       "Fn::GetAtt": [
         "TestCacheCluster",

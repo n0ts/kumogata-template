@@ -18,7 +18,7 @@ _(name) do
   Type "AWS::Events::Rule"
   Properties do
     Description description unless description.empty?
-    EventPattern pattern if schedule.empty?
+    EventPattern pattern unless pattern.empty?
     Name event
     ScheduleExpression schedule if pattern.empty?
     State state.upcase

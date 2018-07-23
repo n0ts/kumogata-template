@@ -91,8 +91,8 @@ def _emr_ebs(args)
   block_devices = ebs.collect{|v| _emr_ebs_block_device(v) }
 
   _{
-    EbsBlockDeviceConfig block_devices
-    EbsOptimized true if args.key? :ebs_optimized
+    EbsBlockDeviceConfigs block_devices
+    EbsOptimized _bool('optimized', args, true) if args.key? :optimized
   }
 end
 
@@ -223,6 +223,7 @@ end
 def _emr_instance_group(args)
   bid = args[:bid] || ""
   configurations = _emr_configurations(args)
+  ebs_configuration = _emr_ebs(args)
   instance_count = args[:instance_count] || 1
   instance_type = _ref_string_default("instance_type", args, "instance type", EMR_DEFAULT_INSTANCE_TYPE)
   market = _valid_values("market", %w( on_demand, spot), "on_demand")
@@ -231,6 +232,7 @@ def _emr_instance_group(args)
   _{
     BidPrice bid unless bid.empty?
     Configurations configurations unless configurations.empty?
+    EbsConfiguration ebs_configuration unless ebs_configuration.empty?
     InstanceCount instance_count
     InstanceType instance_type
     Market market.upcase

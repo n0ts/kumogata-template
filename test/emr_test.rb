@@ -134,7 +134,7 @@ Test _emr_ebs(ebs: [ { size: "test" } ])
     exp_template = <<-EOS
 {
   "Test": {
-    "EbsBlockDeviceConfig": [
+    "EbsBlockDeviceConfigs": [
       {
         "VolumeSpecification": {
           "SizeInGB": "test",
