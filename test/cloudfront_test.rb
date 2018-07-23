@@ -199,9 +199,9 @@ Test _cloudfront_origins([ { domain: "test1", id: "test1" },
     assert_equal exp_template.chomp, act_template
   end
 
-  def test_cloudfront_custom_origin
+  def test_cloudfront_s3_origin
     template = <<-EOS
-Test _cloudfront_custom_origin({})
+Test _cloudfront_s3_origin({})
     EOS
     act_template = run_client_as_json(template)
     exp_template = <<-EOS
@@ -211,16 +211,26 @@ Test _cloudfront_custom_origin({})
 }
     EOS
     assert_equal exp_template.chomp, act_template
-  end
 
-  def test_cloudfront_s3_origin
     template = <<-EOS
-Test _cloudfront_s3_origin({})
+Test _cloudfront_s3_origin({ ref_s3: 'test' })
     EOS
     act_template = run_client_as_json(template)
     exp_template = <<-EOS
 {
   "Test": {
+    "OriginAccessIdentity": {
+      "Fn::Join": [
+        "/",
+        [
+          "origin-access-identity",
+          "cloudfront",
+          {
+            "Ref": "TestOriginAccessIdentity"
+          }
+        ]
+      ]
+    }
   }
 }
     EOS
@@ -248,33 +258,6 @@ Test _cloudfront_custom_origin({})
     EOS
     assert_equal exp_template.chomp, act_template
   end
-
-  def test_cloudfront_s3_origin
-    template = <<-EOS
-Test _cloudfront_s3_origin({ ref_s3: 'test' })
-    EOS
-    act_template = run_client_as_json(template)
-    exp_template = <<-EOS
-{
-  "Test": {
-    "OriginAccessIdentity": {
-      "Fn::Join": [
-        "/",
-        [
-          "origin-access-identity",
-          "cloudfront",
-          {
-            "Ref": "TestOriginAccessIdentity"
-          }
-        ]
-      ]
-    }
-  }
-}
-    EOS
-    assert_equal exp_template.chomp, act_template
-  end
-
 
   def test_cloudfront_origin_headers
     template = <<-EOS
