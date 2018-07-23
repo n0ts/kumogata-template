@@ -153,7 +153,7 @@ def _cloudwatch_to_namespace(value)
       "WAF"
     when "work spaces", "ws"
       "WorkSpaces"
-  end
+    end
   "AWS/#{value}"
 end
 
