@@ -3,7 +3,7 @@ require 'abstract_unit'
 class EcsTaskDefinitionTest < Minitest::Test
   def test_normal
     template = <<-EOS
-_ecs_task_definition "test", containers: [ { name: "test", image: "test", ports: [ { port: 80 } ] } ], volumes: [ "test": "/test" ]
+_ecs_task_definition "test", containers: [ { name: "test", image: "test", ports: [ { container: 80 } ] } ], volumes: [ "test": "/test" ]
     EOS
     act_template = run_client_as_json(template)
     exp_template = <<-EOS
@@ -75,7 +75,7 @@ container1 = {
   image: "amazon/amazon-ecs-sample",
   memory: 500,
   mounts: [ { source: "my-vol", path: "/var/www/my-vol" } ],
-  ports: [ { ref_port: "app", ref_host: "app" } ],
+  ports: [ { ref_container: "app", ref_host: "app" } ],
 }
 container2 = {
   name: "busybox",
