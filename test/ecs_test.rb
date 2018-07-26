@@ -23,7 +23,7 @@ Test _ecs_load_balancers(load_balancers: [ { name: "test", port: 80, lb_name: "t
 
   def test_ecs_container
     template = <<-EOS
-Test _ecs_containers(containers: [ { name: "test", image: "test", port_mappings: [ { port: 80 } ] } ])
+Test _ecs_containers(containers: [ { name: "test", image: "test", port_mappings: [ { container: 80 } ] } ])
     EOS
     act_template = run_client_as_json(template)
     exp_template = <<-EOS
@@ -83,7 +83,7 @@ Test _ecs_mount_points(mount_points: [ { path: "/", source: "/" } ])
 
   def test_ecs_port_mappings
     template = <<-EOS
-Test _ecs_port_mappings(port_mappings: [ { port: 80 } ])
+Test _ecs_port_mappings(port_mappings: [ { container: 80 } ])
     EOS
     act_template = run_client_as_json(template)
     exp_template = <<-EOS

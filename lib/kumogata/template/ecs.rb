@@ -255,7 +255,7 @@ def _ecs_port_mappings(args)
   (args[:port_mappings] || args[:ports] || []).collect do |port|
     host = _ref_string("host", port, 'host port')
     _{
-      ContainerPort _ref_string("port", port, 'container port')
+      ContainerPort _ref_string("container", port, 'container port')
       HostPort host unless host.empty?
       Protocol _valid_values(port[:protocol], %w( tcp udp ), 'tcp')
     }
