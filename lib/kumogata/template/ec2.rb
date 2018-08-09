@@ -234,7 +234,7 @@ cat <<'EOF' >> /etc/ecs/ecs.config
 ECS_CLUSTER=#{_name("ecs", args)}
 EOF
 EOS
-      user_data = user_data.insert(0, ecs_user_data)
+      user_data = [ecs_user_data] + user_data
     end
     _base64_shell(user_data)
   end
