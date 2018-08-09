@@ -431,4 +431,42 @@ Test _ec2_spot_fleet_launches({ block_devices: [ { ref_size: "test" } ], iam: "t
     EOS
     assert_equal exp_template.chomp, act_template
   end
+
+  def test_ec2_user_data_ecs
+    template = <<-EOS
+user_data = ["X"]
+Test1 _ec2_user_data(user_data: user_data, ecs: true)
+Test2 _ec2_user_data(user_data: user_data, ecs: true)
+    EOS
+    act_template = run_client_as_json(template)
+    exp_template = <<-EOS
+{
+  "Test1": {
+    "Fn::Base64": {
+      "Fn::Join": [
+        "\\n",
+        [
+          "#!/bin/bash",
+          "cat <<'EOF' >> /etc/ecs/ecs.config\\nECS_CLUSTER=true\\nEOF\\n",
+          "X"
+        ]
+      ]
+    }
+  },
+  "Test2": {
+    "Fn::Base64": {
+      "Fn::Join": [
+        "\\n",
+        [
+          "#!/bin/bash",
+          "cat <<'EOF' >> /etc/ecs/ecs.config\\nECS_CLUSTER=true\\nEOF\\n",
+          "X"
+        ]
+      ]
+    }
+  }
+}
+    EOS
+    assert_equal exp_template.chomp, act_template
+  end
 end
