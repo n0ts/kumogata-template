@@ -14,7 +14,9 @@ end
 
 def _events_pattern(args)
   # http://docs.aws.amazon.com/AmazonCloudWatch/latest/events/CloudWatchEventsandEventPatterns.html#CloudWatchEventsPatterns
-  args[:pattern] || {}
+  pattern = args[:pattern] || {}
+
+  pattern
 end
 
 def _events_targets(args)

@@ -66,11 +66,11 @@ def _pair_value(args, name, key_prefix = "key")
   end
 end
 
-def _name(name, args, prefix = "-")
-  return _import(args["import_#{name}".to_sym]) if args.key? "import_#{name}".to_sym
+def _name(name, args, prefix = '-', ref_name = '', append_import_name = '')
+  return _import(args["import_#{name}".to_sym], ref_name, append_import_name) if args.key? "import_#{name}".to_sym
   ref_name = _ref_string(name, args)
   if ref_name.empty?
-    ref_name_default = _ref_string("name", args)
+    ref_name_default = _ref_string("name", args, ref_name, append_import_name)
     _join([
            _ref(_resource_name("service")),
            (ref_name_default.is_a? String) ? ref_name_default.gsub(' ', prefix) : ref_name_default,
@@ -115,7 +115,7 @@ end
 
 def _ref_string_default(name, args, ref_name = '', default = '')
   ref_string = _ref_string(name, args, ref_name)
-  ref_string.empty? ? default : ref_string
+  ref_string.empty? ? default.to_s : ref_string
 end
 
 def _ref_array(name, args, ref_name = '', attr_name = '', append_import_name = '')

@@ -65,7 +65,7 @@ Test _pair_value({ test: { "test key": "test value" } }, "test1")
 
   def test_name
     template = <<-EOS
-Test _name("test", { name: "test name" })
+Test _name("test", ({ name: "test name" }))
     EOS
     act_template = run_client_as_json(template)
     exp_template = <<-EOS
@@ -86,7 +86,7 @@ Test _name("test", { name: "test name" })
     assert_equal exp_template.chomp, act_template
 
     template = <<-EOS
-Test _name("test", { name: "test name", ref_name: "test name ref" })
+Test _name("test", ({ name: "test name", ref_name: "test name ref" }))
     EOS
     act_template = run_client_as_json(template)
     exp_template = <<-EOS
@@ -110,7 +110,7 @@ Test _name("test", { name: "test name", ref_name: "test name ref" })
 
 
     template = <<-EOS
-Test _name("test", { name: "test name", test: "test test" })
+Test _name("test", ({ name: "test name", test: "test test" }))
     EOS
     act_template = run_client_as_json(template)
     exp_template = <<-EOS
@@ -121,7 +121,7 @@ Test _name("test", { name: "test name", test: "test test" })
     assert_equal exp_template.chomp, act_template
 
     template = <<-EOS
-Test _name("test", { name: "test name", ref_test: "test test ref" })
+Test _name("test", ({ name: "test name", ref_test: "test test ref" }))
     EOS
     act_template = run_client_as_json(template)
     exp_template = <<-EOS
@@ -134,7 +134,7 @@ Test _name("test", { name: "test name", ref_test: "test test ref" })
     assert_equal exp_template.chomp, act_template
 
     template = <<-EOS
-Test _name("test", { name: "test name", import_test: "test test import" })
+Test _name("test", ({ name: "test name", import_test: "test test import" }))
     EOS
     act_template = run_client_as_json(template)
     exp_template = <<-EOS
